@@ -1,0 +1,33 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+ticl_order_model_access_right_user,ticl_order_model_access_right user,model_ticl_order,ticl_group_user,1,1,0,0
+ticl_order_model_access_right_manager,ticl_order_model_access_right manager,model_ticl_order,ticl_management.ticl_group_manager,1,1,1,1
+ticl_order_line_model_access_right_user,ticl_order_line_model_access_right user,model_ticl_order_line,ticl_group_user,1,1,1,0
+ticl_order_line_model_access_right_manager,ticl_order_line_model_access_right manager,model_ticl_order_line,ticl_management.ticl_group_manager,1,1,1,1
+,,,,,,,
+,,,,,,,
+manufacturer_order_model_access_right_user,manufacturer_order_model_access_right user,model_manufacturer_order,ticl_configuration_group_user,1,1,1,0
+manufacturer_order_model_access_right_manager,manufacturer_order_model_access_right manager,model_manufacturer_order,ticl_configuration_group_manager,1,1,1,1
+,,,,,,,
+ticl_condition_model_access_right_user,ticl_condition_model_access_right user,model_ticl_condition,ticl_configuration_group_user,1,1,1,0
+ticl_condition_model_access_right_manager,ticl_condition_model_access_right manager,model_ticl_condition,ticl_configuration_group_manager,1,1,1,1
+,,,,,,,
+city_name_model_access_right_user,city_name_model_access_right user,model_city_name,ticl_configuration_group_user,1,1,1,0
+city_name_model_access_right_manager,city_name_model_access_right manager,model_city_name,ticl_configuration_group_manager,1,1,1,1
+,,,,,,,
+zip_code_model_access_right_user,zip_code_model_access_right user,model_zip_code,ticl_configuration_group_user,1,1,1,0
+zip_code_model_access_right_manager,zip_code_model_access_right manager,model_zip_code,ticl_configuration_group_manager,1,1,1,1
+,,,,,,,
+fund_doc_type_model_access_right_user,fund_doc_type_model_access_right user,model_fund_doc_type,ticl_configuration_group_user,1,1,1,0
+fund_doc_type_model_access_right_manager,fund_doc_type_model_access_right manager,model_fund_doc_type,ticl_configuration_group_manager,1,1,1,1
+,,,,,,,
+tel_serial_number_model_access_right_user,tel_serial_number_model_access_right user,model_tel_serial_number,ticl_configuration_group_user,1,1,1,0
+tel_serial_number_model_access_right_manager,tel_serial_number_model_access_right manager,model_tel_serial_number,ticl_configuration_group_manager,1,1,1,1
+,,,,,,,
+shipping_carrierr_model_access_right_user,shipping_carrier_model_access_right user,model_shipping_carrier,ticl_configuration_group_user,1,1,1,0
+shipping_carrier_model_access_right_manager,shipping_carrier_model_access_right manager,model_shipping_carrier,ticl_configuration_group_manager,1,1,1,1
+,,,,,,,
+ticl_epp_manufacturer_model_access_right_user,ticl_epp_manufacturer_model_access_right user,model_ticl_epp_manufacturer,ticl_configuration_group_user,1,1,1,0
+ticl_epp_manufacturer_model_access_right_manager,ticl_epp_manufacturer_model_access_right manager,model_ticl_epp_manufacturer,ticl_configuration_group_manager,1,1,1,1
+,,,,,,,
+ticl_hdd_manufacturer_model_access_right_user,ticl_hdd_manufacturer_model_access_right user,model_ticl_hdd_manufacturer,ticl_configuration_group_user,1,1,1,0
+ticl_hdd_manufacture_model_access_right_manager,ticl_hdd_manufacturer_model_access_right manager,model_ticl_hdd_manufacturer,ticl_configuration_group_manager,1,1,1,1

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="tellerex_product_template_form_view" model="ir.ui.view">
+            <field name="name">tellerex.product.template.common.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="string">Chase Model Name</attribute>
+                </xpath>
+               <!--  <xpath expr="//field[@name='categ_id']" position="attributes">
+                    <attribute name="string">Type</attribute>
+                    <field name="default_code" invisible="1"/>
+                </xpath> -->
+                <!-- <xpath expr="//group[@name='operations']" position="before">
+                    <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
+                    </group>
+                </xpath> -->
+
+                <xpath expr="//field[@name='type']" position="before">
+                    <field name="list_price"/>
+                    <field name="standard_price"/>
+<!--                    <field name="taxes_id"/>-->
+                    <field name="default_code"/>
+                    <field name="barcode"/>
+                </xpath>
+
+                <xpath expr="//field[@name='type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+                <xpath expr="//field[@name='categ_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+               
+  <!--                <group name="group_standard_price" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </group>
+                <xpath expr="//label[@for='purchase_ok']" position="after">
+                    <div>
+                        <field name="atm_ok"/>
+                        <label for="atm_ok"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='type']" position="before">
+                    <field name="manufacturer_id" required="1"/>
+                </xpath> -->
+                <xpath expr="///group[@name='group_general']" position="before">
+                <group col="2">
+                    <field name="model_name" placeholder="Please Fill Model Name" invisible="1"/>
+                    <field name="part_name" placeholder="Please Fill version Number"  string="Part #" invisible="1"/>
+                    <field name="manufacturer_id" required="1" style="width:80%"/>
+                    <field name="type" required="1" style="width:80%"/>
+                    <field name="categ_id" string="Type" required="1" style="width:80%"/>
+                    <field name="xl_items" required="1" style="width:80%"/>
+                    <field name="ticl_product_id" style="width:80%" domain="[('categ_id','=', 'Accessory')]"/>
+                    <field name="condition_id" style="width:80%" invisible="1"/>
+                    <field name="oem_pm" style="width:80%"/>
+                    <field name="product_function" style="width:80%"/>
+                    <field name="monitory_value" style="width:80%"/>
+                </group>
+                </xpath>
+
+                 <xpath expr="//group[@name='group_lots_and_weight']/label" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//group[@name='group_lots_and_weight']/div" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            
+                <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                    <field name="product_weight"/>
+                    <field name="weight" invisible="1"/>
+                    <field name="product_lenght"/>
+                    <field name="product_width"/>
+                    <field name="product_height"/>
+                    <field name="product_squre_feet"/>
+                </xpath>
+
+                <xpath expr="//group[@name='group_standard_price']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+
+               <!--  <xpath expr="//field[@name='route_ids']/.." position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='property_stock_production']/.." position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='description_pickingout']/.." position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='description_pickingin']/.." position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='description_picking']/.." position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='description']/.." position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='sale_ok']/.." position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='purchase_ok']/.." position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='atm_ok']/.." position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath> -->
+
+             <!--    <xpath expr="//group[@name='inventory']" position="replace">
+                    <group name="inventory">
+                        <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
+                            <field name="product_weight" required="1"/>
+                            <field name="product_lenght"/>
+                            <field name="product_width"/>
+                            <field name="product_height"/>
+                            <field name="product_squre_feet"/>
+                        </group>
+                        <field name="tracking" invisible="1"/>
+                    </group>
+                </xpath> -->
+
+            <!--     <xpath expr="//group[@name='inventory']" position="replace">
+                    <group name="inventory">
+                        <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
+                            <field name="product_weight" required="1"/>
+                            <field name="product_lenght"/>
+                            <field name="product_width"/>
+                            <field name="product_height"/>
+                            <field name="product_squre_feet"/>
+                        </group>
+                        <field name="tracking" invisible="1"/>
+                    </group>
+                </xpath> -->
+
+
+            </field>
+        </record>
+
+ <!--        <record id="tellerex_header_template_form_view" model="ir.ui.view">
+            <field name="name">tellerex.product.template.header.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
+            <field name="arch" type="xml">
+                <header position='replace'/>
+                <xpath expr="//button[@name='action_open_quants']" position="replace">
+                </xpath>
+                <xpath expr="//button[@name='135']" position="replace">
+                </xpath>
+                <xpath expr="//button[@name='action_view_stock_move_lines']" position="replace">
+                </xpath>
+                <xpath expr="//button[@name='action_view_orderpoints']" position="replace">
+                    <field name ="nbr_reordering_rules" invisible="1"/>
+                </xpath>
+                <xpath expr="//button[@name='149']" position="replace">
+                </xpath>
+            </field>
+        </record>  -->
+
+         <record id="tellerex_data_template_form_view" model="ir.ui.view">
+            <field name="name">tellerex.product.template.custom.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default_code']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='barcode']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <!-- tree View -->
+        <record id="product_template_tree_view_ticl" model="ir.ui.view">
+            <field name="name">product.template.product.tree</field>
+            <field name="model">product.template</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="part_name"/>
+                    <field name="oem_pm"/>
+                    <field name="product_function"/>
+                    <field name="product_lenght"/>
+                    <field name="product_width"/>
+                    <field name="product_height"/>
+                    <field name="product_squre_feet"/>
+                    <field name="manufacturer_id"/>
+                </field>
+                <xpath expr="//field[@name='categ_id']" position="replace">
+                    <field name="categ_id" string="Type"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+       <record id="tel_serial_number_form_view" model="ir.ui.view">
+            <field name="name">tel.serial.number.form</field>
+            <field name="model">tel.serial.number</field>
+            <field name="arch" type="xml">
+                <form string="Serial Number" class="o_sale_order">
+                <sheet>   
+                     <group>  
+                        <field name="serial_number" required="1" style="width: 50%"/>
+			             <field name="product_id" required="1" style="width: 50%"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+               
+                </form>
+            </field>
+        </record>
+        
+        <record id="tel_serial_number_tree_view" model="ir.ui.view">
+            <field name="name">tel.serial.number.tree</field>
+            <field name="model">tel.serial.number</field>
+            <field name="arch" type="xml">
+                <tree string="Serial Number">
+                    <field name="serial_number"/>
+		             <field name="product_id"/>
+                    <field name="active"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_tel_serial_number" model="ir.actions.act_window">
+            <field name="name">Serial Number</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tel.serial.number</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Serial Number.
+                </p>
+            </field>
+        </record>
+
+<!-- Serial Number Master Menu  -->
+        <menuitem id="serial_number_tel_order" name="Serial Number" 
+            parent="ticl_management.configuration_ticl_menu" action="action_tel_serial_number" sequence="8"
+            />
+
+
+    </data>
+</odoo>
+
