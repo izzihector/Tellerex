@@ -113,8 +113,8 @@
         </record>
 
         <!-- Menu Item -->
-        <menuitem id="rigger_management_ticl_order" name="Rigger Address" 
-            parent="configuration_ticl_menu" action="action_ticl_rigger" sequence="6"/>
+       <!--  <menuitem id="rigger_management_ticl_order" name="Rigger Address" 
+            parent="configuration_ticl_menu" action="action_ticl_rigger" sequence="6"/> -->
 
     </data>
 </odoo>

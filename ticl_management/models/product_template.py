@@ -28,7 +28,7 @@ class ProductTemplate(models.Model):
     serial_number = fields.Char(string = "Serial Number")
     oem_pm = fields.Char(string = "OEM PM")
     product_function = fields.Char(string = "Function")
-    product_weight = fields.Char(string = "Weight")
+    product_weight = fields.Char(string = "Product Weight")
     product_lenght = fields.Float(string = "Lenght")
     product_width = fields.Float(string = "Width")
     product_height = fields.Float(string = "Height")

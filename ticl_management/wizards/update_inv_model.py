@@ -3,6 +3,7 @@ from odoo import api, fields, models, _
 
 class StockMoveModelUpdate(models.TransientModel):
     _name = 'stock.move.model.update'
+    _description = "Stock Move Model Update"
 
     def _product_filter(self):
         mid = self._context.get('active_id')

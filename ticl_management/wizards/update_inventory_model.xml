@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="update_inventory_entries_form_model" model="ir.ui.view">
+        <field name="name">Update Model Entries</field>
+        <field name="model">stock.move.model.update</field>
+        <field name="arch" type="xml">
+            <form string="update move model">
+                <group>
+                    <group><field name="old_model" readonly="1"/></group>
+                    <group><field name="new_model" options="{'no_create': True, 'no_quick_create':True,'no_create_edit':True}" /></group>
+                </group>
+
+                <footer>
+                    <button name="inh_update_model" string="Update" type="object" default_focus="1" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="update_inventory_entries_action_model" model="ir.actions.act_window">
+        <field name="name">Update Model Entries</field>
+        <field name="res_model">stock.move.model.update</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="update_inventory_entries_form_model"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+    
+
+</odoo>

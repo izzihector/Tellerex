@@ -1,10 +1,4 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-ticl_order_model_access_right_user,ticl_order_model_access_right user,model_ticl_order,ticl_group_user,1,1,0,0
-ticl_order_model_access_right_manager,ticl_order_model_access_right manager,model_ticl_order,ticl_management.ticl_group_manager,1,1,1,1
-ticl_order_line_model_access_right_user,ticl_order_line_model_access_right user,model_ticl_order_line,ticl_group_user,1,1,1,0
-ticl_order_line_model_access_right_manager,ticl_order_line_model_access_right manager,model_ticl_order_line,ticl_management.ticl_group_manager,1,1,1,1
-,,,,,,,
-,,,,,,,
 manufacturer_order_model_access_right_user,manufacturer_order_model_access_right user,model_manufacturer_order,ticl_configuration_group_user,1,1,1,0
 manufacturer_order_model_access_right_manager,manufacturer_order_model_access_right manager,model_manufacturer_order,ticl_configuration_group_manager,1,1,1,1
 ,,,,,,,

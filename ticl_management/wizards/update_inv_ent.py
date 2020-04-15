@@ -6,6 +6,7 @@ from odoo.exceptions import Warning
 
 class AccountAgedTrialBalance(models.TransientModel):
     _name = 'stock.move.update'
+    _description = "Stock Move Update"
 
     
     old_serial = fields.Char(string = "Old Serial")

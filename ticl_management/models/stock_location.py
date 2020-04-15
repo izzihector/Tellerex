@@ -8,10 +8,9 @@ from odoo.exceptions import UserError
 class Picking(models.Model):
 	_inherit = "stock.picking"
 
-	ticl_order_id = fields.Many2one("ticl.order", string="TICL Order")
 	condition_id = fields.Many2one('ticl.condition', string="Condition")
 	states = fields.Selection([('draft', 'Inventory'),('shipped', 'Shipped'),('recycled', 'Recycled'),
-		('cancel', 'Cancelled')], string='Status')
+		('cancel', 'Cancelled')], string='States')
 	receive_date = fields.Datetime(string="Receive Date")
 	shipped_date = fields.Datetime(string="Shipped Date")
 	recycled_date = fields.Datetime(string="Recycled Date")
@@ -66,10 +65,9 @@ class StockMove(models.Model):
 	_inherit = 'stock.move'
 
 
-	ticl_order_id = fields.Many2one("ticl.order", string="TICL Order")
 	condition_id = fields.Many2one('ticl.condition', string="Condition")
 	states = fields.Selection([('draft', 'Inventory'),('shipped', 'Shipped'),('recycled', 'Recycled'),
-		('cancel', 'Cancelled')], string='Status')
+		('cancel', 'Cancelled')], string='States')
 	receive_date = fields.Datetime(string="Receive Date")
 	shipped_date = fields.Datetime(string="Shipped Date")
 	recycled_date = fields.Datetime(string="Recycled Date")

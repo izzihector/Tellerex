@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inheriting stock warehouse form view -->
+        <record id="view_warehouse_form_inherit" model="ir.ui.view">
+            <field name="name">ticl.warehouse.form</field>
+            <field name="model">stock.warehouse</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>  
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="checkin_time" widget="time"/>
+                    <field name="checkout_time"  widget="time"/>
+                </xpath>
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="warehouse_email" />
+                    
+                </xpath>
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="warehouse_phone" required="1"/>
+                    <field name="contact_name" required="1"/>
+                </xpath>
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="warehouse_key" />
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="street" required="1"/>
+                        <field name="street2"/>
+                        <field name="city_id" widget="many2one_tags" required="1"/>
+                        <field name="state_id" widget="many2one_tags" required="1"/>
+                        <field name="zip_code" required="1"/>
+                        <field name="appointment_date" invisible="1"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Inheriting stock warehouse tree view -->
+        <record id="view_stock_warehouse_tree_inherit" model="ir.ui.view">
+            <field name="name">ticl.warehouse.tree</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse_tree"/>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="warehouse_key" />
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="checkout_time" />
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="checkin_time" />
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="warehouse_email" />
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="warehouse_phone" />
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='lot_stock_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inheriting stock location form view -->
+<!--         <record id="view_stock_form_inherit" model="ir.ui.view">
+            <field name="name">ticl.location.form</field>
+            <field name="model">stock.location</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>  
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='posx']/.." position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']/.." position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']/.." position="after">
+                    <group string = "Information">
+                        <field name= "contact_name" required="1"/>
+                        <field name="reference_number" required="1"/>
+                        <field name= "company_name"/>
+                        <field name= "location_email"/>
+                        <field name= "location_phone" required="1"/>
+                        <field name= "gc_name"/>
+                        <field name ="gc_address_id"/>
+                        <field name ="gc_warehouse_identifier"/>
+                        <field name= "comments"/>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='posx']/.." position="after">
+                    <group string = "Address">
+                        <field name="street" required="1"/>
+                        <field name="street2"/>
+                        <field name="city_id" widget="many2one_tags" required="1"/>
+                        <field name="state_id" widget="many2one_tags" required="1"/>
+                        <field name="zip_code" required="1"/>
+                        <field name="appointment_date" invisible="1"/>
+                    </group>
+                </xpath>
+            </field>
+        </record> -->
+
+
+         <!-- Inheriting stock location tree view -->
+        <!-- <record id="view_stock_location_tree_inherit" model="ir.ui.view">
+            <field name="name">ticl.location.tree</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_tree2"/>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_name']" position="after">
+                    <field name="company_name" />
+                    <field name="contact_name" />
+                    <field name="location_phone" />
+                    <field name="location_email" />
+                    <field name="gc_name" />
+                    <field name="gc_address_id" />
+                </xpath>
+            </field>  
+        </record> -->
+
+
+    </data>
+</odoo>
+

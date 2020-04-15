@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+       <record id="city_name_form_view" model="ir.ui.view">
+            <field name="name">city.name.form</field>
+            <field name="model">city.name</field>
+            <field name="arch" type="xml">
+                <form string="City Details" class="o_sale_order">
+                <sheet>   
+                     <group>  
+                        <field name="name" required="1" style="width: 50%"/>
+                        <field name="state_id" required="1" style="width: 50%"/>
+                        <field name="country_id" required="1" style="width: 50%"/>
+                        <field name="zip_ids" widget="many2many_tags" 
+                            style="width: 50%" invisible="1"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>  
+                </form>
+            </field>
+        </record>
+        
+
+        <record id="city_name_tree_view" model="ir.ui.view">
+            <field name="name">city.name.tree</field>
+            <field name="model">city.name</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="state_id"/>
+                    <field name="country_id"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ticl_city" model="ir.actions.act_window">
+            <field name="name">City Details</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">city.name</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New City Details.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="city_management_ticl_order" name="City Details" 
+            parent="configuration_ticl_menu" action="action_ticl_city" sequence="3"/>
+
+
+        <record id="view_res_partner_form_inherit_ticl" model="ir.ui.view">
+        <field name="name">Address Res Partner Inherit</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+           <xpath expr="//field[@name='city']" position="replace">
+             <field name="city" invisible="1"/>
+           </xpath>
+<!--
+           <xpath expr="//field[@name='vat']" position="replace">
+             <field name="vat" invisible="1"/>
+           </xpath>
+-->
+            <xpath expr="//field[@name='street2']" position="after">
+                <field name="city_id" string="City Name" style="width: 35%"  
+                    class="o_address_city" placeholder="City" required="1"/>
+            </xpath>
+
+        </field>
+        </record>
+
+ 
+    </data>
+</odoo>

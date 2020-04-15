@@ -24,7 +24,7 @@ class Warehouse(models.Model):
 	location_type = fields.Selection([('RESIDENTIAL', 'RESIDENTIAL'),
 									  ('CONSTRUCTIONSITE', 'CONSTRUCTIONSITE'),
 									  ('TRADESHOW', 'TRADESHOW'),
-									  ('BUSINESS', 'BUSINESS')], string='Location Type')
+									  ('BUSINESS', 'BUSINESS')], string='Location Types')
 
 
 class Location(models.Model):
@@ -49,6 +49,6 @@ class Location(models.Model):
 	location_type = fields.Selection([('RESIDENTIAL', 'RESIDENTIAL'),
 									  ('CONSTRUCTIONSITE', 'CONSTRUCTIONSITE'),
 									  ('TRADESHOW', 'TRADESHOW'),
-									  ('BUSINESS', 'BUSINESS')], string='Location Type')
+									  ('BUSINESS', 'BUSINESS')], string='Location Types')
 	
 	

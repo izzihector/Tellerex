@@ -22,7 +22,7 @@
 
 from . import ticl_configuration
 from . import res_users
-from . import ticl_order
+#from . import ticl_order
 from . import product_template
 from . import res_partner
 from . import menufacturer_order
