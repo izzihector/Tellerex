@@ -26,7 +26,7 @@
         'views/ticl_condition_view.xml',
         'views/stock_location_view.xml',
         'views/tel_serial_number_view.xml',
-        #'security/hide_db_link.xml',
+        'security/hide_db_link.xml',
 	    'views/shipping_carrier_view.xml',
         'views/template.xml',
         'views/ticl_epp_manufacturer_view.xml',
