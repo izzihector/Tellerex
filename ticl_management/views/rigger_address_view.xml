@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inheriting res partner form view -->
+        <record id="view_res_partner_form_inherit_rigger" model="ir.ui.view">
+            <field name="name">rigger.address.form</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>  
+            <field name="arch" type="xml">
+
+                <xpath expr="//div[@class='o_address_format']" position="after">
+                     <field name="gc_address_id" string="GC Address ID" attrs="{'invisible':[('is_rigger', '!=', True)]}" />
+                </xpath>
+
+                <xpath expr="//field[@name='gc_address_id']" position="after">
+                     <field name="gc_warehouse_identifier" string="GC Warehouse Identifier"
+                        attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
+                </xpath>
+           
+                <xpath expr="//field[@name='function']" position="after">
+                    <field name="name_gc" attrs="{'invisible':[('is_rigger', '!=', True)]}" />
+                </xpath>
+
+               <xpath expr="//field[@name='function']" position="after">
+                    <field name="company_name" attrs="{'invisible':[('is_rigger', '!=', True)]}" />
+                </xpath>
+
+                <xpath expr="//field[@name='function']" position="after">
+                    <field name="comments" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='function']" position="replace">
+                    <field name="function" attrs="{'invisible':[('is_rigger', '!=', False)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='website']" position="replace">
+                    <field name="website" attrs="{'invisible':[('is_rigger', '!=', False)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='title']" position="replace">
+                    <field name="title" attrs="{'invisible':[('is_rigger', '!=', False)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='lang']" position="replace">
+                    <field name="lang" attrs="{'invisible':[('is_rigger', '!=', False)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='category_id']" position="replace">
+                    <field name="category_id" widget="many2many_tags" attrs="{'invisible':[('is_rigger', '!=', False)]}"/>
+                </xpath>
+
+                <xpath expr="//group[@name='container_row_2']" position="before">
+                    <group string="Is a Rigger" priority="1">
+                        <field name="is_rigger"/>
+                    </group>  
+                </xpath>
+
+            </field>
+        </record>
+
+
+
+        <!-- Inheriting res partner tree view -->
+        <record id="view_res_partner_tree_inherit_rigger" model="ir.ui.view">
+            <field name="name">rigger.address.tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field eval="8" name="priority"/>
+
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='function']" position="after">
+                    <field name="name_gc" attrs="{'invisible':[('is_rigger', '!=', True)]}" />
+                </xpath>
+
+               <xpath expr="//field[@name='function']" position="after">
+                    <field name="company_name" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='function']" position="after">
+                    <field name="comments" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='function']" position="after">
+                    <field name="gc_warehouse_identifier" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='function']" position="after">
+                    <field name="gc_address_id" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='country_id']" position="after">
+                    <field name="is_rigger"/>
+                </xpath>
+            
+            </field>
+        </record>
+
+        <!-- Inheriting res partner Action  -->
+        <record id="action_ticl_rigger" model="ir.actions.act_window">
+            <field name="name">Rigger Address</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="domain">[('is_rigger','=',True)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a Rigger address.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+       <!--  <menuitem id="rigger_management_ticl_order" name="Rigger Address" 
+            parent="configuration_ticl_menu" action="action_ticl_rigger" sequence="6"/> -->
+
+    </data>
+</odoo>
+

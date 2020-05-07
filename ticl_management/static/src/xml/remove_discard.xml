@@ -1,0 +1,29 @@
+<templates id="template" xml:space="preserve">
+	<t t-extend="FormView.buttons">
+       
+		
+			 <t t-jquery=".o_form_button_cancel" t-operation="replace">
+	             <t t-if="widget.modelName == 'ticl.shipment.log' or widget.modelName == 'ticl.receipt'">
+		             <button type="button"
+			                class="btn btn-secondary o_form_button_cancel_ticl">
+			            Discard
+			        </button>
+		        </t>
+		        <t t-elif="widget.modelName == 'ticl.receipt'">
+		             <button type="button"
+			                class="btn btn-secondary o_form_button_cancel_ticl">
+			            Discard
+			        </button>
+		        </t>
+		        <t t-else="">
+		             <button type="button"
+			                class="btn btn-secondary o_form_button_cancel" accesskey="j">
+			            Discard
+			        </button>
+		        </t>
+		        
+		        
+			</t>
+    </t>
+	
+</templates>
