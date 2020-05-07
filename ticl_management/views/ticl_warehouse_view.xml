@@ -11,7 +11,6 @@
                 <xpath expr="//field[@name='code']" position="after">
                     <field name="checkin_time" widget="time"/>
                     <field name="checkout_time"  widget="time"/>
-                    <field name="partner_id"/>
                 </xpath>
                 <xpath expr="//field[@name='code']" position="after">
                     <field name="warehouse_email" />
@@ -24,9 +23,9 @@
                 <xpath expr="//field[@name='code']" position="after">
                     <field name="warehouse_key" />
                 </xpath>
-                <!-- <xpath expr="//field[@name='partner_id']" position="attributes">
+                <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
-                </xpath> -->
+                </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
                         <field name="street" required="1"/>
                         <field name="street2"/>
