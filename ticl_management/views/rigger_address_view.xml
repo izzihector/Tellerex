@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>  
             <field name="arch" type="xml">
 
-                <xpath expr="//div[@class='o_address_format']" position="after">
+               <!--  <xpath expr="//div[@class='o_address_format']" position="after">
                      <field name="gc_address_id" string="GC Address ID" attrs="{'invisible':[('is_rigger', '!=', True)]}" />
                 </xpath>
 
@@ -24,10 +24,10 @@
 
                <xpath expr="//field[@name='function']" position="after">
                     <field name="company_name" attrs="{'invisible':[('is_rigger', '!=', True)]}" />
-                </xpath>
+                </xpath> -->
 
                 <xpath expr="//field[@name='function']" position="after">
-                    <field name="comments" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
+                 <field name="contact_name" attrs="{'invisible':[('is_rigger', '!=',True)]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='function']" position="replace">
@@ -67,28 +67,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_tree"/>
             <field eval="8" name="priority"/>
-
             <field name="arch" type="xml">
-
-                <xpath expr="//field[@name='function']" position="after">
-                    <field name="name_gc" attrs="{'invisible':[('is_rigger', '!=', True)]}" />
-                </xpath>
-
-               <xpath expr="//field[@name='function']" position="after">
-                    <field name="company_name" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
-                </xpath>
-
-                <xpath expr="//field[@name='function']" position="after">
-                    <field name="comments" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
-                </xpath>
-
-                <xpath expr="//field[@name='function']" position="after">
-                    <field name="gc_warehouse_identifier" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
-                </xpath>
-
-                <xpath expr="//field[@name='function']" position="after">
-                    <field name="gc_address_id" attrs="{'invisible':[('is_rigger', '!=', True)]}"/>
-                </xpath>
 
                 <xpath expr="//field[@name='country_id']" position="after">
                     <field name="is_rigger"/>
@@ -113,8 +92,8 @@
         </record>
 
         <!-- Menu Item -->
-       <!--  <menuitem id="rigger_management_ticl_order" name="Rigger Address" 
-            parent="configuration_ticl_menu" action="action_ticl_rigger" sequence="6"/> -->
+        <menuitem id="rigger_management_ticl_order" name="Rigger Address" 
+            parent="configuration_ticl_menu" action="action_ticl_rigger" sequence="6"/>
 
     </data>
 </odoo>

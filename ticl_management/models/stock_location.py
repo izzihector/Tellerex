@@ -12,7 +12,6 @@ class Picking(models.Model):
 	states = fields.Selection([('draft', 'Inventory'),('shipped', 'Shipped'),('recycled', 'Recycled'),
 		('cancel', 'Cancelled')], string='States')
 	receive_date = fields.Datetime(string="Receive Date")
-	shipped_date = fields.Datetime(string="Shipped Date")
 	recycled_date = fields.Datetime(string="Recycled Date")
 	part_name = fields.Char(string="Version Number")
 	serial_number = fields.Char(string = "Serial Number")
@@ -69,7 +68,6 @@ class StockMove(models.Model):
 	states = fields.Selection([('draft', 'Inventory'),('shipped', 'Shipped'),('recycled', 'Recycled'),
 		('cancel', 'Cancelled')], string='States')
 	receive_date = fields.Datetime(string="Receive Date")
-	shipped_date = fields.Datetime(string="Shipped Date")
 	recycled_date = fields.Datetime(string="Recycled Date")
 	part_name = fields.Char(string="Version Number")
 	serial_number = fields.Char(string = "Serial Number")

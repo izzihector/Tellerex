@@ -11,9 +11,7 @@
                     <button name="confirm_shipped" class="oe_highlight" 
                         string="Confirm shipping Order" type="object"/>
                 </header> -->
-                 <!-- <xpath expr="//field[@name='scheduled_date']" position="before">
-                    <field name="shipped_date" required="1"/>
-                </xpath> -->
+              
                 <xpath expr="//field[@name='partner_id']" position="replace">
                     <field name="partner_id" invisible="1"/>
                 </xpath>

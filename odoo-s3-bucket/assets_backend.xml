@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="odoo-s3-bucket_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+
+                <script type="text/javascript" src="/odoo-s3-bucket/static/src/js/JIC.js"/>
+                <script type="text/javascript" src="/odoo-s3-bucket/static/src/js/s3_image.js"/>
+                <script type="text/javascript" src="/odoo-s3-bucket/static/src/js/s3_image_epp.js"/>
+                <script type="text/javascript" src="/odoo-s3-bucket/static/src/js/s3_image_hdd.js"/>
+
+
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+       <record id="receiving_log_summary_form_view" model="ir.ui.view">
+            <field name="name">receiving.log.summary.form</field>
+            <field name="model">receiving.log.summary</field>
+            <field name="arch" type="xml">
+                <form string="Receiving Log Shipment Summary" class="o_sale_order">
+                <header>
+                    <button name="confirm_shipment_order" class="oe_highlight" 
+                        string="Confirm Receiving" type="object" invisible="1"/>
+                </header>
+                <sheet> 
+                    <div class="oe_title">
+                        <h1>
+                        <field name="name" placeholder="Enter Receipt Number" style="width: 60%"/>
+                        </h1>
+                    </div>         
+                    <group>
+                        <group>
+
+                        <field name="asn_bol_type" style="width: 70%" invisible="1"/>
+                        <field name="expected_delivery_date" required="1" style="width: 70%"/>
+                        <field name="state" required="1" style="width: 70%"/>
+                       </group>
+                        <group>   
+                           <field name="sending_location_id" required="1" style="width:100%"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Inventory">
+                            <field name="receiving_log_line">
+                                <tree string="Inventory" editable="bottom">
+                                    <field name="tel_unique_no"/>
+                                    <field name="tel_type" options="{'no_create': True, 
+                                    'no_create_edit':True, 'no_open':True}"/>
+                                    
+                                    <field name="product_id" string="Model"/>
+                                    <field name="serial_number" 
+                                        attrs="{'required':[('tel_type','==','Unit')]}"/>
+                                    <field name="count_number" invisible="1"/>    
+                                    <field name="manufacturer_id" string="Manufacturer"/>
+                                    <field name="funding_doc_type"/>
+                                    <field name="funding_doc_number"/>
+                                    <field name="ticl_project_id"/>
+                                    <field name="condition_id" options="{'no_create': True, 
+                                    'no_create_edit':True, 'no_open':True}"/>
+                                    <field name="received_date"/>
+                                                                    
+                                </tree>
+                            </field>
+                        </page>
+                         <page string="Note">
+                            <group>
+                                <field name="tel_note"/>
+                            </group>
+                         </page>
+
+                        <page string="Other Information">
+                            <group>
+                                <group>
+                                <field name="warehouse_id" options="{'no_create': True, 
+                                    'no_create_edit':True, 'no_open':True}"/>
+
+                                </group>
+                                <group>
+                                    <field name="user_id" options="{'no_create': True, 
+                                    'no_create_edit':True, 'no_open':True}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>    
+                </form>
+            </field>
+        </record>        
+
+        <record id="receiving_log_summary_tree_view" model="ir.ui.view">
+            <field name="name">receiving.log.summary.tree</field>
+            <field name="model">receiving.log.summary</field>
+            <field name="arch" type="xml">
+                <tree string="Receiving Log">
+                    <field name="name" string="Shipment ID"/>
+                    <field name="asn_bol_type" invisible="1"/>
+                    <field name="sending_location_id"/>
+                    <field name="expected_delivery_date"/>
+                    <field name="total_atm"/>
+                    <field name="total_signage"/>
+                    <field name="total_accessory"/>
+                    <field name="state"/>                      
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_receiving_log_summary" model="ir.actions.act_window">
+            <field name="name">Receipt Log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">receiving.log.summary</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Receiving Log Shipment Summary.
+                </p>
+            </field>
+        </record>
+<!-- Receipt Log Menu -->
+        <menuitem id="tel_receiving_log_summary" name="Receipt Log" 
+            parent="tel_receipt_order_sub" action="action_receiving_log_summary" sequence="2"/>
+
+
+    </data>
+</odoo>

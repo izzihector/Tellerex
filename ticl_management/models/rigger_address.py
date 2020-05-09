@@ -8,9 +8,5 @@ from odoo.exceptions import UserError
 class Partner(models.Model):
 	_inherit = 'res.partner'
 
-	name_gc = fields.Char(string="GC")
-	company_name = fields.Char(string="Company Name")
-	comments = fields.Char(string="Comments")
-	gc_warehouse_identifier = fields.Char(String = "GC Warehouse unique Identifier")
-	gc_address_id = fields.Char(String="GC Address Id")
+	contact_name = fields.Char(string="Contact Name")
 	is_rigger = fields.Boolean(string="Is a Rigger", default=True)

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ticl_invoice_monthly,Ticl.invoice.monthly,model_ticl_monthly_service_line,sales_team.group_sale_salesman,1,1,1,1
+access_ticl_invoice_fright,Ticl.invoice.fright,model_ticl_fright_service_line,sales_team.group_sale_salesman,1,1,1,1

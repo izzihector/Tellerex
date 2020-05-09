@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    
+
+    <div  t-name="import_button_epp" t-attf-class="base #{cls}" class="oe_web_example">
+        <p>
+            <t t-call="odoo-s3-bucket.HiddenInputMultipleFiles">
+
+            </t>
+        </p>
+    </div>
+</templates>

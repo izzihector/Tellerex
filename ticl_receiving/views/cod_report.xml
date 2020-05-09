@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="data_destruction_report_card">
+         <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-foreach="doc" t-as="inventory">
+                    <t t-foreach="inventory" t-as="inventory">
+                        <style>.container {
+                            position: relative;
+                            text-align: left;
+                            color: black;
+                            margin-top: -25px;
+                           
+                            }
+
+                            .parent_serial_section{
+                            position:absolute;
+                            top: 14%;
+                            width:50%;
+                            left: 25%;
+                            height:40px;
+                            border: 1px solid grey;
+                            transform: translate(-50%, -50%);
+                            }
+
+                            .data_left_section {
+                            position: absolute;
+                            left: 20%;
+                            transform: translate(-50%, -50%);
+                            max-width: 35%;
+                            }
+
+                            .data_right_section{
+                            position:absolute;
+                            left: 55%;
+                            transform: translate(-50%, -50%);
+                            max-width: 45%;
+                            
+                            }
+
+                            .custom_footer{
+                            position:absolute;
+                            bottom: 7%;
+                            left: 16%;
+                            width: 70%;
+                            transform: translate(-50%, -50%);
+                            }
+
+                            .second_container {
+                            position: relative;
+                            text-align: center;
+                            }
+
+                            .serial_header{
+                            position:absolute;
+                            width:50%;
+                            left: 30%;
+                            height:30px;
+                            background-color: blue;
+                            transform: translate(-50%, -50%);
+                            text-align: center;
+                            }
+
+                            .serial_header_span{
+                            color:white;
+                            font-size: 20px;
+                            }
+
+                            .custom_header{
+                            position:absolute;
+                            left:23%;
+                            transform: translate(-50%, -50%);
+                            top:11%;
+                            }
+
+                            .epp{
+                            position:absolute;
+                            left:23%;
+                            transform: translate(-50%, -50%);
+                            top:36%;
+                            }
+
+                            .left_image_upload{
+                            position: absolute;
+                            left: 19%;
+                            transform: translate(-50%, -50%);
+                            width: 30%;
+                            height: 200px;
+                            }
+
+
+                            .right_image_upload{
+                            position: absolute;
+                            right : 19%;
+                            transform: translate(-50%, -50%);
+                            width: 30%;
+                            height: 200px;
+                            }
+
+                            .middle_image_upload{
+                            position: absolute;
+                            left: 35%;
+                            transform: translate(-50%, -50%);
+                            width: 30%;
+                            height: 200px;
+                            }
+
+                            .second_custom_footer{
+                            position:absolute;
+                            bottom: 7%;
+                            left: 15%;
+                            width: 70%;
+                            transform: translate(-50%, -50%);
+                            }
+
+                            .third_container {
+                            position: relative;
+                            text-align: center;
+                            }
+
+                            * {
+                            box-sizing: border-box;
+                            }
+
+                            .column {
+                            float: left;
+                            width: 50%;
+                            padding: 5px;
+                            }
+
+                            
+                            .row::after {
+                            content: "";
+                            clear: both;
+                            display: table;
+                            }
+                            
+                            * {
+                            box-sizing: border-box;
+                            }
+
+                            .column {
+                            float: left;
+                            width: 50%;
+                            padding: 5px;
+                            }
+
+                            / Clearfix (clear floats) /
+                            .row::after {
+                            content: "";
+                            clear: both;
+                            display: table;
+                            }
+                        </style>
+
+                        <div class="container">
+                            <img class="img img-responsive" src="http://raju-virtualbox:8069/ticl_receiving/static/src/images/Layer2.jpg" style="width:100%;margin-top: 30px;"/>
+                            <div class="parent_serial_section" style="text-align: center;">
+                                <p style="font-size:25px; margin-top:4px;">
+                                    <b>Parent Serial:</b>
+                                    <span t-field="inventory.serial_number"/>
+                                </p>
+                            </div>
+                            
+                                <div class="data_left_section" style="top:42%;margin-left:-34px;font-size: 22px;">
+                                    <u style="font-size: 22px;">Client:</u>
+                                <br/>
+                                <b>
+                                    <span style="font-size: 22px;">Chase</span>
+                                </b>
+                            </div>  
+                            <div class="data_right_section" style="top:42%;font-size: 22px;">
+                                    <u>Unique Number:</u>
+                                <br/>
+                                <b>
+                                    <span t-field="inventory.tel_unique_no"/>
+                                </b>
+                            </div>
+                            <div class="data_left_section" style="top:49%;margin-left:-34px;font-size: 22px;">
+                                    <u>ATM Serial Number:</u>
+                                 <br/>
+                                       
+                                    <b>
+                                        <span t-field="inventory.serial_number"/>
+                                    </b>       
+                            </div>
+                           
+                                <div class="data_right_section" style="top:49%;font-size: 22px;">
+                                        <u>*EPP Serial Number:</u>
+                                    <br/>
+                                    <b>
+                                        <span t-field="inventory.epp_serial_num"/>
+                                    </b>
+                                </div>
+                                <div class="data_left_section" style="top:56%;margin-left:-34px;font-size: 22px;">
+                                        <u>Manufacturer:</u>
+                                    <br/>
+                                    <b>
+                                        <span t-field="inventory.manufacturer_id.name"/>
+                                    </b>
+                                </div>
+                                <div class="data_right_section" style="top:56%;font-size: 22px;">
+                                        <u>*EPP Manufacturer:</u>
+                                    <br/>
+                                    <b>
+                                        <span t-field="inventory.epp_manufacturer"/>
+                                    </b>
+                                </div>
+                                <div class="data_left_section" style="top:63%;margin-left:-34px;font-size: 22px;">
+                                        <u>Model:</u>
+                                    <br/>
+                                    <b>
+                                        <span t-field="inventory.product_id.name"/>
+                                    </b>
+                                </div>
+
+                                <div class="data_right_section" style="top:63%;font-size: 22px;">
+                                        <u>Date Received:</u>
+                                    <br/>
+                                    <b>
+                                        <span t-field="inventory.received_date" t-field-options="{&quot;format&quot;: &quot;d MMMM y&quot;}" t-options="{&quot;widget&quot;: &quot;date&quot;}"/>
+                                    </b>
+                                </div>
+                                <div class="data_left_section" style="top:70%;margin-left:-35px;font-size: 22px;">
+                                        <u>Hard Disk Serial Number:</u>
+                                    <br/>
+                                    <b>
+                                        <span t-field="inventory.hdd_serial_num"/>
+                                    </b>
+                                </div>
+                                <div class="data_right_section" style="top:70%;font-size: 20px;">
+                                        <u>Date Processed:</u>
+                                    <br/>
+                                    <b>
+                                        <span t-field="inventory.processed_date" t-field-options="{&quot;format&quot;: &quot;d MMMM y&quot;}" t-options="{&quot;widget&quot;: &quot;date&quot;}"/>
+                                    </b>
+                                </div>
+                                <div class="data_left_section" style="top:77%;margin-left:-35px;font-size: 22px;">
+                                        <u>Hard Disk Manufacturer:</u>
+                                    <br/>
+                                    <b>
+                                        <span t-field="inventory.hdd_manufacturer"/>
+                                    </b>
+                                </div>
+                                <div class="data_right_section" style="top:77%;font-size: 22px;">
+                                        <u>Processed By:</u>
+                                    <br/>
+                                    <b>
+                                        <i t-field="inventory.cod_employee_id.name"/>
+                                    </b>
+                                </div>
+                           
+                            <div class="data_right_section" style="top:83%;font-size: 16px;">
+                                Submitted:
+                                
+                                 <span t-field="inventory.received_date" t-field-options="{&quot;format&quot;: &quot;d MMMM y&quot;}" t-options="{&quot;widget&quot;: &quot;date&quot;}"/>
+                            </div>
+                        
+                            <div class="custom_footer" style="text-align: center;">
+                                <span style="text-align:center;font-size:18px;">
+                                    <b>Tellerex, Inc</b>
+                                </span>
+                                <br/>
+                                <span style="font-size:15px;">1765, West Oak Parkaway * Suite 100 * Marietta, GA 30062 *
+                                    888.395.0170
+                                </span>
+                                <br/>
+                                <span style="font-size:15px;">www.tellerex.com *Info@tellerex.com</span>
+                            </div>
+                        </div>
+                        <p style="page-break-before:always;"/>
+                        <div style="    background-color: lightgray;     border-bottom: 1px solid black;    height: 78px;     margin-top: 2px; ">    
+                            <img src="http://raju-virtualbox:8069/ticl_receiving/static/src/images/Tellerex.png" style="width: 8%; margin-top: 1%;float: right;margin-bottom: 3%;margin-right: 2%;"/>
+
+                        </div>
+                        <div class="row" style="width:90%;margin-left:2px;">
+                            <br/>
+                            <br/>
+                            <div class="serial_header">
+                                <span class="serial_header_span">Parent Serial--</span>
+                                <span class="serial_header_span" t-field="inventory.serial_number"/>
+                                <b class="serial_header_span">Images</b>
+                            </div>
+                            <br/>
+                            <br/>
+
+                            <div class="row" style="top: 18%;margin-right: 5px;margin-left: 65px;width:100%;">
+    <!-- <div class="container" style="width:100%; display: -webkit-inline-box;">-->
+       <div class="row">
+    <div class="column" style="width:50%;">
+    <img t-att-src="'data:image/*;base64,%s' % to_text(inventory.attachment_ids[0].datas)" style="width:94%;margin: 10px;height:335px;"/>
+    <br/>
+    </div>
+    <div class="column" style="width:50%;">
+    <img t-att-src="'data:image/*;base64,%s' % to_text(inventory.attachment_ids[1].datas)" style="width:94%;margin: 10px;height:335px;"/>
+    <br/>
+    </div>
+    <!-- </div>-->
+    </div>
+
+
+    <div class="row">
+
+    <div class="column" style="width:50%;">
+    <img t-att-src="'data:image/*;base64,%s' % to_text(inventory.attachment_ids[2].datas)" style="width:94%;margin: 10px;height:335px;"/>
+    <br/>
+    </div>
+    <div class="column" style="width:50%;">
+    <img t-att-src="'data:image/*;base64,%s' % to_text(inventory.attachment_ids[3].datas)" style="width:94%;margin: 10px;height:335px;"/>
+    <br/>
+    </div>
+    </div>
+
+
+    <div class="row">
+
+    <div class="column" style="width:50%;">
+    <img t-att-src="'data:image/*;base64,%s' % to_text(inventory.attachment_ids[4].datas)" style="width:94%;margin: 10px;height:335px;"/>
+    </div>
+
+    </div>
+    <p style="page-break-before:always;"/>
+    <br/>
+    <div style=" background-color: lightgray; border-bottom: 1px solid black; height: 78px; margin-top: -20px; ">
+    <img src="http://raju-virtualbox:8069/ticl_receiving/static/src/images/Tellerex.png" style=" width: 8%; margin-top: 1%; float: right; margin-bottom: 3%; margin-right: 2%;"/>
+
+    </div>
+    <br/>
+    <br/>
+
+
+    <div class="row">
+
+    <div class="column" style="width:50%;">
+    <img t-att-src="'data:image/*;base64,%s' % to_text(inventory.attachment_ids_epp[0].datas)" style="width:94%;margin: 10px;height:335px;"/>
+    <br/>
+    </div>
+    <div class="column" style="width:50%;">
+    <img t-att-src="'data:image/*;base64,%s' % to_text(inventory.attachment_ids_epp[1].datas)" style="width:94%;margin: 10px;height:335px;"/>
+    <br/>
+    </div>
+    </div>
+    <div class="row">
+
+    <div class="column" style="width:50%;">
+    <img t-att-src="'data:image/*;base64,%s' % to_text(inventory.attachment_ids_hdd[0].datas)" style="width:94%;margin: 10px;height:335px;"/>
+    <br/>
+    </div>
+    <div class="column" style="width:50%;">
+    <img t-att-src="'data:image/*;base64,%s' % to_text(inventory.attachment_ids_hdd[1].datas)" style="width:94%;margin: 10px;height:335px;"/>
+    <br/>
+    </div>
+    </div>
+
+    </div>
+
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+
+    </template>
+
+
+</odoo>

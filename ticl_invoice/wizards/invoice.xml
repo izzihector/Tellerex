@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="form_monthly_fright_invoices" model="ir.ui.view">
+        <field name="name">Generate Service/Freight Invoice</field>
+        <field name="model">monthly.fright.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Invoice Option">
+                <group col="4">
+                    <field name="invoice_type"/>
+                    <field name="months" attrs="{'invisible': 
+                        [('invoice_type', '=', 'fright')]}"/>
+                </group>
+                <footer>
+                    <button name="generate_invoice" string="Generate Invoice" type="object" default_focus="1" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_monthly_fright_invoices" model="ir.actions.act_window">
+        <field name="name">Generate Service/Freight Invoice</field>
+        <field name="res_model">monthly.fright.invoice</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="form_monthly_fright_invoices"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_monthly_fright_invoices"
+        name="Generate Service/Freight Invoice"
+        sequence="1"
+        action="action_monthly_fright_invoices"
+        parent="ticl_invoice.menu_finance_service"/>
+
+</odoo>

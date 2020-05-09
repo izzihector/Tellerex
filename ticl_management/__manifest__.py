@@ -28,6 +28,7 @@
         'views/tel_serial_number_view.xml',
         'security/hide_db_link.xml',
 	    'views/shipping_carrier_view.xml',
+        'views/rigger_address_view.xml',
         'views/template.xml',
         'views/ticl_epp_manufacturer_view.xml',
         'views/ticl_hdd_manufacturer_view.xml',

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_receiving">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="row justify-content-end mb16">
+                                <div class="col-4" name="right_box">
+                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;" alt="Barcode"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span><strong></strong></span>         
+                                </div>
+                                <div class="col-6">
+                                    <span><strong>Origin Address:</strong>
+
+                                    <span t-field="o.sending_location_id.name"/><br/>
+                                    <span t-field="o.sending_location_id.street"/>,
+                                    <span t-field="o.sending_location_id.street2"/><br/>
+                                    <span t-field="o.sending_location_id.city"/>,
+                                    <span t-field="o.sending_location_id.state.code"/>,
+                                    <span t-field="o.sending_location_id.zip"/><br/>
+                                    <span t-field="o.sending_location_id.country_id.name"/><br/>
+
+                                    </span>
+                                </div>
+                            </div>
+                               
+             
+                            <br/>
+                            <h1 t-field="o.name" class="mt0 float-left"/>
+                            <div class="clearfix"/>
+                            <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th t-if="o.name"><strong>Order</strong></th>
+                                    <th><strong>State</strong></th>
+                                    <th name="td_sched_date_h" width="20%"><strong>Delivery Date</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td t-if="o.name">
+                                        <span t-field="o.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.state"/>
+                                    </td>
+                                    <td name="td_sched_date" width="20%">
+                                        <span t-field="o.delivery_date"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <table class="table table-sm" t-if="o.tel_receipt_log_id.ticl_receipt_lines">
+                               <!--  <t t-set="has_barcode" t-value="any([ticl_receipt_summary_lines.product_id and ticl_receipt_summary_lines.product_id.sudo().barcode])"/> -->
+                              <!--   <t t-set="has_serial_number" t-value="o.ticl_receipt_summary_lines.filtered(lambda ml: ml.lot_id or ml.lot_name)" groups="stock.group_production_lot"/> -->
+                                <thead>
+                                    <tr>
+                                        <th><strong>Product</strong></th>
+                                        <th><strong>Quantity</strong></th>
+                                        <th width="20%" align="left">
+                                        <strong>From</strong>
+                                        </th>
+                                      <!--      <th t-if="o.picking_type_id.code != 'outgoing'"><strong>To</strong></th> -->
+                                        <!-- <th width="15%" class="text-center" t-if="has_serial_number">
+                                           <strong>Lot/Serial Number</strong>
+                                        </th>
+                                        <th width="15%" class="text-center" t-if="has_barcode"><strong>
+                                            Product Barcode</strong>
+                                        </th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                     <t t-foreach="o.tel_receipt_log_id.ticl_receipt_lines.sorted(key=lambda m: m.product_id.id)" t-as="move">
+                                        <!-- <t t-foreach="move.ticl_receipt_summary_lines.sorted(key=lambda ml: ml.location_id.id)" t-as="ml"> -->
+                                            <tr>
+                                                <td>
+                                                    <span t-field="move.product_id.display_name"/><br/>
+                                                    
+                                                </td>
+                                                 <td>
+                                                    <span t-field="move.count_number"/><br/>   
+                                                </td>
+                                                 <td>
+                                                <span t-field="move.ticl_receipt_id.sending_location_id.name"/>
+                                                <br/>
+                                                    
+                                                </td>
+                                            </tr>
+                                        <!-- </t> -->
+                                    </t>
+                        
+                                  </tbody>
+                            </table>
+                        </div>
+                        </t>
+                    </t>
+                </t>
+            </template>
+
+
+                        
+
+
+        <report
+            string="Receiving Picking Operations"
+            id="ticl_action_report_receipt"
+            model="ticl.receipt.log.summary"
+            report_type="qweb-pdf"
+            name="ticl_receiving.report_receiving"
+          
+        />
+    </data>
+</odoo>

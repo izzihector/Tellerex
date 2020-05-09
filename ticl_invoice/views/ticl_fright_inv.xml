@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+    <!-- Form For Service Charges In Configuration  -->
+       <record id="ticl_fright_service_invoice_form_view" model="ir.ui.view">
+            <field name="name">ticl.fright.service.invoice.form</field>
+            <field name="model">ticl.fright.service.line</field>
+            <field name="arch" type="xml">
+                <form string="fright Invoice" create="false" class="o_sale_order">
+                 <sheet> 
+                    <group> 
+	                    <group>
+	                        <field name="ven_cmp_name"/>
+							<field name="vendor_number"/>
+							<field name="invoice_number"/>
+							<field name="state"/>
+							<field name="zip"/>
+							<field name="vendor_description"/>
+							<field name="invoice_type"/>
+							<field name="unit_price"/>
+	                    </group>
+	                    <group>
+								<field name="funding_doc_type"/>
+								<field name="funding_doc_number"/>
+								<field name="ticl_project_id"/>
+								<field name="tid"/>
+								<field name="document_date"/>
+								<field name="fright_price"/>
+								<field name="approved_by"/>
+								<field name="approved_date"/>
+								<field name="invoice_status" />
+	                    </group>
+                    </group>       
+                </sheet>
+                </form>
+            </field>
+        </record>
+        
+    <!-- Tree For Service Charges In Configuration  -->
+        <record id="ticl_fright_service_invoice_tree_view" model="ir.ui.view">
+            <field name="name">ticl.fright.service.charge.tree</field>
+            <field name="model">ticl.fright.service.line</field>
+            <field name="arch" type="xml">
+                <tree string="Fright Service Invoice" create="false">
+                    <field name="ven_cmp_name" />
+                    <field name="document_date"/>
+                    <field name="vendor_description" />
+                    <field name="invoice_number"/>
+                    <field name="invoice_type"/>
+                    <field name="invoice_status" />
+                    <field name="fright_price"/>                   
+                </tree>
+            </field>
+        </record>
+
+    <!-- Action For Service invoice In Configuration  -->
+        <record id="action_ticl_fright_service_invoice" model="ir.actions.act_window">
+            <field name="name">Fright Service Invoice Details</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.fright.service.line</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+<!-- Menu For Service Charges In Configuration  -->
+        <menuitem id="ticl_fright_service_invoice" name="Freight Service Invoice Lines" 
+            parent="ticl_invoice.menu_finance_service" 
+            action="action_ticl_fright_service_invoice" sequence="20"/>
+
+		
+    </data>
+</odoo>

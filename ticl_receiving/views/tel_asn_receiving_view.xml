@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+       <record id="tel_asn_receiving_form_view" model="ir.ui.view">
+            <field name="name">tel.asn.receiving.form</field>
+            <field name="model">tel.asn.receiving</field>
+            <field name="arch" type="xml">
+                <form string="ASN Receiving" class="o_sale_order">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>            
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sending_location_id"/>
+                        </group>
+                        <group>
+                           <field name="asn_received_date"/>
+                           <field name="bill_of_lading_number"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="ASN Receiving Line">
+                            <field name="asn_order_line">
+                                <tree string="Part Order" editable="bottom">
+                                    <field name="product_id" string="Model Name"/>
+                                    <field name="model_serial_number"/>
+                                    <field name="count_number"/>
+                                     <field name="funding_doc_type"/>
+                                     <field name="funding_doc_number"/>
+                                     <field name="ticl_project_id"/>
+                                    <field name="manufacturer_id" string="Manufacturer"/>
+                                    <field name="condition_id" options="{'no_create': True, 
+                                    'no_create_edit':True, 'no_open':True}"/>
+                                    <field name="tel_type" options="{'no_create': True, 
+                                    'no_create_edit':True, 'no_open':True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>    
+                </form>
+            </field>
+        </record>
+        
+
+        <record id="tel_asn_receiving_tree_view" model="ir.ui.view">
+            <field name="name">tel.asn.receiving.tree</field>
+            <field name="model">tel.asn.receiving</field>
+            <field name="arch" type="xml">
+                <tree string="Receiving ANS">
+                    <field name="name"/>
+                    <field name="asn_received_date"/>
+                    <field name="bill_of_lading_number"/>
+                    <field name="sending_location_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_tel_asn_receiving" model="ir.actions.act_window">
+            <field name="name">Receiving ASN</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tel.asn.receiving</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New ASN Receiving Shipment.
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Receiving Shipment" id="receiving_asn_log_menu" icon="fa-car"/>
+        <menuitem id="receiving_asn_log_sub_menu" name="Receiving Shipment" 
+            parent="receiving_asn_log_menu" sequence="1"/>
+        <menuitem id="tell_asn_receiving_log" name="Receiving ASN" 
+            parent="receiving_asn_log_sub_menu" action="action_tel_asn_receiving" sequence="2"/>
+
+
+    </data>
+</odoo>

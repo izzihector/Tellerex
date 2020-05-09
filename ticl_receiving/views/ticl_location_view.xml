@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Stock Picking  -->
+        <record id="stock_location_form_view_inherit" model="ir.ui.view">
+            <field name="name">stock.location.form.view.inh</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='usage']" position="after">
+                    <field name="warehouse_id" string="Warehouse"/>
+                    <field name="warehouse_key"/>
+                    <field name="is_location" string="Is Location"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

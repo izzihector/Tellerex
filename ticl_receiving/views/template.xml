@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="tel_serial_number_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/ticl_receiving/static/js/tel_button.js"/>
+
+                <!-- <script type="text/javascript" src="/ticl_receiving/static/js/atm_processing.js"/>
+                <script type="text/javascript" src="/ticl_receiving/static/js/list_button_tender.js"/>
+                <link rel="stylesheet" href="/ticl_receiving/static/css/tender_import.css"/>
+ -->
+
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
+
+
+        <!-- <?xml version="1.0" encoding="utf-8" ?>
+        <odoo>
+            <data>
+                <template id="assets_backend" name="tel_serial_number_assets" inherit_id="web.assets_backend">
+                    <xpath expr="." position="inside">
+                        <script type="text/javascript" src="/ticl_receiving/static/js/tel_serial_handler.js"/>
+                    </xpath>
+                </template>
+            </data>
+        </odoo> -->

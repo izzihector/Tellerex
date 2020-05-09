@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+    <!-- Form For Service Charges In Configuration  -->
+       <record id="ticl_monthly_service_invoice_form_view" model="ir.ui.view">
+            <field name="name">ticl.monthly.service.invoice.form</field>
+            <field name="model">ticl.monthly.service.line</field>
+            <field name="arch" type="xml">
+                <form string="Service Invoice" create="false" class="o_sale_order">
+                 <sheet> 
+                    <group> 
+	                    <group>
+	                        <field name="warehouse_id"/>
+							<field name="product_id"/>
+							<field name="manufacturer_id"/>
+							<field name="serial_number"/>
+							<field name="quantity"/>
+							<field name="condition_id"/>
+							<!-- <field name="service_location"/> -->
+							<field name="tel_type"/>
+							<field name="funding_doc_type"/>
+							<field name="funding_doc_number"/>
+							<field name="ticl_project_id"/>
+							<field name="xl_items"/>
+							<field name="repalletize"/>
+                            <field name="repalletize_charge"/>
+							<field name="tel_cod"/>
+							<field name="tid"/>
+	                    </group>
+	                    <group>
+								<field name="document_date"/>
+								<field name="ven_cmp_name"/>
+								<field name="vendor_number"/>
+								<field name="invoice_number"/>
+                                <field name="receipt_id" attrs="{'invisible': 
+                        [('ticl_ship_id', '!=', False)]}"/>
+                                <field name="ticl_ship_id" attrs="{'invisible': 
+                        [('receipt_id', '!=', False)]}"/>
+								<!-- <field name="ref_invoice"/>
+								<field name="formula"/> -->
+								<field name="state"/>
+								<field name="zip"/>
+								<field name="vendor_description"/>
+								<field name="invoice_type"/>
+								<field name="service_date"/>
+								<!-- <field name="billed_quantity"/> -->
+								<field name="unit_price"/>
+								<field name="summary_invoice"/>
+								<field name="payment"/>
+                                <!-- <field name="total_charge" /> -->
+                                <field name="gl" />
+                                <field name="cost_center" />
+	                    </group>
+                    </group>       
+                </sheet>
+                </form>
+            </field>
+        </record>
+        
+    <!-- Tree For Service Charges In Configuration  -->
+        <record id="ticl_monthly_service_invoice_tree_view" model="ir.ui.view">
+            <field name="name">ticl.monthly.service.charge.tree</field>
+            <field name="model">ticl.monthly.service.line</field>
+            <field name="arch" type="xml">
+                <tree string="Service Invoice" create="false">
+                    <!-- <field name="receipt_id" attrs="{'invisible': 
+                        [('ticl_ship_id', '!=', False)]}"/>
+                    <field name="ticl_ship_id" attrs="{'invisible': 
+                        [('receipt_id', '!=', False)]}"/> -->
+                	<field name="vendor_description"/>
+                    <field name="product_id" />
+                    <field name="manufacturer_id" />
+                    <field name="serial_number"/>
+                    <field name="invoice_number"/>
+                    <field name="invoice_type"/>
+                    <field name="service_date" />
+                    <field name="quantity" />
+                    <!-- <field name="billed_quantity"/> -->
+                    <field name="warehouse_id"/>
+                    <field name="unit_price"/>
+                    <!-- <field name="total_charge" />  -->                
+                </tree>
+            </field>
+        </record>
+
+    <!-- Action For Service invoice In Configuration  -->
+        <record id="action_ticl_monthly_service_invoice" model="ir.actions.act_window">
+            <field name="name">Monthly Service Invoice Details</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.monthly.service.line</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Monthly Service Charges.
+                </p>
+            </field>
+        </record>
+
+<!-- Menu For Service Charges In Configuration  -->
+        <menuitem id="ticl_monthly_service_invoice" name="Service Invoice Lines"
+            parent="ticl_invoice.menu_finance_service"
+            action="action_ticl_monthly_service_invoice" sequence="20"/>
+
+		
+    </data>
+</odoo>

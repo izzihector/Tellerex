@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>  
+        <!-- ATM Form View Process-->
+        <record id="ticl_receipt_log_summary_form_view_placard" model="ir.ui.view">
+            <field name="name">ticl.receipt.log.summary.line.form</field>
+            <field name="model">ticl.receipt.log.summary.line</field>
+            <field name="arch" type="xml">
+                <form create="false" delete="false">
+                   <header>
+                        <button name="atm_process_done" class="oe_highlight"
+                        string="Move to Inventory" type="object"
+                        attrs="{'invisible': ['|',('state', 'not in', ('wrapped')) ,('hide_mv_inv_button', '=', True)]}"/>
+                        
+                        <button name="download_cod" class="oe_highlight"
+                        string="Generate COD" type="object"
+                        attrs="{'invisible': ['&amp;', ('state', 'not in', ('done')), ('hide_mv_inv_button', '!=', True)]}"/>
+
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                     <sheet>
+                    <group>
+                    <group>
+                        <field name="atm_cleaned" 
+                            attrs="{'required': [('atm_cleaned', '=', False)], 
+                            'readonly': [('state','!=','cleaned')]}"/>
+                        <field name="atm_photographed"
+                            attrs="{'readonly': [('state', '!=', 'photographed')]}"/>
+                        <field name="atm_data_destroyed" 
+                            attrs="{'readonly': [('state', '!=', 'destroyed')]}"/>
+                        <field name="atm_wrapped" 
+                            attrs="{'readonly': [('state', '!=', 'wrapped')]}"/>
+                        <field name="hide_mv_inv_button" invisible="1"/>
+                    </group>
+                     <group>
+                        <field name="processed_date"
+                            attrs="{'invisible': [('state', '!=', 'done')]}"
+                            readonly="1" widget="date"/>
+                        <field name="received_date" readonly="1" widget="date"/>
+                        <field name="ticl_receipt_summary_id" readonly="1" 
+                            string="Receipt Number"/> 
+                        <field name="product_id" readonly="1"/>
+                        <field name="serial_number" readonly="1"/>
+                        <field name="manufacturer_id" readonly="1"/>
+                        <field name="condition_id" string="Condition" required="1"
+                         attrs="{'readonly': [('custom_hide_condition', '=', True)]}"
+                         options="{'no_create': True, 'no_create_edit':True, 'no_open':True}"/>
+                        <field name="custom_hide_condition" invisible="1"/>
+                        <field name="tel_type" readonly="1"/>             
+                       <field name="cod_employee_id" attrs="{'required': [('state', '!=', 'cleaned')]}" options="{'no_create': True, 'no_create_edit':True, 'no_open':True}"/>
+                       <field name="cod_charges"/>
+                       <field name="cod_comments"/>
+                    </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Note" invisible="1">
+                           <group>
+                                <field name="tel_note"/>
+                            </group>                   
+                        </page>
+                    </notebook>                
+                </sheet>
+ 		<!-- <div class="oe_chatter" style="display:none !important;">
+                <field name="message_follower_ids" widget="mail_followers" />
+                <field name="message_ids" widget="mail_thread" />
+            </div> -->
+                </form>
+            </field>
+        </record>
+
+     <record id="ticl_receipt_log_summary_tree_view_placard" model="ir.ui.view">
+            <field name="name">ticl.receipt.log.summary.line.tree</field>
+            <field name="model">ticl.receipt.log.summary.line</field>
+            <field name="arch" type="xml">
+                <tree create="false" import="false">
+                    <field name="ticl_receipt_summary_id" string="Receipt ID"/>
+                    <field name="tel_unique_no" readonly="1"/>
+                    <field name="tel_type"/>
+                    <field name="manufacturer_id"/>
+                    <field name="product_id" string="Model"/>
+                    <field name="serial_number"/>          
+                    <field name="condition_id"/>             
+                    <field name="received_date" widget="date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="ticl_action_receipt_log_summary_placards" model="ir.actions.act_window">
+            <field name="name">Placards(P)</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.receipt.log.summary.line</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_id" ref="ticl_receipt_log_summary_tree_view_placard"/>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('tel_type','=','ATM')]</field>
+            <field name="target">current</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Receiving Log Shipment Summary Placard.
+                </p>
+            </field>
+        </record>
+
+
+
+
+
+
+
+
+
+        <!-- Qurantine Form View -->
+<!--        <record id="ticl_receipt_log_summary_form_view_quarantine" model="ir.ui.view">-->
+<!--            <field name="name">ticl.receipt.log.summary.line.form</field>-->
+<!--            <field name="model">ticl.receipt.log.summary.line</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form create="false" delete="false">-->
+<!--                    <header>-->
+<!--                        <button name="confirm_shipment_order" class="oe_highlight" attrs="{'invisible': ['|', ('move_to_inv','==','y'),('hide_mv_inv_button', '=', True)]}"-->
+<!--                        string="Move to Inventory" type="object" groups="stock.group_stock_manager,stock.group_stock_user"/>-->
+<!--                    </header>-->
+<!--                     <sheet>-->
+<!--                    <group>-->
+
+<!--                     <group>-->
+<!--                        <field name="ticl_receipt_summary_id" readonly="1"/>-->
+<!--                         <field name="processed_date"-->
+<!--                            attrs="{'invisible': [('state', '!=', 'done')]}"-->
+<!--                            readonly="1" widget="date"/>-->
+<!--                         <field name="received_date" readonly="1" widget="date"/>-->
+<!--                          <field name="delivery_date" widget="date"/>-->
+<!--                          <field name="sending_location_id" readonly="1"/>-->
+<!--                          <field name="receiving_location_id" readonly="1"/>-->
+<!--                          <field name="warehouse_id" />-->
+<!--                          <field name="bill_of_lading_number" />-->
+<!--                          <field name="accepted_date" widget="date"/>-->
+<!--                          <field name="shipping_carrier_id" />-->
+<!--                          <field name="hr_employee_id" readonly="1"/>-->
+<!--                          <field name="move_to_inv" invisible="1"/>-->
+<!--                          <field name="hide_mv_inv_button" invisible="1"/>-->
+
+<!--                    </group>-->
+<!--                        <group>-->
+<!--                            <field name="condition_id" required="1"/>-->
+<!--                            <field name="state" invisible="1"/>-->
+<!--                            <field name="status" readonly="1"/>-->
+<!--                        <field name="product_id" readonly="1"/>-->
+<!--                        <field name="serial_number" readonly="1"/>-->
+<!--                        <field name="manufacturer_id" readonly="1"/>-->
+
+<!--                        <field name="tel_type" readonly="1"/>-->
+<!--                    </group>-->
+<!--                    </group>-->
+
+<!--                    <notebook>-->
+<!--                        <page string="Note" invisible="1">-->
+<!--                           <group>-->
+<!--                                <field name="tel_note"/>-->
+<!--                            </group>-->
+<!--                        </page>-->
+<!--                    </notebook>-->
+
+<!--                </sheet>-->
+<!--                <style>-->
+<!--                .o_dropdown{-->
+<!--                    display: none !important;-->
+<!--                }-->
+<!--                 </style>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+<!--         <record id="ticl_receipt_log_summary_tree_view_quarantine" model="ir.ui.view">-->
+<!--            <field name="name">ticl.receipt.log.summary.line.tree</field>-->
+<!--            <field name="model">ticl.receipt.log.summary.line</field>-->
+<!--            <field name="view_ids" ref="ticl_receipt_log_summary_form_view_quarantine"></field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree create="false" delete="false" import="false">-->
+<!--		            <field name="ticl_receipt_summary_id" string="Receipt ID"/>-->
+<!--                    <field name="tel_unique_no" readonly="1"/>-->
+<!--                    <field name="tel_type"/>-->
+<!--                    <field name="manufacturer_id"/>-->
+<!--                    <field name="product_id" string="Model"/>-->
+<!--                    <field name="serial_number"/>          -->
+<!--                    <field name="condition_id"/>             -->
+<!--                    <field name="received_date" widget="date"/>-->
+<!--		            <field name="state" invisible="1"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record id="ticl_action_receipt_log_summary_quarantines" model="ir.actions.act_window">-->
+<!--            <field name="name">Quarantine Items</field>-->
+<!--            <field name="res_model">ticl.receipt.log.summary.line</field>-->
+<!--            <field name="binding_view_types">form</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--              <field name="view_ids"-->
+<!--                   eval="[(5, 0, 0),-->
+<!--                          (0, 0, {'view_mode': 'tree', 'view_id': ref('ticl_receipt_log_summary_tree_view_quarantine')}),-->
+<!--                          (0, 0, {'view_mode': 'form', 'view_id': ref('ticl_receipt_log_summary_form_view_quarantine')})]"/>-->
+<!--        </record>-->
+
+
+
+    <report id="print_cod"  model="ticl.receipt.log.summary.line"  string="Generate COD"  
+    name="ticl_receiving.data_destruction_report_card"
+    file="ticl_receiving.data_destruction_report_card" report_type="qweb-pdf"
+    menu="False"/>
+
+    <record id="ticl_receiving.print_cod" model="ir.actions.report">
+    <field name="paperformat_id" ref="ticl_receiving.cod_form_format" />
+    </record>
+
+
+ </data>
+</odoo>
+   
+

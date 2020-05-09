@@ -26,7 +26,6 @@
                 <xpath expr="//field[@name='location_dest_id']" position="after"> 
                     <field name="receive_date" invisible="1"/>
                     <field name="recycled_date" invisible="1"/>
-                    <field name="shipped_date" invisible="1"/>
                     <field name="condition_id" invisible="1"/>
                     <field name="manufacturer_id" invisible="1"/>
                     <field name="warehouse_id" invisible="1"/>
@@ -58,11 +57,7 @@
                     <field name="count_number" invisible="1"/>
                     <field name="receive_date"/>
                     <field name="recycled_date"/>
-                    <field name="fund_doc_type"/>
-                    <field name="fund_doc_number"/>
-                    <field name="ticl_project_id"/>
                     <field name="warehouse_id"/>
-                    <field name="shipped_date"/>
                     <field name="warehouse_id" string="Location"/>
                     <field name="condition_id"/>
         		   <field name="user_id"/>
