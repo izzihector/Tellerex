@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+        <record id="module_ticl_shipment_category" model="ir.module.category">
+            <field name="name">Ticl Shipments</field>
+            <field name="sequence">19</field>
+        </record>
+        <record id="ticl_shipment_group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_ticl_shipment_category"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <record id="ticl_shipment_external_user" model="res.groups">
+            <field name="name">External User</field>
+            <field name="category_id" ref="module_ticl_shipment_category"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <record id="ticl_shipment_group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('ticl_shipment_group_user'))]"/>
+            <field name="category_id" ref="module_ticl_shipment_category"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+
+    </data>
+</odoo>

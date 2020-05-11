@@ -1,0 +1,60 @@
+<templates id="template" xml:space="preserve">
+	<t t-extend="ListView.buttons">
+		<t t-jquery="button.o_list_button_save" t-operation="after">
+		
+	           <t t-if="widget.modelName == 'stock.move'">
+		             <button type="button" class="btn btn-secondary o_button_import_ship">
+			            Ship
+			        </button>
+			        <button type="button" class="btn btn-secondary o_button_scrap">
+			            Scrap
+			        </button>
+
+			        <!-- <button t-if='widget and widget.importEnabled' type="button" class="btn btn-secondary o_button_import">
+			            Import
+			        </button> -->
+	         </t>
+	     </t>
+	 </t>
+	 <div t-name="ShipDialog" class="o_export">
+    	<table class="table" id="shiplog">
+    		<thead>
+			    <tr>
+			      <th scope="col">Type</th>
+			      <th scope="col">Model</th>
+			      <th scope="col">Manufacturer</th>
+			      <th scope="col">Serial Number</th>
+			      <th scope="col">Condition</th>
+			      <th scope="col">XL</th>
+			      <th scope="col">Unique No.</th>
+			      <th scope="col"></th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  </tbody>
+			   <tfoot style="position:absolute;bottom:0">
+			  		<tr>
+			  			<td style="border:none" colspan="8">
+			  				Would you like to add above inventory items to the Existing Shipment or New Shipment?
+			  			</td>
+			  		</tr>
+			  </tfoot>
+    	</table>
+    	
+    	<div id="ship_data" style="display:none;">
+    		<span id="ship_message"></span>
+    		<table id="tbl">
+    			<tr>
+    				<td id="select_ss">
+    				</td>
+    				<td>
+    					<button type="button" class="btn o_button_ship_continue">
+				            Continue
+				        </button>
+    				</td>
+    			</tr>
+    		</table>
+    	</div>
+    	<style>.close{display:none !important;}</style>
+	</div>
+</templates>

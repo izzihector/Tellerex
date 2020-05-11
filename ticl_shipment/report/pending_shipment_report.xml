@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="custom_layout_background">
+
+            <div class="header">
+                <div class="row">
+                    <div class="col-6" style="font-family:'Calibri'; sans-serif;font-weight: bold;">
+                        <img class="img img-responsive" src="/ticl_shipment/static/src/img/CHASE.jpg" 
+                            style="padding-top:7px;padding-left:60px;"/>        
+                    </div>
+                    <div class="col-6">
+                        <h1 style="margin-left:100px; padding-top:45px; font-weight:bold">Pending Shipments</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-call="web.address_layout"/>
+                <t t-raw="0"/>
+            </div>
+
+            <div class="footer o_background_footer" style="visibility: hidden">
+                <div class="text-center">
+                    <ul class="list-inline">
+                        <li t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="company.phone"/></li>
+                        <li t-if="company.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
+                        <li t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
+                        <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    </ul>
+                    <div t-field="company.report_footer"/>
+                    <div t-if="report_type == 'pdf'" class="text-muted">
+                        Page:
+                        <span class="page"/>
+                        of
+                        <span class="topage"/>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="external_custom_layout">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+            <t t-call="ticl_shipment.custom_layout_background"><t t-raw="0"/></t>
+        </template>
+
+       <template id="pending_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs.get_pending_report_values()" t-as="o">
+                    <t t-call="ticl_shipment.external_custom_layout">
+                  
+                        <div class="page"
+                            style="font-family:Calibri; font-size: 18px;">
+
+                           <!--  <div class="row">
+                                <div class="col-6" style="font-family:'Calibri'; sans-serif;font-weight: bold;">
+                                    <img class="img img-responsive" src="/ticl_shipment/static/src/img/CHASE.jpg" 
+                                        style="padding-top:7px;padding-left:60px;"/>        
+                                </div>
+                                <div class="col-6">
+                                    <h1 style="margin-left:100px; padding-top:45px; font-weight:bold">Pending Shipments</h1>
+                                </div>
+                            </div> -->
+
+                            <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="color:grey;"><strong>Shipment ID</strong></th>
+                                    <th style="color:grey;"><strong>Shipping Site</strong></th>
+                                    <th style="color:grey;"><strong>Shipping Date</strong></th>
+                                    <th style="color:grey;"><strong>Carrier</strong></th>
+                                    <th style="color:grey;"><strong>BOL</strong></th>
+                                    <th style="color:grey;"><strong>Total Qty</strong></th>
+                                    <th style="color:grey;"><strong>Shipment Type</strong></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td t-if="o.name">
+                                        <span style="color:red;" t-field="o.name"/>
+                                    </td>
+                                    <td>
+                                        <span style="color:black;" t-field="o.sending_location_id.name"/>
+                                    </td>
+
+                                    <td>
+                                    <span style="color:green;" t-field="o.appointment_date_new"
+                                        t-field-options='{"format": "dd MM yy"}'
+                                        t-options='{"widget": "date"}'/>
+                                    </td>
+                                    <td>
+                                        <span style="color:black;" t-field="o.shipping_carrier_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span style="color:black;" t-field="o.echo_tracking_id"/>
+                                    </td>
+                                    <td>
+                                  
+                                        <span style="color:black;" t-esc= "sum([int(x) for x in o.ticl_ship_lines.mapped('count_number')])"/>
+                               
+                                    
+                                    </td>
+                                    <td>
+                                        <span style="color:black;" t-field="o.shipment_type"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                            <br/>
+
+                            <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="color:grey;"><strong>Destination</strong></th>
+                                    <th style="color:grey;"><strong>Address</strong></th>
+                                    <th style="color:grey;"><strong>Address2</strong></th>
+                                    <th style="color:grey;"><strong>City</strong></th>
+                                    <th style="color:grey;"><strong>State</strong></th>
+                                    <th style="color:grey;"><strong>Zip</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td t-if="o.name">
+                                        <span style="color:black;" t-field="o.receiving_location_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span style="color:black;" t-field="o.receiving_location_id.street"/>
+                                    </td>
+                                    <td>
+                                        <span style="color:black;" t-field="o.receiving_location_id.street2"/>
+                                    </td>
+                                    <td>
+                                        <span style="color:black;" t-field="o.receiving_location_id.city"/>
+                                    </td>
+                                    <td>
+                                        <span style="color:black;" t-field="o.receiving_location_id.state.code"/>
+                                    </td>
+                                    <td>
+                                        <span style="color:black;" t-field="o.receiving_location_id.zip"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+
+                            <br/>
+                            <br/>
+
+                            <table class="table table-sm" t-if="o.ticl_ship_lines">
+                                <thead>
+                                    <tr>
+                                        <th style="color:grey;"><strong>Manufacturer</strong></th>
+                                        <th style="color:grey;"><strong>Model</strong></th>
+                                        <th style="color:grey;"><strong>Serial #</strong></th>
+                                        <th style="color:grey;"><strong>Quantity</strong></th>
+                                        <th style="color:grey;"><strong>Condition</strong></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <t t-foreach="o.ticl_ship_lines.sorted(key=lambda m: m.product_id.id)" t-as="move">
+                                            <tr>
+                                                <td>
+                                                    <span style="color:black;" t-field="move.manufacturer_id.name"/><br/>                                      
+                                                </td>
+                                                <td>
+                                                    <span style="color:black;" t-field="move.product_id.name"/><br/>
+                                                    
+                                                </td>
+                                                <td>
+                                                    <span style="color:black;" t-field="move.lot_id.name"/><br/>
+                                                    
+                                                </td>
+                                                 <td>
+                                                    <span style="color:black;" t-field="move.count_number"/><br/>   
+                                                </td>
+                                                 <td>
+                                                    <span style="color:black;" t-field="move.ship_stock_move_id.condition_id.name"/><br/>
+                                                </td>                                          
+                                            </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

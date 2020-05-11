@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Draft shipment Flow -->
+       <record id="ticl_shipment_form_view" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.form</field>
+            <field name="model">ticl.shipment.log</field>
+            <field name="arch" type="xml">
+            <form string="Shipment Form" class="o_sale_order" delete="false" duplicate="false">
+                <header>   
+                    <button name="ticl_echo_shipment" class="oe_highlight" 
+                        string="Picked Shipment" type="object"
+                        attrs="{'invisible': ['|',('state', 'in', ('cancel','picked','packed','shipped')),('dropship_state', '=','yes')]}"/>
+
+                    <button name="ticl_echo_rigger_shipment" class="oe_highlight" 
+                        string="Pick Drop Shipment" type="object"
+                        attrs="{'invisible': ['|',('state', 'in', ('cancel','picked','packed','shipped')),('dropship_state', '=','no')]}"/> 
+
+                    <button name="ticl_packed_shipment" class="oe_highlight" 
+                        string="Packed Shipment" type="object"
+                        attrs="{'invisible': ['|',('state', 'in', ('cancel','draft','packed','shipped'))]}"/>
+                
+                    <button name="shipped_shipment_log" class="oe_highlight" 
+                        string="Shipped Shipment" 
+                        type="object" attrs="{'invisible': 
+                        [('state', 'in', ('pending','cancel','draft','picked','shipped'))]}"/>
+
+                    <button name="update_shipment_status" string="Update Echo Status" 
+                    class="oe_highlight" type="object"
+                    attrs="{'invisible': [('echo_call', '=', 'no')]}"/>
+
+
+                    <button name="revert_shipment" class="oe_highlight"
+                                string="Revert Shipment to Draft" type="object"
+                                attrs="{'invisible': [('state', 'not in','cancel')]}"/>
+                       
+                </header>
+                <sheet> 
+                <div>
+                <group> 
+                    <h2>       
+                        <field name="name" class="oe_inline" style="width:70%" 
+                        string="Shipment ID" readonly="1"/>   
+                    </h2>     
+               </group>
+                </div>     
+                <group>
+                    <group>
+                    <field name="state" required="1" style="width: 70%" readonly="1"/>
+                    <field name="dropship_state" required="1" style="width: 70%"/>
+                    <field name="shipment_type" style="width:70%" required="1" 
+                        attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                    <field name="appointment_date" invisible="1" 
+                        style="width: 70%" widget="datetime"/>
+                    <field name="appointment_date_new" required="1" style="width: 70%"/>
+                    <field name="delivery_date" string="Required Deliver By Date" invisible="1" 
+                        style="width: 70%" widget="datetime"/>
+                    <field name="delivery_date_new" string="Required Deliver By Date" 
+                        style="width: 70%"/>
+                    <field name="activity_date_new" style="width: 70%" required="1"/>
+                    <field name="sending_location_id" required="0" style="width:70%" 
+                        options="{'no_create': True,'no_create_edit':True}"
+                        attrs="{'invisible': [('dropship_state', '=','yes')],'readonly': ['|',('state','!=', 'draft'),('is_from_inventory', '=', True)]}"/>
+                    <field name="sending_rigger_id" style="width:70%" attrs="{'invisible': [('dropship_state', '=','no')]}"/>   
+                    <field name="is_from_inventory" invisible="1"/>
+                    <field name="receiving_location_id" required="1" style="width:70%"
+                        options="{'no_create': True,'no_create_edit':True}"
+                         attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                    <field name="hr_employee_id" style="width:70%"
+                        attrs="{'required': [('state','in', 'packed')]}" options="{'no_create': True, 'no_create_edit':True}"/>
+                    <field name="pallet_id" widget="many2many_tags" style="width: 70%"
+                        domain="[('state','!=','in_ship_log')]" options="{'no_create': True, 'no_create_edit':True}"/>
+                    <field name="equipment_date" style="width: 70%" invisible="1"/>
+                    </group>
+                    <group>
+                    <field name="show_bol_carr" invisible="1"/>
+                    <field name="echo_call" required="1" 
+                        attrs="{'readonly':[('state','in', ('picked', 'packed'))]}"/>
+                    <field name="shipping_carrier_name" invisible="1"/>
+                    <field name="shipping_carrier_id"
+                        attrs="{'readonly': [('echo_call','=', 'yes'), 
+                        ('state','in', ('packed'))],'invisible':[('show_bol_carr','=',False)]}"
+                        options="{'no_create': True, 'no_create_edit':True}"/>
+                            
+                    <field name="echo_tracking_id"
+                        attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible':[('show_bol_carr','=',False)]}"/>
+
+                    <field name="shipment_mode"
+                        attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible':[('state','in',('draft','cancel'))]}"/>
+                            
+                    <field name="shipment_status"
+                        attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible': ['|', ('state', 'in',('draft','cancel')), '&amp;', ('echo_call','=', 'no'), ('state', 'in',  ('picked', 'packed', 'shipped'))]}"/>
+                    <field name="estimated_delivery_date"
+                        attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible':[('state','in',('draft','cancel'))]}"/>
+                    <field name="old_name"
+                        attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible':[('state','in',('draft','cancel'))]}"/>
+                    <field name="bill_of_lading_number" string="BOL #" invisible="1"/>
+                    <field name="attachment_ids" widget="many2many_binary" 
+                        colspan="2" string="Upload BOL #" nolabel="0" invisible="1"/>
+                    <field name="pick_up_date" style="width: 100%" invisible="1"/> 
+                    <field name="accepted_date" style="width: 100%" invisible="1"/>
+                    <field name="request_pick_date" invisible="1" widget="datetime"/>
+                    <field name="request_delivery_date" invisible="1" widget="datetime"/>
+                    <field name="tender_stock_move_id" invisible="1"/>
+                    </group>
+                    </group>
+            <notebook>
+                <page string="Shipment Log" name="ticl_ship_lines">
+                <field name="ticl_ship_lines" widget="section_and_note_one2many"
+                    mode="tree,kanban" attrs="{'readonly': [('state', 'in', ('shipped','cancel'))]}">
+                <tree string="Shipment Log" editable="bottom" 
+                    decoration-danger="status_not_inventory == True">
+                    
+                    <field name="tel_type" options="{'no_create': True,
+                        'no_create_edit':True, 'no_open':True}" readonly="1" force_save="1"/>
+                    <field name="type_dup" invisible="1"/>
+                    <field name="manufacturer_id_dup" invisible="1"/>
+                    <field name="manufacturer_id" string="Manufacturer" 
+                        options="{'no_create': True,'no_create_edit':True, 'no_open':True}" 
+                        class="manufacturer" readonly="1" force_save="1"/>
+                    <field name="product_id" string="Model" required="1" 
+                        options="{'no_create': True, 'no_create_edit':True}" domain="[('type','!=','service')]"/>
+
+                    <field name="serial_number" string="Dropship Serial#"
+                        attrs="{'required': [('ticl_checked','=', True)],'readonly':[('ticl_checked', '!=', True)],'column_invisible': [('parent.dropship_state','=','no')]}"/>
+                    <field name="lot_id" string="Serial#" 
+                        attrs="{'required': [('ticl_checked','=', True)],'readonly':[('ticl_checked', '=',False)],
+                        'column_invisible': [('parent.dropship_state','=','yes')]}"
+                        options="{'no_create': True, 'no_create_edit':True}"/>
+
+                    <field name="product_weight" invisible="1"/>
+                    <field name="xl_items" invisible="1"/>
+                    <field name="count_number" default="1" invisible="1"/>
+                    <field name="funding_doc_type" required="1"/>
+                    <field name="funding_doc_number" required="1"/>
+                    <field name="ticl_project_id" required="1"/>
+                    <field name="tid"/>
+                    <field name="common_name"/>
+                    <field name="outbound_charges"/>
+                    <field name="pallet_id_name_visible" readonly="True" invisible="1"/>
+                    <field name="pallet_id_name" string="Pallet ID" invisible="1"/>
+                    <!-- <field name="misc_log_time" invisible="1"/>
+                    <field name="misc_charges" invisible="1"/> -->
+                    <field name="outbound_associated_fees" invisible="1"/>
+                    <field name="service_price" invisible="1"/>                       
+                    <field name="tel_note" placeholder="Comment Here.."/>
+                    <field name="ticl_checked" invisible="1"/>
+                    <field name="ship_stock_move_line_id"/>
+                    <field name="ship_stock_move_id" invisible="1"/>
+                    <field name="hide_cod" invisible="1"/>
+                    <field name="hide_xl_items" invisible="1"/>
+                    <field name="xl_items" attrs="{'invisible':[('hide_xl_items','=',True)]}" 
+                        invisible="1"/>
+                    <field name="condition_id" invisible="1"/>
+                    <field name="tel_cod" invisible="1" />
+                    <field name="tel_unique_no" invisible='1'/>
+                    <field name="shipment_service_charges" invisible="1"/>
+                    <field name="warehouse_id" invisible='1'/>
+                    <field name="state_parent" invisible="1"/>
+                    <field name="status_not_inventory" invisible="1"/>
+                    <button name="ticl_action_show_details" string="Register Username, Time Logs"
+                        attrs="{'invisible':[('state_parent','=',True)]}" type="object"
+                            icon="fa-list" options='{"warn": true}' invisible="1"/>
+                    </tree>
+                    </field>
+                </page> 
+                <page string="Shipment Costs" attrs="{'invisible':[('state','=','draft')]}">
+                  <field name="ticl_payment_lines" mode="tree" widget="section_and_note_one2many">
+                    <tree string="Shipment Costs" editable="bottom">
+                        <field name="name" string="Shipment ID"/>
+                        <field name="ticl_units" />
+                        <field name="payment_rate" />
+                        <field name="payment_amount" />                         
+                    </tree>
+                    </field>
+                </page>
+                         
+                <page string="Note">
+                    <group>
+                        <field name="tel_note" placeholder="Please Comments Here...."/>
+                    </group>
+                </page>
+                <page string="Other Information">
+                    <group>
+                    <group>
+                    <field name="warehouse_id" style="width:70%"
+                    options="{'no_create': True, 'no_create_edit':True}"/>
+                    <field name="user_id" readonly="1"
+                        options="{'no_create': True,'no_create_edit':True, 'no_open':True}"/>
+                    <field name="total_signage"/> 
+                    <field name="total_accessory"/>   
+                    </group>
+                    <group> 
+                    <field name="total_pallet"/>  
+                    <field name="unit_of_weight"/> 
+                    <field name="total_weight"/>
+                    <field name="miles"/>
+                    </group>
+                    </group>
+                </page> 
+                <page string="Freight Charges" attrs="{'invisible': [('state','==', 'draft')]}">
+                    <group>
+                    <group>
+                    <field name="total_echo_cost"/>
+                    <field name="chase_fright_cost" string="Chase Freight Cost"/>
+                    <field name="is_validate" attrs="{'readonly':[('is_validate','==',False)]}"/>
+                    <field name="is_invoice" readonly="1"/>
+                    <field name="validate_date" readonly="1"/>
+                    <field name="validate_by" readonly="1"/>
+                    <field name="approval_authority"/>
+                    <field name="approved_date" widget="date"/>
+                    </group>
+                    <group>
+                    <button name="validate_fright_charge" type="object" class="btn btn-primary" string="Validate" attrs="{'invisible': [('is_validate','==', True)]}"/>
+                    </group>
+                    </group>
+                </page> 
+            </notebook>
+
+                    <!-- Script for NCR 8 digit Fixed  -->
+                <script>
+                    $(document).ready(function(){
+                    $('body').on("keyup",'.serial_number', function(e){
+                    var v = $(".manufacturer > div.o_input_dropdown > input.o_input").val();
+                    console.log(v);
+                    if(v == 'NCR'){
+                    var Len = $(this).val().length;
+                    var maxCount = 8;
+                    if(Len > maxCount){
+                    $(this).val($(this).val().substring(0,maxCount));
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                </sheet>
+                
+                <div class="oe_chatter" style="display:none !important;">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Draft Tree View-->
+        <record id="ticl_shipment_tree_view" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.tree</field>
+            <field name="model">ticl.shipment.log</field>
+            <field name="arch" type="xml">
+                <tree string="Ships" delete="false" create="false" import="false">
+                    <field name="name" string="Shipment ID"/>
+                    <field name="dropship_state"/>
+                    <field name="origin_location"/>
+                    <field name="hr_employee_id"/>
+                    <field name="appointment_date_new" string="Shipment Date"/>
+                    <field name="state"/>                      
+                </tree>
+            </field>
+        </record>
+        <!-- Draft Tree View-->
+        <record id="ticl_shipment_tree_view_draft" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.tree</field>
+            <field name="model">ticl.shipment.log</field>
+            <field name="arch" type="xml">
+                <tree string="Ships" create="false" import="false">
+                    <field name="name" string="Shipment ID"/>
+                    <field name="dropship_state"/>
+                    <field name="origin_location"/>
+                    <field name="hr_employee_id"/>
+                    <field name="appointment_date_new" string="Shipment Date"/>
+                    <field name="state"/>                      
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ticl_shipment" model="ir.actions.act_window">
+            <field name="name">Shipment Log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_ticl_shipment_model" model="ir.actions.act_window">
+            <field name="name">Shipment Log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record>
+       
+        <record id="action_ticl_shipment_form" model="ir.actions.act_window">
+            <field name="name">Shipment Log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record>
+
+        <!--Draft Shipping Action-->
+        <record id="action_draft_ticl_shipment_model" model="ir.actions.act_window">
+            <field name="name">Draft Shipment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="ticl_shipment_tree_view_draft"/>
+            <field name="domain">[('state', '=',('draft','cancel'))]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record>
+
+    <!--Shipment Log Menu Parents--> 
+    <menuitem id="ticl_ship_order_sub" name="Shipping" sequence="5" 
+        action="action_draft_ticl_shipment_model" 
+        groups="ticl_shipment_group_user,ticl_shipment_group_manager"/>               
+            
+    <!--Shipment Log Menu  -->    
+    <menuitem id="ticl_ship_menu_form" name="Create Shipment" sequence="1"
+        parent="ticl_ship_order_sub" action="action_ticl_shipment_form"  
+        groups="ticl_shipment_group_user,ticl_shipment_group_manager"/>        
+
+    <!--Draft Shipping Manu-->
+    <menuitem id="ticl_ship_menu_draft" name="Draft Shipment" sequence="2"
+        parent="ticl_ship_order_sub" action="action_draft_ticl_shipment_model"  
+        groups="ticl_shipment_group_user,ticl_shipment_group_manager" />
+
+        <!-- Picked Shipping Log form view-->
+        <record id="action_picked_ticl_shipment_model" model="ir.actions.act_window">
+            <field name="name">Picked Shipment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="ticl_shipment_tree_view"/>
+            <field name="domain">[('state', '=',('picked'))]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record>
+       
+        <menuitem id="ticl_ship_menu_picked" name="Picked Shipment" sequence="3"
+            parent="ticl_ship_order_sub" action="action_picked_ticl_shipment_model" 
+            groups="ticl_shipment_group_user,ticl_shipment_group_manager"/>
+
+        <!--Packed Shipping Log-->
+        <record id="action_pending_ticl_shipment_model" model="ir.actions.act_window">
+            <field name="name">Packed Shipment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="ticl_shipment_tree_view"/>
+            <field name="domain">[('state', '=',('packed'))]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record>
+       
+
+
+        <menuitem id="ticl_ship_menu_pending" name="Packed Shipment"
+                  parent="ticl_ship_order_sub" action="action_pending_ticl_shipment_model" sequence="4" groups="ticl_shipment_group_user,ticl_shipment_group_manager"/>
+
+        <!--Archived Shipping Log form view-->
+        <record id="ticl_shipment_archive_form_view" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.form</field>
+            <field name="model">ticl.shipment.log</field>
+            <field name="arch" type="xml">
+                <form string="Shipment Form" class="o_sale_order" create="false" delete="false">
+                <header>   
+
+                    <button name="update_shipment_status" string="Update Shipment Status" 
+                        class="oe_highlight" type="object"
+                        attrs="{'invisible': [('echo_call', '=', 'no')]}"/>            
+                </header>
+                <sheet> 
+                <div>
+                <group> 
+                <h2>       
+                    <field name="name" class="oe_inline" style="width: 70%" 
+                    string="Shipment ID" readonly="1"/>   
+                </h2>     
+               </group>
+                </div>     
+                   <group>
+                    <group>
+                    <field name="state" required="1" style="width: 70%" readonly="1"/>
+                    <field name="dropship_state" required="1" style="width: 70%" readonly="1"/>
+                    <field name="shipment_type" style="width:70%" required="1"  
+                        attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                    <field name="appointment_date" invisible="1" style="width: 70%" readonly="1"/>
+                    <field name="appointment_date_new" style="width: 70%" readonly="1"/>    
+                    <field name="delivery_date" string="Required Deliver By Date" 
+                        invisible="1" style="width:70%"/>
+                    <field name="delivery_date_new" string="Required Deliver By Date" 
+                        style="width: 70%" readonly="1"/>
+                    <field name="activity_date_new" style="width: 70%" readonly="1"/>
+                    <field name="sending_location_id" required="1" style="width:70%" 
+                        options="{'no_create': True,'no_create_edit':True}"
+                         attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                    <field name="receiving_location_id" required="1" style="width:70%"
+                        options="{'no_create': True,'no_create_edit':True}"
+                         attrs="{'readonly': [('state','!=', 'draft')]}"/>
+
+                    <field name="hr_employee_id" style="width:70%"
+                        attrs="{'required': [('state','in', 'packed')],'readonly':[('state', 'in', 'shipped')]}"/>
+                    <field name="pallet_id" widget="many2many_tags" 
+                        domain="[('state','!=','in_ship_log')]" 
+                        options="{'no_create': True,'no_create_edit':True, 'no_open':True}" 
+                        style="width: 70%" readonly="1"/>
+                        
+                    <field name="equipment_date" style="width: 70%" invisible="1"/>
+                    </group>
+                    <group>
+                    <field name="echo_call" required="1" 
+                    attrs="{'readonly':[('state','in', ('picked', 'packed', 'shipped'))]}"/>
+                    <field name="shipping_carrier_name" invisible="1"/>
+                    <field name="shipping_carrier_id"
+                    attrs="{'readonly': [('echo_call','=', 'yes'), 
+                        ('state','in', ('packed'))],'invisible':[('state','in',('draft','cancel'))]}"/>
+                            
+                    <field name="echo_tracking_id"
+                    attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible':[('state','in',('draft','cancel'))]}" />
+
+                    <field name="shipment_mode"
+                    attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible':[('state','in',('draft','cancel'))]}" readonly="1"/>
+                            
+                    <field name="shipment_status"
+                    attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible': ['|', ('state', 'in',('draft','cancel')), '&amp;', ('echo_call','=', 'no'), ('state', 'in',  ('picked', 'packed', 'shipped'))]}" readonly="1"/>
+                    <field name="estimated_delivery_date"
+                    attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible':[('state','in',('draft','cancel'))]}" readonly="1"/>
+                    <field name="old_name"
+                    attrs="{'readonly': [('echo_call','=', 'yes'), ('state','in', ('picked', 'packed'))], 'invisible':[('state','in',('draft','cancel'))]}" readonly="1"/>
+
+                    <field name="bill_of_lading_number" string="BOL #" invisible="1"/>
+                    <field name="attachment_ids" widget="many2many_binary" 
+                    colspan="2" string="Upload BOL #" nolabel="0" invisible="1"/>
+                    <field name="pick_up_date" style="width: 100%" invisible="1"/> 
+                    <field name="accepted_date" style="width: 100%" invisible="1"/>
+                    <field name="request_pick_date" invisible="1" widget="datetime"/>
+                    <field name="request_delivery_date" invisible="1" widget="datetime"/>
+                    <field name="tender_stock_move_id" invisible="1"/>
+                    </group>
+                    </group>
+            <notebook>
+                <page string="Shipment Log">
+                    <field name="ticl_ship_lines" widget="section_and_note_one2many" mode="tree">
+                    <tree string="Shipment Log" editable="bottom" create="false"> 
+                        <field name="tel_type" options="{'no_create': True,
+                            'no_create_edit':True, 'no_open':True}" readonly="1" force_save="1"/>
+                        <field name="type_dup" invisible="1"/>
+                        <field name="manufacturer_id_dup" invisible="1"/>
+                        <field name="manufacturer_id" string="Manufacturer" 
+                            options="{'no_create': True, 
+                            'no_create_edit':True, 'no_open':True}" 
+                            class="manufacturer" readonly="1" force_save="1"/>
+                        <field name="product_id" string="Model Name" readonly="1"/> 
+                        <field name="serial_number" string="Dropship Serial#"
+                            attrs="{'required': [('ticl_checked','=', True)],'readonly':[('ticl_checked', '!=', True)],'column_invisible': [('parent.dropship_state','=','no')]}"/>
+
+                        <field name="lot_id" string="Serial#"
+                            attrs="{'required': [('ticl_checked','=', True)],'readonly':[('ticl_checked', '!=', True)],'invisible':[('xl_items', '=', 'y')],
+                            'column_invisible': [('parent.dropship_state','=','yes')]}"/>
+
+                        <field name="product_weight" readonly="1"/>
+                        <field name="xl_items" readonly="1"/>
+                        <field name="count_number" default="1" readonly="1"/>                    
+                        <field name="funding_doc_type" readonly="1"/>
+                        <field name="funding_doc_number" readonly="1"/>
+                        <field name="ticl_project_id" readonly="1"/>
+                        <field name="tid" readonly="1"/>
+                        <field name="common_name" readonly="1"/>
+                        <field name="outbound_charges" readonly="1"/>
+                        <field name="pallet_id_name_visible" readonly="True"/>
+                        <field name="pallet_id_name" string="Pallet ID" invisible="1"/>
+                        <!-- <field name="misc_log_time" invisible="1"/>
+                        <field name="misc_charges" readonly="1"/> -->
+                        <field name="outbound_associated_fees" invisible="1"/>
+                        <field name="service_price" invisible="1"/>
+                        <field name="tel_note" placeholder="Please Comment Here.." readonly="1"/>
+                        <field name="ticl_checked" invisible="1"/>
+                        <field name="ship_stock_move_line_id"/>
+                        <field name="ship_stock_move_id" invisible="1"/>
+                        <field name="hide_cod" invisible="1"/>
+                        <field name="hide_xl_items" invisible="1"/>
+                        <field name="xl_items" 
+                            attrs="{'invisible': [('hide_xl_items', '=', True)]}" invisible="1"/>
+                        <field name="condition_id" invisible="1"/>
+                        <field name="tel_cod" invisible="1" />
+                        <field name="tel_unique_no" invisible='1'/>
+                        <field name="shipment_service_charges" invisible="1"/>
+                        <field name="warehouse_id" invisible='1'/>
+                        </tree>
+                        </field>
+                    </page> 
+                    <page string="Shipment Costs">
+                        <field name="ticl_payment_lines" mode="tree" 
+                            widget="section_and_note_one2many">
+                        <tree string="Shipment Costs" editable="bottom" create="false">
+                            <field name="name" string="Shipment ID"/>
+                            <field name="ticl_units" />
+                            <field name="payment_rate" />
+                            <field name="payment_amount" />                         
+                        </tree>
+                        </field>
+                        </page>                       
+                    <page string="Note">
+                        <group>
+                        <field name="tel_note" placeholder="Please Comments Here...."/>
+                        </group>
+                    </page>
+                    <page string="Other Information">
+                        <group>
+                        <group>
+                        <field name="warehouse_id" style="width:70%" readonly="1"/>
+                        <field name="user_id" options="{'no_create': True,'no_create_edit':True, 'no_open':True}" readonly="1"/>
+                        <field name="total_signage"/> 
+                        <field name="total_accessory"/>   
+                        </group>
+                        <group> 
+                        <field name="total_pallet"/>  
+                        <field name="unit_of_weight"/> 
+                        <field name="total_weight" readonly="0"/>
+                        <field name="miles"/>
+                        </group>
+                        </group>
+                    </page>                     
+                    <page string="Freight Charges" attrs="{'invisible':[('state','==','draft')]}">
+                        <group>
+                        <group>
+                        <field name="total_echo_cost"/>
+                        <field name="chase_fright_cost" string="Chase Freight Cost"/>
+                        <field name="is_validate" 
+                            attrs="{'readonly':[('is_validate','==', False)]}"/>
+                        <field name="is_invoice" readonly="1"/>
+                        <field name="validate_date" readonly="1"/>
+                        <field name="validate_by" readonly="1"/>
+                        <field name="approval_authority"/>
+                        <field name="approved_date" widget="date"/>
+                        </group>
+                        <group>
+                        <button name="validate_fright_charge" type="object" class="btn btn-primary" string="Validate" attrs="{'invisible': [('is_validate','==', True)]}"/>
+                        </group>
+                        </group>
+                    </page> 
+                </notebook>
+                    <!-- Script for NCR 8 digit Fixed  -->
+                    <script>
+                         $(document).ready(function(){                          
+                            $('body').on("keyup",'.serial_number', function(e){
+                                var v = $(".manufacturer > div.o_input_dropdown > input.o_input").val();
+                                console.log(v);
+                                if(v == 'NCR'){
+                                    var Len = $(this).val().length;
+                                    var maxCount = 8;
+                                    if(Len > maxCount){
+                                        $(this).val($(this).val().substring(0,maxCount));
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                </sheet>
+                <div class="oe_chatter" style="display:none !important;">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+                </form>
+            </field>
+        </record>
+
+    <!--Archived Shipping Log tree view-->
+        <record id="ticl_shipment_archive_tree_view" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.tree</field>
+            <field name="model">ticl.shipment.log</field>
+            <field name="arch" type="xml">
+                <tree string="Ships" delete="false" create="false" import="false">
+                    <field name="name" string="Shipment ID"/>
+                    <field name="dropship_state"/>
+                    <field name="origin_location"/>
+                    <field name="hr_employee_id"/>
+                    <field name="appointment_date_new"/>
+                    <field name="state"/>                      
+                </tree>
+            </field>
+        </record>
+
+       <!--Archived Shipping Log action-->
+        <record id="action_archived_ticl_shipment_model" model="ir.actions.act_window">
+            <field name="name">Archived Shipment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+             <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('ticl_shipment_archive_tree_view')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('ticl_shipment_archive_form_view')})]"/>
+            <field name="domain">[('state', '=','shipped')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record>
+
+        <!--Archived Shipment Menu-->
+        <menuitem id="ticl_ship_menu_archive" name="Archived Shipment" sequence="5"
+        parent="ticl_ship_order_sub" action="action_archived_ticl_shipment_model" 
+        groups="ticl_shipment_group_user,ticl_shipment_group_manager"/>
+
+        <!-- <record id="action_archived_ticl_shipment_model" model="ir.actions.act_window">
+            <field name="name">Archived Shipment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+             <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('ticl_shipment_archive_tree_view')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('ticl_shipment_archive_form_view')})]"/>           
+            <field name="domain">[('state', '=','shipped')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record> -->
+
+
+        <!-- <record id="view_misc_details" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.line.form</field>
+            <field name="model">ticl.shipment.log.line</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form string="Misc Details">
+                    <field name="ticl_shipment_log_line_misc">
+                        <tree editable="bottom">
+                            <field name="model_name" readonly="0"/>
+                            <field name="serial_number" readonly="0"/>
+                            <field name="document_date" widget="datetime" required="1"/>
+                            <field name="user_name" required="1"/>
+                            <field name="work_time" required="1"/>
+                            <field name="description" />
+                        </tree>
+                    </field>
+                    <footer class="oe_edit_only">
+                        <button string="Confirm" special="save" class="oe_highlight"/>
+                        <button string="Discard" special="cancel"/>
+                        
+                    </footer>
+                </form>
+            </field>
+        </record> -->
+
+       <!--  <menuitem id="ticl_ship_menu_archive" name="Archived Shipment"
+        parent="ticl_ship_order_sub" action="action_archived_ticl_shipment_model" 
+        sequence="5"/> -->
+
+
+          <!--  Shipment Logs form view-->
+<!--         <record id="ticl_shipment_logs_form_view" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.line.form</field>
+            <field name="model">ticl.shipment.log.line</field>
+            <field name="arch" type="xml">
+                <form string="Shipment Form" class="o_sale_order" create="false" edit="false" import="false">
+                    <group>
+                    <group>
+                        <field name="ticl_ship_id"/>
+                        <field name="product_id"/>
+                        <field name="manufacturer_id"/>
+                        <field name="lot_id"/>
+                    </group>
+                    <group>
+                        <field name="receipt_id"/>
+                        <field name="tid"/>
+                        <field name="ticl_project_id"/>
+                        <field name="common_name"/>
+                        <field name="state" />
+                    </group>
+                    </group>
+                </form>
+            </field>
+        </record> -->
+
+        <!--Shipment Logs tree view-->
+<!--         <record id="ticl_shipment_logs_tree_view" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.line.tree</field>
+            <field name="model">ticl.shipment.log.line</field>
+            <field name="arch" type="xml">
+                <tree string="Shipping Logs" default_order='ticl_ship_id asc' create="false" import="false">
+                    <field name="ticl_ship_id"/>
+                    <field name="product_id"/>
+                    <field name="manufacturer_id"/>
+                    <field name="lot_id"/>
+                    <field name="receipt_id"/>
+                    <field name="tid"/>
+                    <field name="ticl_project_id"/>
+                    <field name="common_name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="shipment_search_view" model="ir.ui.view">
+            <field name="name">Shipment Search View</field>
+            <field name="model">ticl.shipment.log.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Student">
+                    <field name="ticl_ship_id"/>
+
+                    <field name="manufacturer_id"/>
+                    <field name="product_id"/>
+                    <field name="lot_id"/>
+                     <field name="tid"/>
+                    <field name="ticl_project_id"/>
+                    <field name="common_name"/>
+                </search>
+            </field>
+        </record> -->
+
+        <!--      Shipment Logs-->
+      <!--   <record id="action_logs_ticl_shipment_model" model="ir.actions.act_window">
+            <field name="name">Shipment Logs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="shipment_search_view"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('ticl_shipment_logs_tree_view')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('ticl_shipment_logs_form_view')})]"/>
+            <field name="domain">[('state', '!=','draft')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record> -->
+
+        <!--Shipment Logs-->
+       <!--  <menuitem id="ticl_ship_logs_menu_archive" name="Shipment Logs"
+        action="action_logs_ticl_shipment_model" sequence="6" groups="ticl_shipment_external_user"/>
+ -->
+
+    </data>
+</odoo>

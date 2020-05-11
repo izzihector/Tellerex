@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_pending_shipment_report_form" model="ir.ui.view">
+            <field name="name">ticl.pending.shipment.report.form</field>
+            <field name="model">ticl.pending.shipment.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Pending Shipment Report">
+                        <field name="pending_report_printed" invisible="1"/>
+                        <group  attrs="{'invisible':[('pending_report_printed','=',True)]}">
+                            <group>
+                                <field name="from_date" required="1" style="width:200px;"  t-options="{'format': 'dd / MM / yyyy HH / mm'}" widget="date"/>             
+                            </group>
+                            <group>
+                                <field name="to_date" required="1" style="width:200px;" widget="date"/> 
+                            </group>
+                            <group> 
+                                <field name="report_type" invisible="1"
+                                    style="width:200px;"/> 
+                                <field name="warehouse_ids"
+                                    style="width:200px;" widget="many2many_tags"
+                                    options="{'no_quick_create':True,'no_create_edit':True}" domain="[('is_warehouse', '=', True)]"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible':[('pending_report_printed','=',False)]}">
+                            <field name="file_name" invisible="1"/>
+                            <field name="pending_shipping_file" readonly="1"  filename="file_name"/>
+                        </group>
+                    <footer>
+                    <button string='Print'  name="action_print_pending_shipment_report"
+                        type="object" class="btn-primary" attrs="{'invisible':[('pending_report_printed','=',True)]}"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pending_shipment_report_pdf" model="ir.actions.report">
+        <field name="name">Pending Shipment Report</field>
+        <field name="model">ticl.pending.shipment.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ticl_shipment.pending_report</field>
+        </record>
+
+        <record id="action_pending_shipment_report" model="ir.actions.act_window">
+            <field name="name">Pending Shipment Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.pending.shipment.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Pending Shipment Report" 
+            id="pending_shipment_pdf_report"
+    	    parent="ticl_user_management.report_ticl_menu" sequence="5"
+            action="action_pending_shipment_report"/>
+</odoo>

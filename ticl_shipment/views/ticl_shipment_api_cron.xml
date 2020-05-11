@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_echo_api_shipment" model="ir.cron">
+        <field name="name">Shipment; Echo API For POST</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_ticl_shipment_log"/>
+        <field name="code">model.cron_shipment_echo_token()</field>
+        <field name="state">code</field>
+    </record>
+
+    <!-- Shipment side status Update  -->
+<!--     <record id="ir_cron_echo_status_update_shipment" model="ir.cron">
+        <field name="name">Shipment; Echo Status Update Shipment</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_ticl_shipment_log"/>
+        <field name="code">model._cron_update_shipment_status()</field>
+        <field name="state">code</field>
+    </record> -->
+
+</odoo>

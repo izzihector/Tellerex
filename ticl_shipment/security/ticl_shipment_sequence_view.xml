@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+     <data noupdate="1">
+
+<!--		 Pallet Sequence-->
+		  <record id="seq_ticl_shipment_numbers_pallet" model="ir.sequence">
+		    <field name="name">ticl_shipment__pallet_sequences</field>
+		    <field name="code">ticl.shipment</field>
+		    <field name="prefix">PL/</field>
+		    <field name="padding">4</field>
+		</record>
+
+	<!-- Sequence Number For Shipment Log -->
+		<record id="seq_ticl_shipment_numbers" model="ir.sequence">
+		    <field name="name">ticl_shipment_sequences</field>
+		    <field name="code">ticl.shipment.log</field>
+		    <field name="prefix">SM/</field>
+		    <field name="padding">6</field>
+		</record>
+
+
+    </data>
+</odoo>
+
+

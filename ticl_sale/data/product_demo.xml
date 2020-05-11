@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <record id="data_sanitization_per_atm" model="product.product">
+            <field name="name">Data Sanitization per ATM</field>
+            <field name="type">service</field>
+        </record>
+
+        <record id="outbound_per_atm_pallet" model="product.product">
+            <field name="name">Outbound per ATM / Pallet</field>
+            <field name="type">service</field>
+        </record>
+
+        <record id="outbound_small_item_non_freight" model="product.product">
+            <field name="name">Outbound Small Item (non-freight)</field>
+            <field name="type">service</field>
+        </record>
+
+        <record id="palletization_per_pallet" model="product.product">
+            <field name="name">Palletization per Pallet</field>
+            <field name="type">service</field>
+        </record>
+
+        <record id="associated_fees" model="product.product">
+            <field name="name">Associated Fees</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="misc_fees" model="product.product">
+            <field name="name">MISC Service Charge</field>
+            <field name="type">service</field>
+        </record>
+
+        <record id="outbound_services_per_signage_piece" model="product.product">
+            <field name="name">Outbound Services per Signage Piece</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="outbound_services_for_xl_items" model="product.product">
+            <field name="name">Outbound Services for XL Items</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="receiving_per_pallet" model="product.product">
+            <field name="name">Receiving per Pallet</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="storage_per_atm" model="product.product">
+            <field name="name">Storage per ATM</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="storage_per_signage" model="product.product">
+            <field name="name">Storage per Signage</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="storage_per_xl_item" model="product.product">
+            <field name="name">Storage per XL Item</field>
+            <field name="type">service</field>
+        </record>
+       
+        <record id="freight_shipment" model="product.product">
+            <field name="name">Freight Shipment</field>
+            <field name="type">service</field>
+        </record>
+    </data>
+</odoo>

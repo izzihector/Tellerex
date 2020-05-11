@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="action_report_sales_order"
+            string="Sales Order Report"
+            model="sale.order" 
+            report_type="qweb-pdf"
+            file="ticl_sale.report_sales_order" 
+            name="ticl_sale.report_sales_order"
+            print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
+        />
+
+        <report
+            id="sale.action_report_saleorder"
+            string="Quotation / Order" 
+            model="sale.order" 
+            report_type="qweb-pdf"
+            name="sale.report_saleorder" 
+            file="sale.report_saleorder" 
+            menu="False"
+        />
+
+       <!--  <report
+            id="action_pro_forma_invoice_report"
+            string="PRO-FORMA Invoice"
+            model="sale.order"
+            report_type="qweb-pdf"
+            groups="sale.group_proforma_sales"
+            file="ticl_sale.report_saleorder_pro_forma"
+            name="ticl_sale.sale.report_saleorder_pro_forma"
+            print_report_name="'PRO-FORMA - %s' % (object.name)"
+        /> -->
+
+    </data>
+</odoo>

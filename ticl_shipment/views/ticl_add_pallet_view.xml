@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="ticl_shipment_view_form" model="ir.ui.view">
+            <field name="name">ticl.shipment.form</field>
+            <field name="model">ticl.shipment</field>
+            <field name="arch" type="xml">
+                <form string="Shipment Form" class="o_sale_order">
+                    <sheet>
+                        <div>
+                            <group>
+                                <h2>
+                                    <field name="name" class="oe_inline" style="width: 70%"
+                                           string="Shipment Number" readonly="1"/>
+
+                                </h2>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="state" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="create_date" readonly="1" widget="date"/>
+                                    <field name="user_id" readonly="1"/>
+
+                                </group>
+                            </group>
+                        </div>
+
+                        <notebook>
+                            <page string="Pallet">
+                                <field name="ticl_shipment_lines">
+                                    <tree string="Shipment Log" editable="bottom">
+                                        <field name="tel_type"
+                                               options="{'no_create': True, 'no_create_edit':True, 'no_open':True}"
+                                               required="1" domain="[('id','!=',4)]"/>
+                                        <field name="product_id" string="Model Name" 
+                                            required="1"
+                                        attrs="{'readonly':[('tel_type','=',False)]}"/>
+                                        <field name="product_weight" required="1"/>
+                                        <field name="count_number" required="1"/>
+                                        <field name="manufacturer_id" string="Manufacturer"
+                                        options="{'no_create': True,
+                                        'no_create_edit':True, 'no_open':True}" class="manufacturer" required="1"/>
+
+                                        <field name="condition_id" options="{'no_create': True,
+                                        'no_create_edit':True, 'no_open':True}" required="1"/>
+                                        <field name="tel_note" placeholder="Please Comments Here...."/>
+                                        <field name="ticl_unique_no" readonly="1"/>
+
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                        <div class="oe_chatter" style="display:none !important;">
+                <field name="message_follower_ids" widget="mail_followers" />
+                <field name="message_ids" widget="mail_thread" />
+            </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="ticl_shipment_view_tree" model="ir.ui.view">
+            <field name="name">ticl.shipment.tree</field>
+            <field name="model">ticl.shipment</field>
+            <field name="arch" type="xml">
+                <tree string="Ships">
+                    <field name="name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_ticl_shipment_view" model="ir.actions.act_window">
+            <field name="name">ADD Pallet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Shipment.
+                </p>
+            </field>
+        </record>
+
+    <menuitem id="ticl_shipment_menu" name="ADD Pallet" sequence="6" 
+        parent="ticl_ship_order_sub" action="action_ticl_shipment_view" 
+        groups="ticl_shipment_group_user,ticl_shipment_group_manager"/>
+
+
+    </data>
+</odoo>

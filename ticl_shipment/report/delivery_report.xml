@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="custom_layout_delivery_background">
+
+        <div class="header">
+            <div class="row">
+                <div class="col-2 mb4">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="width: 90px;" alt="Logo"/>
+                </div>
+            
+                <div t-field="company.partner_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                    />
+            </div>
+        </div>
+
+            <div class="article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-call="web.address_layout"/>
+                <t t-raw="0"/>
+            </div>
+
+            <div class="footer o_background_footer">
+                <div class="text-center">
+                    <ul class="list-inline">
+
+                        <li style="color:#875a7b;" t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="company.phone"/></li>
+                        <li style="color:#875a7b;" t-if="company.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
+                        <li style="color:#875a7b;" t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
+                        <li style="color:#875a7b;" t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    </ul>
+                    <div>
+                        <span style="text-center;">Bank Account: SunTrust: 1000169767901</span>   
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="external_custom_delivery_layout">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+
+            <t t-if="not company">
+           
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+
+
+            <t t-call="ticl_shipment.custom_layout_delivery_background"><t t-raw="0"/></t>
+        </template>
+
+       <template id="report_delivery">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="ticl_shipment.external_custom_delivery_layout">
+                        <div class="page" style="font-family:Calibri; font-size: 18px;">
+                            <!-- <div class="row justify-content-end mb16">
+                                <div class="col-4" name="right_box">
+                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;" alt="Barcode"/>
+                                </div>
+                            </div> -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <span><strong></strong></span>         
+                                </div>
+                                <div class="col-6">
+                                    <span><strong>Address:</strong>
+
+                                    <span t-field="o.receiving_location_id.name"/><br/>
+                                    <span t-field="o.receiving_location_id.street"/>,
+                                    <span t-field="o.receiving_location_id.street2"/><br/>
+                                    <span t-field="o.receiving_location_id.city"/>,
+                                    <span t-field="o.receiving_location_id.state.code"/>,
+                                    <span t-field="o.receiving_location_id.zip"/>,
+                                    <span t-field="o.receiving_location_id.country_id.name"/><br/>
+                                    <span t-field="o.receiving_location_id.phone"/><br/>
+                                    </span>
+                                </div>
+                            </div>
+                               
+             
+                            <br/>
+                            <h1 t-field="o.pick_name" class="mt0 float-left"/>
+                            <div class="clearfix"/>
+                            <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="color:#875a7b;" t-if="o.name"><strong>Order</strong></th>
+                                   <!--  <th><strong>State</strong></th> -->
+                                    <th style="color:#875a7b;" name="td_sched_date_h" width="20%"><strong>Date</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td t-if="o.name">
+                                        <span t-field="o.name"/>
+                                    </td>
+                                    <td name="td_sched_date" width="20%">
+                                        <span t-field="o.shipment_date"/>
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <table class="table table-sm" t-if="o.ticl_ship_lines">
+                                <thead>
+                                    <tr>
+                                        <th style="color:#875a7b;"><strong>Product</strong></th>
+                                        <th style="color:#875a7b;"><strong>Serial Number</strong></th>
+                                        <th style="color:#875a7b;" align="right"><strong>Quantity</strong></th>
+                                       <!-- <th width="20%" align="left">  -->
+                                        <!-- <strong>From</strong> -->
+                                       <!-- </th>  -->
+                                  
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                     <t t-foreach="o.ticl_ship_lines.sorted(key=lambda m: m.product_id.id)" t-as="move">
+                                            <tr>
+                                                <td>
+                                                    <span t-field="move.product_id.display_name"/><br/>
+                                                    
+                                                </td>
+                                                <td>
+                                                    <span t-field="move.lot_id.name"/>
+                                                    
+                                                </td>
+                                                 <td>
+                                                    <span t-field="move.count_number"/><br/>   
+                                                </td>
+                                               
+                                            </tr>
+                                    </t>
+                        
+                                  </tbody>
+                            </table>
+                        </div>
+                        </t>
+                    </t>
+                </t>
+            </template>
+
+
+      <report
+            string="Delivery Slip"
+            id="ticl_action_delivery_report_receipt"
+            model="ticl.shipment.log"
+            report_type="qweb-pdf"
+            name="ticl_shipment.report_delivery"  
+        />
+
+        <record id="ticl_shipment.ticl_action_delivery_report_receipt" model="ir.actions.report">
+            <field name="paperformat_id" ref="ticl_shipment.paper_format"/>
+        </record>
+
+    </data>
+</odoo>
