@@ -354,8 +354,9 @@ class SaleOrderLine(models.Model):
 				total_prod = len(move)
 				print("==total_prod===",total_prod)
 				if int(total_prod) < int(line.product_uom_qty):
-					line.product_uom_qty = 0.00
-					raise ValidationError(_("Not enough inventory!"))
+					raise UserError(_("Not enough inventory!"))
+					# line.product_uom_qty = 0.00
+					# raise UserError(_("Not enough inventory!"))
 
 	@api.model
 	def _product_filter(self):
