@@ -77,13 +77,13 @@ class StockQuant(models.Model):
 class SaleOrder(models.Model):
 	_inherit = 'sale.order'
 
-	@api.model_create_multi
-	def create(self, vals):
-		if 'order_line' in vals.keys():
-			for i in range(0, len(vals['order_line'])):
-				vals['order_line'][i][2]['disassembly_unit'] = vals['sale_unit']
-				# vals['order_line'][i][2]['unit_type'] = vals['unit_type']
-		return super(SaleOrder, self).create(vals)
+	# @api.model
+	# def create(self, vals):
+	# 	if 'order_line' in vals.keys():
+	# 		for i in range(0, len(vals['order_line'])):
+	# 			vals['order_line'][i][2]['disassembly_unit'] = vals['sale_unit']
+	# 			# vals['order_line'][i][2]['unit_type'] = vals['unit_type']
+	# 	return super(SaleOrder, self).create(vals)
 
 	# @api.model
 	def write(self, vals):
