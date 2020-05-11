@@ -2334,11 +2334,11 @@ class ticl_shipment_payment(models.Model):
 
     
 
-class StockQuant(models.Model):
-    _inherit = 'stock.quant'
+# class StockQuant(models.Model):
+#     _inherit = 'stock.quant'
 
-    @api.constrains('quantity')
-    def check_quantity(self):
-        if self.lot_id.sale_order_count:
-            res = super(StockQuant, self).check_quantity()
-        return True
+#     @api.constrains('quantity')
+#     def check_quantity(self):
+#         if self.lot_id.sale_order_count:
+#             res = super(StockQuant, self).check_quantity()
+#         return True
