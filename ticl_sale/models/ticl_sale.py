@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from functools import partial
 from itertools import groupby
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.misc import formatLang
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
@@ -77,7 +77,7 @@ class StockQuant(models.Model):
 class SaleOrder(models.Model):
 	_inherit = 'sale.order'
 
-	@api.model
+	@api.model_create_multi
 	def create(self, vals):
 		if 'order_line' in vals.keys():
 			for i in range(0, len(vals['order_line'])):
@@ -389,7 +389,7 @@ class SaleOrderLine(models.Model):
 				print("==total_prod===",total_prod)
 				if int(total_prod) < int(line.product_uom_qty):
 					line.product_uom_qty = 0.00
-					raise ValidationError(_("Not enough inventory!"))
+					raise UserError(_("Not enough inventory!"))
 
 	@api.model
 	def _product_filter(self):
@@ -432,7 +432,7 @@ class StockProductionLot(models.Model):
 	stock_move_id = fields.Many2one('stock.move', string='Stock Move ID')
 	
 	
-	@api.model
+	@api.model_create_multi
 	def create(self, vals):
 		if vals.get('name', False):
 			move = self.env['stock.move'].search([('serial_number','=',vals.get('name'))], order='id desc', limit=1)
