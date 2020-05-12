@@ -252,6 +252,7 @@
                     <field name="name" string="Shipment ID"/>
                     <field name="dropship_state"/>
                     <field name="origin_location"/>
+                    <field name="receiving_location_id"/>
                     <field name="hr_employee_id"/>
                     <field name="appointment_date_new" string="Shipment Date"/>
                     <field name="state"/>                      
@@ -267,6 +268,7 @@
                     <field name="name" string="Shipment ID"/>
                     <field name="dropship_state"/>
                     <field name="origin_location"/>
+                    <field name="receiving_location_id"/>
                     <field name="hr_employee_id"/>
                     <field name="appointment_date_new" string="Shipment Date"/>
                     <field name="state"/>                      
@@ -605,6 +607,7 @@
                     <field name="name" string="Shipment ID"/>
                     <field name="dropship_state"/>
                     <field name="origin_location"/>
+                    <field name="receiving_location_id"/>
                     <field name="hr_employee_id"/>
                     <field name="appointment_date_new"/>
                     <field name="state"/>                      
