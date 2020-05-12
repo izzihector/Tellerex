@@ -1690,6 +1690,7 @@ class ticl_shipment_log(models.Model):
             'location_id':warehouse_loc.id,
             'move_ids_without_package':move_ids_without_package,
             'move_type': 'direct',
+            'state':'confirmed',
             'origin':self.name
         }
         print("===vals===",vals)
