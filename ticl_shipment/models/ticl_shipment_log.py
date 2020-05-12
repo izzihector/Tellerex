@@ -1640,7 +1640,7 @@ class ticl_shipment_log(models.Model):
         moveLst = []
         for line in self.ticl_ship_lines:
             for move in moves:
-                _logger.debug('Create a %s and b %s',move,picking)
+                _logger.Warning('Create a %s and b %s',move,picking)
                 if move.product_id == line.product_id and move.id not in moveLst:
                     moveLst.append(move.id)
                     lot_id = self.env['stock.production.lot'].search([('name','=',line.lot_id.name)], limit=1)
@@ -1696,12 +1696,12 @@ class ticl_shipment_log(models.Model):
             'origin':self.name
         }
         #print("===vals===",vals)
-        _logger.debug('Create a %s',vals)
+        _logger.Warning('Create a %s',vals)
         picking = self.env['stock.picking'].create(vals)
         self.pick_name = vals['name']
-        picking.with_context({'merge':True}).action_confirm()
+        picking.with_context({'merge':False}).action_confirm()
         moves = self.env['stock.move'].search([('picking_id','=',picking.id)])
-        print(moves)
+        _logger.Warning('Create m %s',moves)
         self.create_mv_line(moves, picking)
         picking.button_validate()
         return picking
