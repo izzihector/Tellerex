@@ -1704,8 +1704,8 @@ class ticl_shipment_log(models.Model):
         self.pick_name = vals['name']
         #picking.action_confirm()
         # picking.with_context({'merge':False}).action_confirm()
-        # moves = self.env['stock.move'].search([('picking_id','=',picking.id)])
-        # _logger.warning('Create m %s',moves)
+        moves = self.env['stock.move'].search([('picking_id','=',picking.id)])
+        _logger.warning('Create m %s',moves)
         self.create_mv_line(moves, picking)
         picking.button_validate()
         return picking
