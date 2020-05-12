@@ -1686,6 +1686,8 @@ class ticl_shipment_log(models.Model):
                                           #'location_id':loc.id
     #                                       'quantity_done':data.get('product_uom_qty')
                                         }))
+
+        _logger.warning('Create aaaaaaaaaaaaa %s',move_ids_without_package)    
         vals = {
             'location_dest_id':loc.id,
             'picking_type_id':pickingType.id,
@@ -1696,6 +1698,7 @@ class ticl_shipment_log(models.Model):
             'origin':self.name
         }
         #print("===vals===",vals)
+
         _logger.warning('Create a %s',vals)
         picking = self.env['stock.picking'].create(vals)
         self.pick_name = vals['name']

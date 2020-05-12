@@ -9,7 +9,7 @@ import calendar
 
 class TiclStockMoveLine(models.Model):
     _inherit = "stock.move.line"
-    _order = 'origin desc, id desc'
+    _order = 'tel_unique_no desc, id desc'
 
     order_from_receipt = fields.Boolean(string='Order from Receipt')
     product_id = fields.Many2one("product.product",string="Product ID")
