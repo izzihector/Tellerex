@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+<!--    	<record id="ticl_receiving.receipts_menu" model="ir.ui.menu">-->
+<!--	        <field name="name">Receipts</field>-->
+<!--	        <field name="groups_id" eval="[(4, ref('ticl_inbound_import.ticl_shipment_ext_group_manager')),(4, ref('ticl_shipment.ticl_shipment_group_manager'))]"/>-->
+<!--	    </record>-->
+<!--	    <record id="ticl_management.configuration_menu" model="ir.ui.menu">-->
+<!--	        <field name="name">Configuration</field>-->
+<!--	        <field name="groups_id" eval="[(4, ref('ticl_inbound_import.ticl_shipment_ext_group_manager')),(4, ref('ticl_management.ticl_configuration_group_manager'))]"/>-->
+<!--	    </record>-->
+	    
+    </data>
+</odoo>

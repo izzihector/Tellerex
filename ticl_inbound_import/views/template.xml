@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="ticl_inbound_import_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/ticl_inbound_import/static/src/js/shipTenderExport.js"/>
+                <script type="text/javascript" src="/ticl_inbound_import/static/src/js/list_button_tender.js"/>
+                <link rel="stylesheet" href="/ticl_inbound_import/static/src/css/tender_import.css"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
