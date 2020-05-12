@@ -1702,11 +1702,11 @@ class ticl_shipment_log(models.Model):
         _logger.warning('Create a %s',vals)
         picking = self.env['stock.picking'].create(vals)
         self.pick_name = vals['name']
-        picking.action_confirm()
-        moves = self.env['stock.move'].search([('picking_id','=',picking.id)])
-        _logger.warning('Create m %s',moves)
-        self.create_mv_line(moves, picking)
-        picking.button_validate()
+        # picking.with_context({'merge':False}).action_confirm()
+        # moves = self.env['stock.move'].search([('picking_id','=',picking.id)])
+        # _logger.warning('Create m %s',moves)
+        # self.create_mv_line(moves, picking)
+        # picking.button_validate()
         return picking
 
 
