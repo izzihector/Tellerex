@@ -1629,6 +1629,7 @@ class ticl_shipment_log(models.Model):
 
     #link serial number
     def create_mv_line(self,moves,picking):
+
         wareKey = self.env['stock.location'].browse(self.sending_location_id.id).warehouse_key
         warehouse = self.env['stock.warehouse'].search([('warehouse_key','=',int(wareKey))])
         print("====warehouse===",warehouse)
@@ -1639,6 +1640,7 @@ class ticl_shipment_log(models.Model):
         moveLst = []
         for line in self.ticl_ship_lines:
             for move in moves:
+                _logger.debug('Create a %s and b %s',move,picking)
                 if move.product_id == line.product_id and move.id not in moveLst:
                     moveLst.append(move.id)
                     lot_id = self.env['stock.production.lot'].search([('name','=',line.lot_id.name)], limit=1)
@@ -1693,10 +1695,11 @@ class ticl_shipment_log(models.Model):
             'state':'assigned',
             'origin':self.name
         }
-        print("===vals===",vals)
+        #print("===vals===",vals)
+        _logger.debug('Create a %s',vals)
         picking = self.env['stock.picking'].create(vals)
         self.pick_name = vals['name']
-        picking.with_context({'merge':False}).action_confirm()
+        picking.with_context({'merge':True}).action_confirm()
         moves = self.env['stock.move'].search([('picking_id','=',picking.id)])
         print(moves)
         self.create_mv_line(moves, picking)
