@@ -6,13 +6,13 @@
 	         
 	           <t t-if="widget.modelName == 'ticl.shipment.log'">
 		             <button type="button" class="btn btn-primary btn_frt_chrg_import_shipment">
-			            Freight Charges Import
+			            Freight Charges Import1
 			        </button>
 			        
 	        	</t>
 	        	<t t-if="widget.modelName == 'ticl.receipt.log.summary'">
 		             <button type="button" class="btn btn-primary btn_frt_chrg_import_receipt">
-			            Freight Charges Import
+			            Freight Charges Import2
 			        </button>
 			        
 	        	</t>
@@ -31,9 +31,8 @@
 		 	</span>
 		 	
 	 	</div>
-	 	<form method="post" enctype="multipart/form-data" role="form" id="tender_form">
-			 
-			   <input type="file" multiple="true" class="form-control" id="fileinput" name="shipment" />
+	 	<form method="post" enctype="multipart/form-data" role="form" id="tender_form">	 
+		<input type="file" multiple="true" class="form-control" id="fileinput" name="shipment" />
 			    
 		</form>
 		

@@ -1,4 +1,4 @@
-odoo.define('receipt_import.freight_list_button', function (require) {
+odoo.define('freight_charges_import.freight_list_button', function (require) {
 "use strict";
 
 var config = require('web.config');
