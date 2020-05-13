@@ -1540,6 +1540,9 @@ class ticl_shipment_log(models.Model):
                                             }
                                     log.ticl_payment_lines = [(0, 0, cost_lines)]
                                 # Update Other Fields
+                                EstimatedDeliveryDate = request_data.get('EstimatedDeliveryDate')
+                                delivery_date = datetime.strptime(str(EstimatedDeliveryDate),'%m/%d/%Y').strftime("%Y-%m-%d")
+                                log.write({'estimated_delivery_date': delivery_date})
                                 log.write({
                                     'shipment_status' : request_data.get('ShipmentStatus'),
                                     'shipping_carrier_name' : request_data.get('CarrierName'),
@@ -1548,7 +1551,7 @@ class ticl_shipment_log(models.Model):
                                     'pallet_quantity' : request_data.get('PalletQuantity'),
                                     #'request_pick_date' : request_data.get('RequestedPickUpDate'),
                                     #'request_delivery_date' : request_data.get('RequestedDeliveryDate'),
-                                    'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate'),
+                                    #'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate'),
                                     'total_echo_cost' : request_data.get('TotalCost'),
                                        
                                     })

@@ -399,12 +399,12 @@ class StockProductionLot(models.Model):
 	stock_move_id = fields.Many2one('stock.move', string='Stock Move ID')
 	
 	
-	# @api.model_create_multi
-	# def create(self, vals):
-	# 	if vals.get('name', False):
-	# 		move = self.env['stock.move'].search([('serial_number','=',vals.get('name'))], order='id desc', limit=1)
-	# 		vals.update({'condition_id':move.condition_id.id,'receiving_location_id':move.location_dest_id.id,'stock_move_id':move.id})
-	# 	return super(StockProductionLot, self).create(vals)
+	#@api.model_create_multi
+	def create(self, vals_list):
+		if vals_list.get('name', False):
+			move = self.env['stock.move'].search([('serial_number','=',vals_list.get('name'))], order='id desc', limit=1)
+			vals_list.update({'condition_id':move.condition_id.id,'receiving_location_id':move.location_dest_id.id,'stock_move_id':move.id})
+		return super(StockProductionLot, self).create(vals_list)
 
 
 class Picking(models.Model):

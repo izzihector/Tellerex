@@ -858,13 +858,17 @@ class ticl_receipt(models.Model):
                                 #             })
 
                                 # Update Other Fields
+
+                                EstimatedDeliveryDate = request_data.get('EstimatedDeliveryDate')
+                                delivery_date = datetime.strptime(str(EstimatedDeliveryDate),'%m/%d/%Y').strftime("%Y-%m-%d")
+                                log.write({'estimated_delivery_date': delivery_date})
+
                                 log.write({
                                     'shipment_status' : request_data.get('ShipmentStatus'),
                                     'shipping_carrier_name' : request_data.get('CarrierName'),
                                     'unit_of_weight' : request_data.get('UnitOfWeight'),
                                     'total_weight' : request_data.get('TotalWeight'),
-                                    'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate'),
-                                    'tel_note' : request_data.get('EstimatedDeliveryDate'),
+                                    #'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate'),
                                     'total_cost' : request_data.get('TotalCost'),
                                        
                                     })
@@ -880,10 +884,10 @@ class ticl_receipt(models.Model):
                                             "ticl_units": line.get("Units")
                                         }
                                 log.ticl_receipt_payment_lines = [(0, 0, cost_lines)]
-                            # estimated_delivery_date = request_data.get('EstimatedDeliveryDate')
-                            # print("=====ddddddddddddddd",estimated_delivery_date)
-                            # self.estimated_delivery_date = str(estimated_delivery_date)
-                            # print("=====ddddddddddddddd",self.estimated_delivery_date)
+
+                            EstimatedDeliveryDate = request_data.get('EstimatedDeliveryDate')
+                            delivery_date = datetime.strptime(str(EstimatedDeliveryDate),'%m/%d/%Y').strftime("%Y-%m-%d")
+                            log.write({'estimated_delivery_date': delivery_date})
 
                             # Update Other Fields
                             log.write({
@@ -891,7 +895,7 @@ class ticl_receipt(models.Model):
                                     'shipping_carrier_name' : request_data.get('CarrierName'),
                                     'unit_of_weight' : request_data.get('UnitOfWeight'),
                                     'total_weight' : request_data.get('TotalWeight'),
-                                    'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate').strftime('%m/%d/%Y'),
+                                    #'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate').strftime('%m/%d/%Y'),
                                     'total_cost' : request_data.get('TotalCost'),
                                 })
 
