@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="tel_serial_number_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/ticl_recommend_view/static/js/list_button_tender.js"/>
+                <link rel="stylesheet" href="/ticl_recommend_view/static/css/tender_import.css"/>
+
+
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
+
