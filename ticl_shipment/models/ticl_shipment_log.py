@@ -1768,8 +1768,8 @@ class ticl_shipment_log(models.Model):
                             })
 
             picking = self.create_picking()
-            if self.shipment_type != "warehouse_transfer":
-                self.env['ticl.monthly.service.line'].create_detail_mnth_service_inv(self, 'shipment')
+            # if self.shipment_type != "warehouse_transfer":
+            #     self.env['ticl.monthly.service.line'].create_detail_mnth_service_inv(self, 'shipment')
         else:
             if len(self.ticl_ship_lines) == 0:
                 raise Warning(_('You can not shipped shipment without inventory lines.'))
