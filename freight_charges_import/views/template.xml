@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="freight_charges_import_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/freight_charges_import/static/src/js/shipmentExport.js"/>
+                <script type="text/javascript" src="/freight_charges_import/static/src/js/freight_list_button.js"/>
+                
+            </xpath>
+        </template>
+    </data>
+</odoo>
