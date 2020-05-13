@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ticl_order_cancel" model="ir.ui.view">
+        <field name="name">Reason for the cancellation</field>
+        <field name="model">ticl.receipt.cancel</field>
+        <field name="arch" type="xml">
+         <form string="Reason for the cancellation" version="7.0">
+            <p class="oe_grey">
+                Are you sure do you want to cancel Receipt?
+            </p>
+            <group>
+                <field name="ticl_cancel_reason" required="1" string="Reason"/>
+            </group>
+            <footer>
+                <button name="confirm_cancel"
+                    string="Confirm" type="object"
+                    class="oe_highlight"/>
+                or
+                <button string="Close" class="oe_link"
+                    special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="action_ticl_order_cancel" model="ir.actions.act_window">
+        <field name="name">Reason for the cancellation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ticl.receipt.cancel</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ticl_order_cancel"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

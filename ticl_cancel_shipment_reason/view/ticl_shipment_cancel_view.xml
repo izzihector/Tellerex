@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Inherits Shipment From View  -->
+        <record model="ir.ui.view" id="view_receipt_order_ticl_form">
+        <field name="name">ticl.shipment.cancel.log.form</field>
+        <field name="model">ticl.shipment.log</field>
+        <field name="inherit_id" ref="ticl_shipment.ticl_shipment_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='ticl_echo_shipment']" position="after">
+                <button name="%(action_ticl_shipment_order_cancel)d" attrs="{'invisible': [('state', 'in',('picked','packed','shipped','cancel'))]}"
+                    string="Cancel Shipment" type="action" style="background-color: #ff4d4d;" 
+                    class="oe_highlight"/>
+            </xpath>
+
+            <xpath expr="//button[@name='ticl_packed_shipment']" position="after">
+                <button name="%(action_ticl_shipment_order_cancel)d" attrs="{'invisible': [('state', 'in',('draft','packed','shipped','cancel'))]}"
+                string="Cancel Shipment" type="action" style="background-color: #ff4d4d;" 
+                class="oe_highlight"/>
+            </xpath>
+
+            <xpath expr="//button[@name='shipped_shipment_log']" position="after">
+                <button name="%(action_ticl_shipment_order_cancel)d" attrs="{'invisible': [('state', 'in',('picked','draft','shipped','cancel'))]}"
+                    string="Cancel Shipment" type="action" style="background-color: #ff4d4d;" 
+                    class="oe_highlight"/>
+            </xpath>
+
+            <xpath expr="//page[3]/group/field[@name='tel_note']" position="after">
+                <field name="ticl_cancel_reason" string="Reason Of Cancellation" readonly="1"/>
+            </xpath>
+
+        </field>
+        </record>
+
+
+
+    </data>
+</odoo>
