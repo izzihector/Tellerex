@@ -87,7 +87,7 @@ class ticl_monthly_service_line(models.Model):
     serial_number = fields.Char(string='Serial #   ')
     quantity = fields.Char(string='Quantity', default=1)
     condition_id = fields.Many2one('ticl.condition', string="Condition")
-    service_location = fields.Many2one('stock.location',string='Service Location')
+    service_location = fields.Many2one('res.partner',string='Service Location')
     tel_type = fields.Many2one('product.category', string="Type")
     funding_doc_type = fields.Char(string="Funding Doc Type")
     funding_doc_number = fields.Char(string="Funding Doc Number")

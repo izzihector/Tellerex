@@ -1200,8 +1200,8 @@ class ticl_receipt(models.Model):
 
         receipt_log_ids = self.env['ticl.receipt'].search(
                        [('name', '=', self.name)], limit=1)
-        # if self.receipt_type != 'warehouse_transfer':
-        #     self.env['ticl.monthly.service.line'].create_detail_mnth_service_inv(self, 'receipt')
+        if self.receipt_type != 'warehouse_transfer':
+            self.env['ticl.monthly.service.line'].create_detail_mnth_service_inv(self, 'receipt')
         #self.env['ticl.fright.service.line'].create_detail_mnth_fright_inv(self,'receipt')
         action =self.env.ref('ticl_receiving.ticl_action_receipt_log_summary').read()[0]
         action['views'] = [(self.env.ref('ticl_receiving.ticl_receipt_log_summary_form_view').id, 'form')]
