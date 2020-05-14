@@ -226,7 +226,7 @@ class ticl_shipment_log(models.Model):
         return super(ticl_shipment_log, self).unlink()
 
     # Validate Fright Charge Fucntion
-    @api.model
+    #@api.model
     def validate_fright_charge(self):
         for record in self:
             if not record.approval_authority and record.shipment_type == 'Guaranteed' or record.shipment_type == 'Expedited' or record.shipment_type == 'Re-Consignment':

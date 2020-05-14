@@ -17,11 +17,14 @@
                     <field name="origin" readonly="1" string="Receipt Number"/>
                         <field name="status"/>
                         <field name="warehouse_id" invisible="1"/>
-                        <field name="received_date" readonly="1" widget="date"/>
+                        <field name="received_date" readonly="1"/>
+                        <field name="tel_note"/>
+                        <field name="processed_date" readonly="1" invisible="0"/>
+                        <field name="cod_comments"/>           
                         <field name="cod_employee_id" readonly="1"/>
                         <field name="future_ship_location" options="{'no_create': True, 'no_create_edit':True}" invisible="1"/>
                         <field name="future_ship_date" widget="date" invisible="1"/>
-                        <field name="processed_date" readonly="1" invisible="0"/>
+                        
                         <field name="recycled_date" readonly="1" invisible="0"/>
                         <field name="scrap_tel_note" readonly="1" invisible="0"/>     
                         <field name="monthly_service_charge" invisible="1"/>

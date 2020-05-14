@@ -60,6 +60,7 @@ class TiclStockMoveLine(models.Model):
     outbound_associated_fees = fields.Float(string='Outbound Associated Fees')
     shipment_date = fields.Date(string='Shipped Date')
     cod_employee_id = fields.Many2one('hr.employee',string='COD Employee')
+    cod_comments = fields.Char(string='COD Comments')
     refurbishment_charges = fields.Float(string='Refurbishment Charges', store=True)
     old_name = fields.Char(string='Old Receipt Id', index=True)
     shipment_id = fields.Char(string="Shipment Id")

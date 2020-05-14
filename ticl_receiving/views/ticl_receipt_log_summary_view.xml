@@ -121,7 +121,7 @@
                                     <field name="tel_cod" attrs="{'readonly':['|',('move_to_inv','!=','n'),('check_atm','=',True)]}"/>
                                     <field name="repalletize"  readonly="1"/>
                                     <field name="xl_items" readonly="1"/>
-                                    <field name="received_date"   readonly="1"/>
+                                    <field name="received_date" invisible="1"/>
                                     <field name="inbound_charges" readonly="1"/>
                                     <field name="associated_fees" invisible="1"/>
                                     <field name="misc_log_time" invisible="1"/>
@@ -363,7 +363,7 @@
                                         <field name="tel_cod"/>
                                         <field name="repalletize"/>
                                         <field name="xl_items" readonly="1"/>
-                                        <field name="received_date" />
+                                        <field name="received_date" invisible="1"/>
 
                                         <field name="inbound_charges"/>
                                         <field name="associated_fees" invisible="1"/>

@@ -117,26 +117,20 @@
 
 
                                     <field name="line_item_weight" string="Line Item Weight" invisible="1"/>
-
-
                                     <field name="hide_cod" invisible="1"/>
                                     <field name="quarantine_count" invisible="1"/>
                                     <field name="tel_cod" invisible="1"/>
-
                                     <field name="repalletize" invisible="1"/>
                                     <field name="hide_xl_items" invisible="1"/>
-                                    <field name="received_date"  invisible="1"/>
-                             
+                                    <field name="received_date"  invisible="1"/>   
                                     <field name="inbound_charges" invisible="1"/>
                                     <field name="associated_fees" invisible="1"/>
                                     <field name="misc_log_time" invisible="1"/>
                                     <field name="misc_charges" invisible="1"/>
                                     <field name="repalletize_charge" invisible="1"/>
                                     <field name="service_price" invisible="1"/>
-
                                     <field name="tel_note" 
                                     placeholder="Please Comments Here...."/>
-
                                     <field name="funding_doc_type" invisible="1"/>
                                     <field name="funding_doc_number" invisible="1"/>
                                     <field name="ticl_project_id" invisible="1"/>
@@ -399,25 +393,19 @@
                                     <field name="xl_items" />
                                     <field name="ticl_checked" invisible="1"/>
 
-
-
-
-
                                     <field name="hide_cod" invisible="1"/>
                                     <field name="quarantine_count" attrs="{'invisible':[('tel_type','=',4)],'readonly':[('condition_id','=',5)]}"/>
                                     <field name="tel_cod"
                                         attrs="{'invisible': [('hide_cod', '=', True)]}"/>
                                     <field name="repalletize"/>
                                     <field name="hide_xl_items" invisible="1"/>
-                                    <field name="received_date"/>
-
+                                    <field name="received_date" invisible="1"/>
                                     <field name="inbound_charges"/>
                                     <field name="associated_fees" invisible="1"/>
                                     <field name="misc_log_time" invisible="1"/>
                                     <field name="misc_charges" invisible="1"/>
                                     <field name="repalletize_charge"/>
                                     <field name="service_price" invisible="1"/>
-
                                     <field name="tel_note" 
                                     placeholder="Please Comments Here...."/>
                                     <field name="funding_doc_type" invisible="1"/>

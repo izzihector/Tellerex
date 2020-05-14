@@ -6,13 +6,13 @@
 	         
 	           <t t-if="widget.modelName == 'ticl.shipment.log'">
 		             <button type="button" class="btn btn-primary btn_frt_chrg_import_shipment">
-			            Freight Charges Import1
+			            Freight Charges Import
 			        </button>
 			        
 	        	</t>
 	        	<t t-if="widget.modelName == 'ticl.receipt.log.summary'">
 		             <button type="button" class="btn btn-primary btn_frt_chrg_import_receipt">
-			            Freight Charges Import2
+			            Freight Charges Import
 			        </button>
 			        
 	        	</t>
