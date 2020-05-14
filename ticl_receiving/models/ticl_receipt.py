@@ -1236,7 +1236,6 @@ class ticl_receipt_line(models.Model):
     _name = 'ticl.receipt.line'
     _inherit = ['mail.thread']
     _description = "Receiving Line"
-    _parent_store = True
 
      #delivery date plus 5 days        
     # def _get_delivery_date(self):
