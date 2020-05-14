@@ -29,8 +29,8 @@ class ticl_receipt(models.Model):
     #Unique Receiving Number
     @api.model
     def create(self, vals):
-        sequence = self.env['ir.sequence'].next_by_code('ticl.receipt') or '/'
-        vals['name'] = sequence
+        # sequence = self.env['ir.sequence'].next_by_code('ticl.receipt') or '/'
+        # vals['name'] = sequence
         if 'ticl_receipt_lines' in vals.keys():
             for recs in range(len(vals['ticl_receipt_lines'])):
                 vals['ticl_receipt_lines'][recs][2]['tel_type'] = vals['ticl_receipt_lines'][recs][2]['type_dup']
@@ -321,6 +321,18 @@ class ticl_receipt(models.Model):
     #     self.write({'state': 'pending'})
 
 
+    #import receipt
+    def import_receipt(self):
+        view = self.env.ref('ticl_import.wizard_import_work_order')
+        return {
+            'name': 'Warning',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'import.work.order',
+            'view': [('view', 'form')],
+            'target': 'new',
+        }
 
 #Basic RTE3MDU1OTpiMjRmYWRmYS0yNjkwLTQ3NDgtOThjMi1lYWEzNTViNTViMjQ=
 #Echo API POST INTEGRATION With Receipts Creations
@@ -1145,16 +1157,17 @@ class ticl_receipt(models.Model):
                         'tel_cod':tel_line.tel_cod,
                         'xl_items': tel_line.xl_items,
                         'check_atm': tel_line.check_atm,
-                        # 'inbound_charges':tel_line.inbound_charges,
+                        'inbound_charges':tel_line.inbound_charges,
                         'associated_fees':tel_line.associated_fees,
                         'misc_log_time':tel_line.misc_log_time,
                         'misc_charges':tel_line.misc_charges,
                         'service_price':tel_line.service_price,
-
+                        'tel_unique_no':tel_line.tel_unique_no,
                         'check_move_inventory': True,
                         'repalletize': tel_line.repalletize,
                         'repalletize_charge':tel_line.repalletize_charge,
                     }
+                    #print("===ticl_receipt_summary_lines==",ticl_receipt_summary_lines)
                     #count_number = int(tel_line.count_number) - tel_line.quarantine_count
                     tel_line.status_inv = 'y'
 
@@ -1223,6 +1236,7 @@ class ticl_receipt_line(models.Model):
     _name = 'ticl.receipt.line'
     _inherit = ['mail.thread']
     _description = "Receiving Line"
+    _parent_store = True
 
      #delivery date plus 5 days        
     # def _get_delivery_date(self):
@@ -1468,6 +1482,7 @@ class ticl_receipt_line(models.Model):
                 
 
     name = fields.Text(string='Description')
+    tel_unique_no = fields.Char(string="Unique Id")
     received_date = fields.Date(string='Received Date', related='ticl_receipt_id.delivery_date', store=True)
     check_asn = fields.Boolean(string="Check ASN")
     ticl_receipt_id = fields.Many2one('ticl.receipt', invisible=1)
@@ -1489,7 +1504,7 @@ class ticl_receipt_line(models.Model):
     hide_cod = fields.Boolean(string="Hide COD")
     status_inv = fields.Selection(string="Moved to Inventory", selection=[('y', 'Y'), ('n', 'N')])
 
-    inbound_charges = fields.Float(string='Inbound Charges',compute=_ticl_service_price, default=0)
+    inbound_charges = fields.Float(string='Inbound Charges',store=True, compute=_ticl_service_price)
     misc_log_time = fields.Char(string='Misc Log Time', default=0)
     misc_charges = fields.Float(string='Misc Charges', compute=_total_misc_charges)
     associated_fees = fields.Float(string='Associated Fees') 

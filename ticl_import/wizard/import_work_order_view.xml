@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="wizard_import_work_order" model="ir.ui.view">
+			<field name="name">wizard.import.work.order.form</field>
+			<field name="model">import.work.order</field>
+			<field name="arch" type="xml">
+				<form string="Import Product" >	
+		        	<group>
+		                <group>
+		                    <field name="file_data" filename="file_name" widget="binary" required="1" class="oe_inline"/>
+		                	<field name="import_type" />
+		                </group>
+		                <field name="file_name" invisible="1"/>
+		                <field name="import_option" invisible="1"/>
+		                
+		            </group>
+	    
+		            <footer>
+		                <button string="Work Order Import" name="import_button" type="object" class="btn-primary"/>
+		                <button string="Cancel" class="oe_link" special="cancel"/>
+		            </footer>
+					</form>
+				</field>
+		</record>
+
+		<record id="action_import_work_order" model="ir.actions.act_window">
+			<field name="name">Import Work Order</field>
+			<field name="res_model">import.work.order</field>
+			<field name="binding_view_types">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="wizard_import_work_order" />
+			<field name="target">new</field>
+		</record>
+
+
+		<!-- Configuration Menu  -->
+
+		<!-- <menuitem id="menu_import_work_order" action="action_import_work_order"
+    		name="Import Work Order" parent="ticl_management.work_management_sub_menu" sequence="3"/> -->
+
+	</data>
+</odoo>

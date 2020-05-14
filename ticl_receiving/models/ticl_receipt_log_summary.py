@@ -950,28 +950,50 @@ class ticl_receipt_log_summary_line(models.Model):
                 line.repalletize_charge = 0.00
 
 
-    #TICL Service Charges Function 
-    # @api.depends('tel_type', 'misc_log_time', 'xl_items', 'service_price','associated_fees','repalletize')
-    # def _total_service_price(self):
-    #     for line in self:
-    #         rec_log = self.env['ticl.service.charge'].search([('name', '=', 'ATM'),('monthly_service_charge', '=', False)])
-    #         if line.tel_type.name == "ATM":             
-    #             line.service_price = rec_log.service_price + line.associated_fees + line.misc_charges 
-    #             if line.repalletize == "y":
-    #                 line.service_price = rec_log.service_price + line.associated_fees + line.repalletize_charge
+    #TICL Service Charges Function
+    # @api.depends('tel_type','xl_items')
+    def _ticl_service_price(self):
+        for line in self:
+            if line.tel_type.name == "ATM":
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
     
-    #         rec_signage = self.env['ticl.service.charge'].search([('name', '=', 'Signage'),('xl_items', '=', 'y'),('monthly_service_charge', '=', False)])
-    #         if line.tel_type.name == "Signage":             
-    #             line.service_price = rec_log.service_price + line.associated_fees + line.misc_charges
-    #             if line.repalletize == "y":
-    #                 line.service_price = rec_log.service_price + line.associated_fees + line.repalletize_charge
-
-    #         rec_accessory = self.env['ticl.service.charge'].search([('name', '=', 'Accessory'),('xl_items', '=', 'y'),('monthly_service_charge', '=', False)])
-    #         if line.tel_type.name == "Accessory":              
-    #             line.service_price = rec_log.service_price + line.associated_fees
-    #             if line.repalletize == "y":
-    #                 line.service_price = rec_log.service_price +  line.associated_fees + line.repalletize_charge
-
+            if line.tel_type.name == "Signage" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Accessory" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Signage" and line.xl_items == 'n':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Accessory" and line.xl_items =='n':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Lockbox" and line.xl_items =='n':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Lockbox" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "XL" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+                    
     #This fumction for COD Charges                
     @api.onchange('atm_data_destroyed','cod_charges')
     def _ticl_cod_charges(self):
@@ -1029,7 +1051,7 @@ class ticl_receipt_log_summary_line(models.Model):
         string='Status', default='cleaned')
 
 
-    inbound_charges = fields.Float(string='Inbound Charges')
+    inbound_charges = fields.Float(string='Inbound Charges', compute=_ticl_service_price)
     misc_log_time = fields.Char(string='Misc Log Time')
     misc_charges = fields.Float(string='Misc Charges', compute=_total_misc_charges)
     associated_fees = fields.Float(string='Associated Fees')
@@ -1324,11 +1346,11 @@ class ticl_receipt_log_summary_line(models.Model):
 
 
 
-    @api.model
-    def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('ticl.receipt.log.summary.line') or '/'
-        vals['tel_unique_no'] = seq
-        return super(ticl_receipt_log_summary_line, self).create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     seq = self.env['ir.sequence'].next_by_code('ticl.receipt.log.summary.line') or '/'
+    #     vals['tel_unique_no'] = seq
+    #     return super(ticl_receipt_log_summary_line, self).create(vals)
 
 
     @api.model
