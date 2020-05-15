@@ -93,9 +93,9 @@ class import_work_order(models.TransientModel):
                                     lot_name = col12.strip() 
                                     lot = self.env['stock.production.lot'].search([('name','=',lot_name)],limit = 1)
                                     vals.update({'lot_id':lot.id})
-                            col10 = sheet.cell(row, 9).value
-                            if col10 and isinstance(col11, str) == True and col11 != '0':
-                                condition_name = col10.strip()
+                            col14 = sheet.cell(row, 13).value
+                            if col14 and isinstance(col14, str) == True and col14 != '0':
+                                condition_name = col14.strip()
                                 condition = self.env['ticl.condition'].search([('name','=',condition_name)])
                                 vals.update({'condition_id':condition.id})
                             self.env['ticl.shipment.log.line'].create(vals)
