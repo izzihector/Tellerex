@@ -20,7 +20,7 @@
     "data": [
             'security/ticl_menu_security.xml',
             'security/ir.model.access.csv',
-            'views/sidebar.xml',
+            #'views/sidebar.xml',
             'views/menu.xml',
      
     ],
