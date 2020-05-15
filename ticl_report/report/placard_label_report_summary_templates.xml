@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- 
+<template id="external_layout_header" inherit_id="web.external_layout_standard">
+    <xpath expr="//div[@class='header']" position="replace">
+        <div class="header" style="font-family: 'Roboto', sans-serif;font-weight: bold;">
+
+           <img class="img img-responsive" src="/ticl_report/static/src/img/CHASE.jpg" 
+            style="padding-top:10px;padding-left:350px;"/>
+
+        </div>
+    </xpath>
+</template> -->
+
+<template id="individual_report_placards_label">
+    <t t-call="web.html_container">
+        <div class="page" 
+            style="font-family:Helvetica,Verdana,Arial,sans,Lucida Grande,Calibri;">
+            <t t-call="ticl_report.external_layout_custom">
+            <t t-foreach="docs" t-as="o">
+
+            <div style="page-break-after:always; padding-top: 100px;">
+            <center>
+                <p style="word-break: break-all;margin-left:100px;margin-right:100px;font-size:127px;
+                    padding-top:100px;">
+                   <span t-field="o.serial_number"/><br></br>
+                   <span t-field="o.product_id.name"/>
+                </p>
+
+            </center>
+
+               <div style="width: 55%; height:200px; float:left; margin:20px;font-size:23px;padding-top: 80px;">
+                <b style="color:#808080;padding-top:80px;"> Receipt ID</b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                <span t-field="o.ticl_receipt_summary_id.name"/><br></br>
+                <b style="color:#808080;padding-top:80px;">Manufacturer</b>&#160;&#160;&#160;&#160;<span t-field="o.manufacturer_id.name"/>
+                </div>
+
+                <div style="width: 35%; height:200px; float:left; margin:20px;font-size:23px;padding-top:80px;">
+                <b style="color:#808080;padding-top:80px;">Received Date</b>&#160;&#160;
+                <span t-field="o.received_date" t-options="{'widget': 'date'}"/><br></br>
+                <b style="color:#808080;padding-top:80px;">Condition</b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                <span t-field="o.condition_id.name"/>
+                </div>
+
+
+              <div style="font-size:23px;padding-top: 95px;padding-left:410px;">
+                 <b style="color:#808080;">Location </b><span t-field="o.ticl_receipt_summary_id.receiving_location_id.name"/>
+              </div>
+                
+
+            </div>
+            </t>
+        </t>
+        </div>
+    </t>
+</template>
+
+</odoo>

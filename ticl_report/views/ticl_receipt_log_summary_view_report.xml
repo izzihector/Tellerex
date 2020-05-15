@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+       <record id="ticl_receipt_log_summary_form_view_report" model="ir.ui.view">
+            <field name="name">ticl.receipt.log.summary.form</field>
+            <field name="model">ticl.receipt.log.summary</field>
+ 	   <field name="inherit_id" ref="Tel_Receiving.ticl_receipt_log_summary_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='tel_type']" position="after">
+		 <button name="print_placard_label" string="Print" type="object" states="pending" class="btn-primary o_sale_print"/>
+                </xpath> 
+          
+               
+            </field>
+        </record>  
+      
+    </data>
+</odoo>

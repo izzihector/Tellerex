@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="external_layout_standard_custom">
+            <div class="header" style="font-family: 'Roboto', sans-serif;font-weight: bold;">
+               <img class="img img-responsive" src="/ticl_report/static/src/img/CHASE.jpg" style="padding-top:20px;padding-left:200px;"/>
+            </div>
+    
+            <div class="article o_report_layout_standard"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-call="web.address_layout"/>
+                <t t-raw="0"/>
+            </div>
+    
+            <div class="footer o_standard_footer">
+                <div class="text-center" style="border-top: 1px solid black;">
+                    <ul class="list-inline mb4">
+                        <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
+                        <li t-if="company.email" class="list-inline-item">Email: <span t-field="company.email"/></li>
+                        <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
+                        <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    </ul>
+    
+                    <div name="financial_infos">
+                        <span t-field="company.report_footer"/>
+                    </div>
+    
+                    <div t-if="report_type == 'pdf'" class="text-muted">
+                        Page: <span class="page"/> / <span class="topage"/>
+                    </div>
+                </div>
+            </div>
+    </template>
+    <template id="external_layout_custom">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        
+        <t  t-call="ticl_report.external_layout_standard_custom"><t t-raw="0"/></t>
+
+    </template>
+    
+
+
+
+<template id="report_placard_label_document">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="ticl_report.external_layout_custom">
+
+            <div class="page" style="font-family:Helvetica,Verdana,Arial,sans,Lucida Grande,Calibri;">
+            <tr t-foreach="o.ticl_receipt_summary_lines" t-as="line">
+            <div t-if="line_index % 1 == 0 and line.tel_type.name == 'ATM'" 
+                    style="page-break-after: always; padding-top: 100px;">
+
+
+            <center>
+            <p style="word-break: break-all;margin-left:100px;margin-right:100px;font-size:127px;
+                    padding-top:100px;">
+               <span t-field="line.serial_number"/><br></br>
+               <span t-field="line.product_id.name"/>
+            </p>
+            </center>
+
+                <div style="width: 30%; height:200px; float:left; margin:15px;font-size:21px;padding-top: 85px;">
+                <b style="color:#808080;padding-top:90px;"> Receipt ID</b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                <span t-field="line.ticl_receipt_summary_id.name"/><br></br>
+                <b style="color:#808080;padding-top:90px;">Manufacturer</b>&#160;&#160;&#160;&#160;<span t-field="line.manufacturer_id.name"/>
+                </div>
+
+                <div style="width: 70%; height:200px; float:left; margin:60px;font-size:21px;padding-top:85px;">
+                <b style="color:#808080;padding-top:90px;">Received Date</b>&#160;
+                <span t-field="line.received_date" t-options="{'widget': 'date'}"/><br></br>
+                <b style="color:#808080;padding-top:90px;">Condition</b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                <span t-field="line.condition_id.name"/>
+                </div>
+
+                <div style="font-size:21px;padding-top:95px;padding-left:-50px;">
+                 <b style="color:#808080;">Location</b><span t-field="line.ticl_receipt_summary_id.receiving_location_id.name"/>
+                </div> 
+           </div>
+        </tr>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="report_placards_label">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="ticl_report.report_placard_label_document"/>
+        </t>
+    </t>
+</template>
+
+
+</odoo>

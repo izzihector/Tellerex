@@ -274,8 +274,8 @@ class ticl_shipment_log(models.Model):
     #Create method in shipment draft status
     @api.model
     def create(self, vals):
-        sequence = self.env['ir.sequence'].next_by_code('ticl.shipment.log') or '/'
-        vals['name'] = sequence
+        # sequence = self.env['ir.sequence'].next_by_code('ticl.shipment.log') or '/'
+        # vals['name'] = sequence
         if 'ticl_ship_lines' in vals:
             for i in range(len(self.pallet_id.ids), len(vals['ticl_ship_lines'])):
                 if vals['ticl_ship_lines'][i][2] != False or '':
@@ -1768,8 +1768,8 @@ class ticl_shipment_log(models.Model):
                             })
 
             picking = self.create_picking()
-            # if self.shipment_type != "warehouse_transfer":
-            #     self.env['ticl.monthly.service.line'].create_detail_mnth_service_inv(self, 'shipment')
+            if self.shipment_type != "warehouse_transfer":
+                self.env['ticl.monthly.service.line'].create_detail_mnth_service_inv(self, 'shipment')
         else:
             if len(self.ticl_ship_lines) == 0:
                 raise Warning(_('You can not shipped shipment without inventory lines.'))
@@ -2033,6 +2033,7 @@ class ticl_shipment_log_line(models.Model):
 
     name = fields.Text(string='Description')
     shipment_date = fields.Date(string='Shipped Date')
+    receive_date = fields.Date(string='Shipped Date')
     ticl_ship_id = fields.Many2one('ticl.shipment.log', string='Shipment ID', readonly=True)
     product_id = fields.Many2one('product.product', string='Model Name',track_visibility='onchange')
     manufacturer_id = fields.Many2one('manufacturer.order', string="Manufacturer",track_visibility='onchange')
@@ -2255,6 +2256,20 @@ class ticl_shipment_log_line(models.Model):
             else:
                 domain = {'lot_id': [('id', 'in', '')]}
                 return {'domain': domain}
+                
+    #import shipment
+    def import_shipment(self):
+        view = self.env.ref('ticl_import.wizard_import_work_order')
+        return {
+            'name': 'Warning',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'import.work.order',
+            'view': [('view', 'form')],
+            'target': 'new',
+        }
+
 
 
     #unlink Fucntion for delete line            
