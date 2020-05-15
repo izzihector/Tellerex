@@ -63,7 +63,8 @@
                     <field name="activity_date_new" style="width: 70%" required="1"/>
                     <field name="sending_location_id" required="0" style="width:70%" 
                         options="{'no_create': True,'no_create_edit':True}"
-                        attrs="{'invisible': [('dropship_state', '=','yes')],'readonly': ['|',('state','!=', 'draft'),('is_from_inventory', '=', True)]}"/>
+                        attrs="{'invisible': [('dropship_state', '=','yes')],'readonly': ['|',('state','!=', 'draft'),('is_from_inventory', '=', True)]}"
+                        domain="[('is_location','=',True)]"/>
                     <field name="sending_rigger_id" style="width:70%" attrs="{'invisible': [('dropship_state', '=','no')]}"/>   
                     <field name="is_from_inventory" invisible="1"/>
                     <field name="receiving_location_id" required="1" style="width:70%"
@@ -148,7 +149,7 @@
                     <field name="service_price" invisible="1"/>                       
                     <field name="tel_note" placeholder="Comment Here.."/>
                     <field name="ticl_checked" invisible="1"/>
-                    <field name="ship_stock_move_line_id"/>
+                    <field name="ship_stock_move_line_id" invisible="1"/>
                     <field name="ship_stock_move_id" invisible="1"/>
                     <field name="hide_cod" invisible="1"/>
                     <field name="hide_xl_items" invisible="1"/>
@@ -429,7 +430,8 @@
                     <field name="activity_date_new" style="width: 70%" readonly="1"/>
                     <field name="sending_location_id" required="1" style="width:70%" 
                         options="{'no_create': True,'no_create_edit':True}"
-                         attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                         attrs="{'readonly': [('state','!=', 'draft')]}"
+                         domain="[('is_location','=',True)]"/>
                     <field name="receiving_location_id" required="1" style="width:70%"
                         options="{'no_create': True,'no_create_edit':True}"
                          attrs="{'readonly': [('state','!=', 'draft')]}"/>
@@ -511,7 +513,7 @@
                         <field name="service_price" invisible="1"/>
                         <field name="tel_note" placeholder="Please Comment Here.." readonly="1"/>
                         <field name="ticl_checked" invisible="1"/>
-                        <field name="ship_stock_move_line_id"/>
+                        <field name="ship_stock_move_line_id" invisible="1"/>
                         <field name="ship_stock_move_id" invisible="1"/>
                         <field name="hide_cod" invisible="1"/>
                         <field name="hide_xl_items" invisible="1"/>

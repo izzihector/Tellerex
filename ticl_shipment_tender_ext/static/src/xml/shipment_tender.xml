@@ -1,0 +1,50 @@
+<templates id="template" xml:space="preserve">
+	<t t-extend="ListView.buttons">
+		<t t-jquery="button.o_list_button_add" t-operation="replace">
+	         
+	         <t t-if="widget.modelName == 'ticl.shipment.log.ext'">
+		             <button type="button" class="btn btn-primary o_button_import_outbond">
+			            Outbound Tender Import
+			        </button>
+			        <script>
+			        	$(document).ready(function(){
+			        		$('.o_button_import').hide();
+			        	});
+			        </script>
+	         </t>
+	         <t t-else="">
+	         	<t t-if="widget.is_action_enabled('create')">
+		            <button type="button" class="btn btn-primary o_list_button_add" accesskey="c">
+		                Create
+		            </button>
+		        </t>
+	         </t>
+	     </t>
+	 </t>
+<!--	 <header t-extend="Menu">-->
+<!--	 	<t t-jquery="a.o_menu_brand" t-operation="replace">-->
+<!--	 		<a class="o_menu_brand_brad" href="/">-->
+<!--	 			<img src="/ticl_inbound_import/static/src/img/logo1.png" width="80px"/>-->
+<!--	 		</a>-->
+<!--	 	</t>-->
+<!--	</header>-->
+	 <div t-name="OutboundImportDialog" class="o_export">
+	 	<div class="float-right asn" style="display: unset !important;">
+		 	<span class="tender_tooltip">
+		 		<img class="tender_img" src="/ticl_inbound_import/static/src/img/information-icon.png"></img>
+		 		<span class="tn_tooltiptext">You can download Outbound tender file template from here.</span>
+		 		<a style="float:right;" 
+		 		href="/ticl_shipment_tender_ext/static/src/excel_template/Outbound_Import_Tender_Templates.xlsx">Download Template</a>
+		 	</span>
+		 	
+	 	</div>
+
+	 	<form method="post" enctype="multipart/form-data" role="form" id="tender_form">
+			 
+			   <input type="file" multiple="true" class="form-control" id="fileinput" name="tender" />
+			    
+		</form>
+		
+	</div>
+<!--	</t>-->
+</templates>

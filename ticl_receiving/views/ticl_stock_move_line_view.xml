@@ -117,10 +117,10 @@
             </field>
         </record>
 
-   <menuitem name="TICL Inventory" id="menu_stock_root_ticl" 
+   <menuitem name="Inventory Details" id="menu_stock_root_ticl" 
     action="action_tel_receving_inv_line" sequence="4"/>
 
-    <menuitem name="TICL Inventory" id="menu_stock_root_ticl_line"
+    <menuitem name="Inventory Details" id="menu_stock_root_ticl_line"
               parent="menu_stock_root_ticl" action="action_tel_receving_inv_line" sequence="1"/>
 
 <!--     <menuitem name="TICL Inventory Line" id="menu_stock_root_ticl_line"
