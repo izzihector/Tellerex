@@ -1346,7 +1346,7 @@ class ticl_receipt_log_summary_line(models.Model):
 
 
 
-    # @api.model
+    @api.model
     def create(self, vals):
         seq = self.env['ir.sequence'].next_by_code('ticl.receipt.log.summary.line') or '/'
         vals['tel_unique_no'] = seq
