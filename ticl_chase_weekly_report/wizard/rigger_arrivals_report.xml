@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_rigger_arrivals_report_form" model="ir.ui.view">
+            <field name="name">ticl.rigger.arrivals.report.form</field>
+            <field name="model">ticl.rigger.arrivals.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Rigger Arrivals Report">
+                        <field name="rigger_report_printed" invisible="1"/>
+                        <group  attrs="{'invisible':[('rigger_report_printed','=',True)]}">
+                            <group>
+                                <field name="from_date" required="1" style="width:200px;"  t-options="{'format': 'dd / MM / yyyy HH / mm'}" widget="date"/>             
+                            </group>
+                            <group>
+                                <field name="to_date" required="1" style="width:200px;" widget="date"/> 
+                            </group>
+                            <group> 
+                                <field name="report_type" invisible="1"
+                                    style="width:200px;"/> 
+                            </group>
+                        </group>
+                        <group attrs="{'invisible':[('rigger_report_printed','=',False)]}">
+                            <field name="file_name" invisible="1"/>
+                            <field name="rigger_arrivals_file" readonly="1"  filename="file_name"/>
+                        </group>
+                    <footer>
+                    <button string='Generate'  name="action_print_rigger_arrivals_report"
+                        type="object" class="btn-primary" attrs="{'invisible':[('rigger_report_printed','=',True)]}"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_rigger_arrivals_report_pdf" model="ir.actions.report">
+        <field name="name">Rigger Arrivals Report</field>
+        <field name="model">ticl.rigger.arrivals.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ticl_inventory_xls_report.rigger_arrivals_report_pdf</field>
+        </record>
+
+        <record id="action_rigger_arrivals_report" model="ir.actions.act_window">
+            <field name="name">Rigger Arrivals Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.rigger.arrivals.report</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Rigger Arrivals Report" 
+            id="rigger_arrivals_excel_pdf_report"
+    	    parent="ticl_user_management.report_ticl_menu" sequence="4"
+            action="action_rigger_arrivals_report"/>
+</odoo>

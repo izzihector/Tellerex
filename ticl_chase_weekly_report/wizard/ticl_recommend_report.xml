@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <record id="receipt_recommend" model="ir.actions.server">
+        <field name="name">Generate To Recommend Report</field>
+        <field name="model_id" ref="ticl_receiving.model_ticl_receipt_line"/>
+        <field name="binding_model_id" ref="ticl_receiving.model_ticl_receipt_line"/>
+        <field name="state">code</field>
+        <field name="code">action = records.generate_to_recommend_xls() </field>
+    </record>
+
+    </data>
+</odoo>
