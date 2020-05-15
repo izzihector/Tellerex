@@ -1162,7 +1162,7 @@ class ticl_receipt(models.Model):
                         'misc_log_time':tel_line.misc_log_time,
                         'misc_charges':tel_line.misc_charges,
                         'service_price':tel_line.service_price,
-                        'tel_unique_no':tel_line.tel_unique_no,
+                        #'tel_unique_no':tel_line.tel_unique_no,
                         'check_move_inventory': True,
                         'repalletize': tel_line.repalletize,
                         'repalletize_charge':tel_line.repalletize_charge,
