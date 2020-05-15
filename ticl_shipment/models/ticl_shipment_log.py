@@ -216,6 +216,19 @@ class ticl_shipment_log(models.Model):
     #     if self.shipment_type == 'warehouse_transfer':
     #         res['domain'] = {'receiving_location_id': [('is_warehouse', '=', True)]}
     #     return res
+
+    #import shipment
+    def import_shipment(self):
+        view = self.env.ref('ticl_import.wizard_import_work_order')
+        return {
+            'name': 'Warning',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'import.work.order',
+            'view': [('view', 'form')],
+            'target': 'new',
+        }
         
     @api.model
     def unlink(self):
@@ -2257,18 +2270,7 @@ class ticl_shipment_log_line(models.Model):
                 domain = {'lot_id': [('id', 'in', '')]}
                 return {'domain': domain}
                 
-    #import shipment
-    def import_shipment(self):
-        view = self.env.ref('ticl_import.wizard_import_work_order')
-        return {
-            'name': 'Warning',
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'import.work.order',
-            'view': [('view', 'form')],
-            'target': 'new',
-        }
+
 
 
 
