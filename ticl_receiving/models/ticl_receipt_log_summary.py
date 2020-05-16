@@ -1305,7 +1305,7 @@ class ticl_receipt_log_summary_line(models.Model):
                     'picking_id': picking.id,
                     'picking_type_id': picking.picking_type_id.id,
                 })
-                move = self.env['stock.move.line'].create(vals)
+                move = self.env['stock.move'].create(vals)
                 self.ticl_receipt_summary_id.create_mv_line(vals,move,picking)
 
                 summary_line_id = self.env['ticl.receipt.log.summary.line'].search(
