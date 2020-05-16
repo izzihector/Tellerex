@@ -2,3 +2,4 @@
 # Part of BrowseInfo. See LICENSE file for full copyright and licensing details.
 
 from . import wiz_import_work_order
+from . import update_data
