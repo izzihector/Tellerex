@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="email_template_rigger_report" model="mail.template">
+        <field name="name">Rigger Arrival Report: Send by email</field>
+        <field name="model_id" ref="model_ticl_rigger_arrival_report"/>
+        <field name="subject">Rigger Arrival Report</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    This is a Rigger Arrival Report.
+                    <br/>
+                    Please find the Attachment for Rigger Arrival Report.
+                    <div style="margin: 16px 0px 16px 0px;">
+
+                    </div>
+                    Thanks,
+                    <br/>
+                    Tellerex Inc.
+                </p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="user_signature" eval="False"/>
+    </record>
+</odoo>

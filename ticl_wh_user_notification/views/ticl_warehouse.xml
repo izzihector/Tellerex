@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inheriting stock warehouse form view -->
+        <record id="ticl_view_warehouse_form_inherit" model="ir.ui.view">
+            <field name="name">ticl.warehouse.form</field>
+            <field name="model">stock.warehouse</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="ticl_management.view_warehouse_form_inherit"/>  
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="checkin_time" widget="time"/>
+                    <field name="checkout_time"  widget="time"/>
+                </xpath>
+                <xpath expr="//field[@name='warehouse_email']" position="after">
+                    <field name="ticl_email_ids" widget="many2many_tags" domain="[('warehouse_notify', '=', True)]" options="{'no_create': True, 'no_create_edit':True}" string="Shipment Notifications recipients"
+                    placeholder="Emails"
+                    />
+                </xpath>
+                
+            </field>
+        </record>
+
+        
+
+    </data>
+</odoo>
+
