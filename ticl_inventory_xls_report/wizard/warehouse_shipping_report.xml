@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_warehouse_shipping_report_form" model="ir.ui.view">
+            <field name="name">ticl.warehouse.shipping.report.form</field>
+            <field name="model">ticl.warehouse.shipping.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Warehouse Shipping Report">
+                        <field name="shipping_report_printed" invisible="1"/>
+                        <group  attrs="{'invisible':[('shipping_report_printed','=',True)]}">
+                        <group>
+                        <field name="from_date" required="1" style="width:200px;"  t-options="{'format': 'dd / MM / yyyy HH / mm'}" widget="date"/>             
+                        </group>
+                        <group>
+                        <field name="to_date" required="1" style="width:200px;" widget="date"/> 
+                        </group>
+                        <group> 
+                        <field name="warehouse_ids"
+                        style="width:200px;" widget="many2many_tags"
+                        options="{'no_quick_create':True,'no_create_edit':True}" domain="[('is_location', '=', True)]"/>
+                        </group>
+                        <group> 
+                        <field name="print_type" required="1"
+                        style="width:200px;"/> 
+                       
+                        </group>
+                        </group>
+                        <group attrs="{'invisible':[('shipping_report_printed','=',False)]}">
+                        <field name="file_name" invisible="1"/>
+                        <field name="warehouse_shipping_file" readonly="1"  filename="file_name"/>
+                        </group>
+                    <footer>
+                    <button string='Print'  name="action_print_warehouse_shipping_report"
+                        type="object" class="btn-primary" attrs="{'invisible':[('shipping_report_printed','=',True),('print_type','=','pdf')]}"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_warehouse_shipping_report_pdf" model="ir.actions.report">
+        <field name="name">Warehouse Shipping Report</field>
+        <field name="model">ticl.warehouse.shipping.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ticl_inventory_xls_report.warehouse_shipping_report_pdf</field>
+        </record>
+
+        <record id="action_warehouse_shipping_report" model="ir.actions.act_window">
+            <field name="name">Warehouse Shipping Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.warehouse.shipping.report</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Warehouse Shipping Report" 
+            id="warehouse_shipping_excel_pdf_report"
+    	    parent="ticl_user_management.report_ticl_menu" sequence="6"
+            action="action_warehouse_shipping_report"/>
+</odoo>

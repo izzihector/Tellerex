@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_sold_items_Report_form" model="ir.ui.view">
+            <field name="name">ticl.sold.items.report.form</field>
+            <field name="model">ticl.sold.items.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Inbound/Received Report">
+                        <field name="inventory_report_printed" invisible="1"/>
+                            <group  attrs="{'invisible':[('inventory_report_printed','=',True)]}">
+                                <group>
+                                    <field name="from_date" required="1" style="width:200px;" widget="date" t-options="{'format': 'dd / MM / yyyy HH / mm'}"/>
+
+                                </group>
+                                <group>
+                                    <field name="to_date" required="1" style="width:200px;" widget="date"/>
+                               </group>
+                                <group> <field name="warehouse_ids"
+                                        style="width:200px;" widget="many2many_tags" domain="[('is_location', '=', True)]"/></group>
+                                 <group> <field name="categ_ids" style="width:200px;" widget="many2many_tags"/>
+                                     <field name="print_type" required="1"
+                                        style="width:200px;"/></group>
+                           </group>
+                           <group attrs="{'invisible':[('inventory_report_printed','=',False)]}">
+                              <field name="file_name" invisible="1"/>
+                              <field name="inventory_summary_file" readonly="1"  filename="file_name"/>
+                           </group>
+                    <footer>
+                    <button string='Print'  name="action_print_inventory_inbound"
+                        type="object" class="btn-primary" attrs="{'invisible':[('inventory_report_printed','=',True),('print_type','=','pdf')]}"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sold_items_Report" model="ir.actions.report">
+        <field name="name">Sold Items Report</field>
+        <field name="model">ticl.sold.items.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ticl_inventory_xls_report.sold_items_report_pdf</field>
+        </record>
+
+        <record id="action_sold_items_Report" model="ir.actions.act_window">
+            <field name="name">Sold Items Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.sold.items.report</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem name="Sold Items Report" id="inventory_sold_items_report_child_menu"
+            parent="ticl_user_management.report_ticl_menu" sequence="5"
+            action="action_sold_items_Report"/>
+
+</odoo>
