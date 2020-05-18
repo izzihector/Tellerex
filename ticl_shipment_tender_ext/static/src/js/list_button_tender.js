@@ -26,7 +26,7 @@ ListController.include({
 //        });
         this.$buttons.on('click', '.o_button_import_outbond', function () {
         	
-        	var data = ['tender','Import Inbound Tender File'];
+        	var data = ['tender','Import Outbound Tender File'];
         	new tenderImport(this, data).open();
         });
     }

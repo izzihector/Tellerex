@@ -26,7 +26,7 @@ ListController.include({
 //        });
         this.$buttons.on('click', '.o_button_import_tender_drop', function () {
         	
-        	var data = ['tender','Import Inbound Tender File'];
+        	var data = ['tender','Import DropShip  File'];
         	new tenderImport(this, data).open();
         });
     }

@@ -29,10 +29,10 @@
 							<field name="state" required="1" style="width: 70%" readonly="1"/>
 							<field name="delivery_date" style="width: 70%" invisible="1" widget="datetime"/>
                             <field name="delivery_date_new" style="width: 70%" readonly="1"/>
-							<field name="sending_location_id" style="width:70%" required="1"
-                                string="Destination Location"/>
                             <field name="receiving_location_id" string="Origin Location"
                             style="width:70%" readonly="1"/>
+                            <field name="sending_rigger_id" style="width:70%" required="1"
+                                string="Destination Location"/>
                         	<field name="equipment_date" style="width: 70%" widget="date" invisible="1"/>
                         	<field name="shipment_types" style="width: 70%" />
                        </group>
@@ -113,7 +113,7 @@
                 <tree string="Ships">
                     <field name="name"/>
                     <field name="receiving_location_id" string="Origin Location"/>
-                    <field name="sending_location_id" string="Destination Location"/>
+                    <field name="sending_rigger_id" string="Destination Location"/>
                     <field name="delivery_date" invisible="1"/>
                     <field name="dropship_state"/>
                     <field name="delivery_date_new"/>

@@ -494,7 +494,7 @@ class ticl_shipment_log(models.Model):
                 from_location = self.env['res.partner'].search([('name','=',location[0])],limit=1)
                 to_location = self.env['res.partner'].search([('name','=',location[1])],limit=1)
                 vals['receiving_location_id'] = from_location.id
-                vals['sending_location_id'] = to_location.id
+                vals['sending_rigger_id'] = to_location.id
                 for cols in out[recs]:
                     try:
                         product_name = str(int(sheet.cell(cols+1, 9).value)).strip()
@@ -599,10 +599,10 @@ class ticl_shipment_log(models.Model):
                         str(real_datetime.datetime.today()).split(' ')[0] + " 00:00:00", '%Y-%m-%d %H:%M:%S') + timedelta(
                         days=3)
                 vals['ticl_ship_lines'] = ticl_ship_lines
-                ship_id = self.env['ticl.shipment.log'].search([],order="id desc",limit=1)
-                last_ship_name = ship_id.name.split('/')
-                new_ship_name = int(last_ship_name[1]) + 1
-                vals['name'] = 'SM/'+str(new_ship_name)
+                # ship_id = self.env['ticl.shipment.log'].search([],order="id desc",limit=1)
+                # last_ship_name = ship_id.name.split('/')
+                # new_ship_name = int(last_ship_name[1]) + 1
+                # vals['name'] = 'SM/'+str(new_ship_name)
                 vals['shipment_types'] = 'Regular'
                 ship_log = self.env['ticl.shipment.log.ext.drop'].create(vals)
                 ship_log.picked_shipment_log_ext_drop()

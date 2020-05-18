@@ -19,7 +19,7 @@ class ticl_shipment_log_ext_drop(models.Model):
     activity_date_new = fields.Date(string='Activity Date')
 
     bill_of_lading_number = fields.Char(string='Bill of Lading (BOL)')
-    sending_location_id = fields.Many2one('res.partner', string='Receiving Location')
+    sending_rigger_id = fields.Many2one('res.partner', string='Receiving Location')
     warehouse_id = fields.Many2one('stock.warehouse', string='Receiving warehouse',
                                    default=lambda self: self.env.user.warehouse_id.id)
     user_id = fields.Many2one('res.users', string='Created By', default=lambda self: self.env.user)
@@ -74,8 +74,8 @@ class ticl_shipment_log_ext_drop(models.Model):
         vals = {
             'delivery_date_new': self.delivery_date_new,
             'shipment_date': pick_up_date_new,
-            'receiving_location_id': self.sending_location_id.id,
-            'sending_location_id': self.receiving_location_id.id,
+            'receiving_location_id': self.receiving_location_id.id,
+            'sending_rigger_id': self.sending_rigger_id.id,
             'warehouse_id': self.warehouse_id.id,
             'equipment_date': self.equipment_date,
             'shipment_type': self.shipment_types,
