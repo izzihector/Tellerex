@@ -93,7 +93,7 @@ class import_update_data(models.TransientModel):
                             vals = {}
                             col1 = sheet.cell(row, 1).value
                             if col1:
-                                c_date = self.convert_date(col10,workbook.datemode)
+                                c_date = self.convert_date(col1,workbook.datemode)
                                 print("----c_date",c_date)
                                 vals.update({'recycled_date':c_date})
 
