@@ -11,7 +11,7 @@
     'author': 'delaplex',
     'license': "OPL-1",
     'support': 'delaplex.com',
-    'depends': ['stock', 'ticl_management'],
+    'depends': ['stock', 'ticl_management','ticl_user_management'],
     'data': [
         # 'wizard/inventory_xls_menu_report_view.xml',
         # 'wizard/stock_summary_report.xml',
