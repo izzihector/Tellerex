@@ -146,10 +146,10 @@
                                         <span style="color:black;" t-field="o.receiving_location_id.street2"/>
                                     </td>
                                     <td>
-                                        <span style="color:black;" t-field="o.receiving_location_id.city"/>
+                                        <span style="color:black;" t-field="o.receiving_location_id.city_id.name"/>
                                     </td>
                                     <td>
-                                        <span style="color:black;" t-field="o.receiving_location_id.state.code"/>
+                                        <span style="color:black;" t-field="o.receiving_location_id.state_id.code"/>
                                     </td>
                                     <td>
                                         <span style="color:black;" t-field="o.receiving_location_id.zip"/>

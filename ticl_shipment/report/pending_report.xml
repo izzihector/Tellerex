@@ -19,7 +19,7 @@
                                     style="width:200px;"/> 
                                 <field name="warehouse_ids"
                                     style="width:200px;" widget="many2many_tags"
-                                    options="{'no_quick_create':True,'no_create_edit':True}" domain="[('is_warehouse', '=', True)]"/>
+                                    options="{'no_quick_create':True,'no_create_edit':True}" domain="[('is_location', '=', True)]"/>
                             </group>
                         </group>
                         <group attrs="{'invisible':[('pending_report_printed','=',False)]}">
@@ -46,7 +46,7 @@
             <field name="name">Pending Shipment Report</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ticl.pending.shipment.report</field>
-            <field name="view_type">form</field>
+            <field name="binding_view_types">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>

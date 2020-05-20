@@ -35,7 +35,7 @@ class ticl_pending_shipment_report(models.TransientModel):
     warehouse_ids = fields.Many2many('stock.location', string='Warehouse')
 
 
-    @api.multi
+    #@api.multi
     def action_print_pending_shipment_report(self):
         if self.report_type == 'pending_shipment':
             return {
@@ -46,7 +46,7 @@ class ticl_pending_shipment_report(models.TransientModel):
             }
 
 
-    @api.multi
+    #@api.multi
     def get_pending_report_values(self,data=None):
         date_split_1 = str(self.from_date).split(" ")
         date_split_2 = str(self.to_date).split(" ")
