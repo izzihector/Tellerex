@@ -10,8 +10,8 @@
 	'depends': ['base', 'stock', 'ticl_management'],	
 	'data': [
 		#'security/ir.model.access.csv',
-		'wizard/update_data_view.xml',
-		'wizard/import_work_order_view.xml',
+		# 'wizard/update_data_view.xml',
+		# 'wizard/import_work_order_view.xml',
 		],
 
 	'installable': True,
