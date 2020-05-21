@@ -22,27 +22,30 @@ class ticl_scrap_stock(models.Model):
     
     location_id = fields.Many2one(
         'stock.location', 'Location', domain="[('usage', '=', 'internal')]",
-        required=True, states={'done': [('readonly', True)]}, default=_get_default_location_id)
+        required=True, states={'done': [('readonly', True)]}, default=_get_default_location_id, track_visibility='onchange')
     scrap_lines = fields.One2many('stock.scrap.line', 'scrap_id', ondelete='cascade',track_visibility='onchange')
-    move_count = fields.Integer(compute="count_moves")
-    date_expected_new = fields.Date('Create Date', store=True)
+    move_count = fields.Integer(compute="count_moves",track_visibility='onchange')
+    date_expected_new = fields.Date('Create Date', store=True,track_visibility='onchange')
     
     @api.model
-    def create(self, vals):
-        if vals.get('scrap_lines',False):
-            for line in vals.get('scrap_lines'):
+    def create(self, vals_list):
+        if vals_list.get('scrap_lines',False):
+            for line in vals_list.get('scrap_lines'):
                 product_id = line[2].get('product_id')
                 product = self.env['product.product'].browse(product_id)
                 uom = product.product_tmpl_id.uom_id
                 line[2].update({'product_uom_id':uom.id})
-                vals.update({'product_id':product_id,'product_uom_id':uom.id})
-            return super(ticl_scrap_stock, self).create(vals)
+                vals_list.update({'product_id':product_id,'product_uom_id':uom.id})
+            return super(ticl_scrap_stock, self).create(vals_list)
         else:
             try:
-                return super(ticl_scrap_stock, self).create(vals)
+                return super(ticl_scrap_stock, self).create(vals_list)
             except:
 
                 raise UserError(_("No Scrap Items"))
+
+
+
 
     def action_validates(self, lines):
         for scrap_line in lines:
@@ -53,7 +56,7 @@ class ticl_scrap_stock(models.Model):
             mv.sudo().write({'status':'recycled','recycled_date':scrap_line[0].date_expected_new,'scrap_tel_note': scrap_line[0].scrap_tel_note})
 
 
-
+    
     def action_validate(self):
         self.ensure_one()
         condition = self.env['ticl.condition'].search([('name','=','To Recommend')])
@@ -66,8 +69,8 @@ class ticl_scrap_stock(models.Model):
             domain = [('product_id','=',scrap_line.product_id.id),
                       ('order_from_receipt','=',True),
                       ('condition_id','=',condition.id),
-                      ('status','=','inventory'),
-                      ('ticl_warehouse_id', '=', scrap_line.location_id.id)]
+                      ('status','=','inventory')]
+            print("==111111111111111===",domain)          
 #             available_qty = sum(self.env['stock.quant']._gather(scrap_line.product_id,
 #                                                                 scrap_line.location_id,
 #                                                                 scrap_line.lot_id,
@@ -78,6 +81,7 @@ class ticl_scrap_stock(models.Model):
                 domain += [('serial_number','=',scrap_line.lot_id.name)]
             
             available_move = self.env['stock.move.line'].search(domain)
+            print("==domaindomaindomaindomain===",available_move)
             available_qty = float(len(available_move)) if available_move else 0.0
             scrap_qty = scrap_line.product_uom_id._compute_quantity(scrap_line.scrap_qty, scrap_line.product_id.uom_id)
             
@@ -124,11 +128,10 @@ class ticl_scrap_stock_line(models.Model):
         required=True)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure',required=True, default=_default_unit)
     scrap_qty = fields.Float('Quantity', default=1.0)
-    lot_id = fields.Many2one(
-        'stock.production.lot', 'Serial Number')
+    lot_id = fields.Many2one('stock.production.lot', 'Serial Number')
     scrap_id = fields.Many2one('stock.scrap', invisible=1)
     condition_id = fields.Many2one('ticl.condition', string="Condition",default=_default_to_recommend)
-    tel_type = fields.Many2one('product.category', string="Type")
+    tel_type = fields.Many2one('product.category', string="Type", store=True)
     manufacturer_id = fields.Many2one('manufacturer.order', string="Manufacturer")
     tel_note = fields.Char(string='Comment/Note')
     scrap_tel_note = fields.Char(string='Comment/Note')
@@ -192,24 +195,15 @@ class ticl_scrap_stock_line(models.Model):
         return True
     
     # Filter Product Basis of Product TYpe
-    @api.depends('tel_type','manufacturer_id')
-    @api.onchange('tel_type', 'manufacturer_id')
+    # Filter Product Basis of Product TYpe
+    @api.depends('tel_type','manufacturer_id','lot_id')
+    @api.onchange('tel_type', 'manufacturer_id','lot_id')
     def onchange_product_type(self):
-        
-        res = {}
-        if self.tel_type and not self.manufacturer_id:
-            print('test call 1')
-            res['domain']={'product_id':[('categ_id', '=', self.tel_type.id)]}
-        elif self.tel_type and self.manufacturer_id:
-            print('test call 2')
-            res['domain']={'product_id':[('categ_id', '=', self.tel_type.id),('manufacturer_id', '=', self.manufacturer_id.id)]}
-        elif not self.tel_type and self.manufacturer_id:
-            print('test call 3')
-            res['domain']={'product_id':[('manufacturer_id', '=', self.manufacturer_id.id)]}
+        if self.tel_type.name == 'ATM':
+            lot_id = self.env['stock.move.line'].search([('serial_number', '=', self.lot_id.name)], limit=1)
+            self.move_id = lot_id.id
         else:
-            print('test call 4')
-            res['domain']={'product_id':[('categ_id', '=', 0),('manufacturer_id', '=', 0)]}
-            
+            self.move_id = ""
         if self.tel_type.name == 'ATM':
                 self.ticl_checked = False
                 self.count_number = 1
@@ -219,27 +213,32 @@ class ticl_scrap_stock_line(models.Model):
         if self.manufacturer_id:
             if self.product_id.manufacturer_id.id != self.manufacturer_id.id:
                 self.product_id = False
-        return res
+        
     
     # Filter Product Basis of Product TYpe
     @api.depends('product_id')
     @api.onchange('product_id')
     def onchange_product(self):
-        res = {}
-        condition_id = self.env['ticl.condition'].search([('name', '=', 'To Recommend')], limit=1).id
-        #stock_move_ids = self.env['stock.move'].search([('condition_id', '=', condition_id),('product_id', '=',self.product_id.id )])
-        stock_move_ids = self.env['stock.move'].search([('status', '=', 'inventory'),('condition_id', '=', condition_id),('product_id', '=',self.product_id.id )])
-        move_names = []
-        for move in stock_move_ids:
-            if move.serial_number:
-                move_names.append(move.serial_number)
-        res['domain']={'lot_id':[
-            ('product_id', '=', self.product_id.id),
-            ('condition_id','=',condition_id),
-            ('receiving_location_id','=',self.location_id.id),
-            ('is_scraped','=',False),
-            ('name','in',move_names)]}
-        return res
+        if self.product_id:
+            self.xl_items = self.product_id.xl_items
+            self.manufacturer_id = self.product_id.manufacturer_id.id or False
+            self.tel_type = self.product_id.categ_id.id or False
+            res = {}
+            condition_id = self.env['ticl.condition'].search([('name', '=', 'To Recommend')], limit=1).id
+            #stock_move_ids = self.env['stock.move'].search([('condition_id', '=', condition_id),('product_id', '=',self.product_id.id )])
+            stock_move_ids = self.env['stock.move.line'].search([('status', '=', 'inventory'),('condition_id', '=', condition_id),('product_id', '=',self.product_id.id )])
+            
+            move_names = []
+            for move in stock_move_ids:
+                if move.serial_number:
+                    move_names.append(move.serial_number)
+            res['domain']={'lot_id':[
+                ('product_id', '=', self.product_id.id),
+                ('condition_id','=',condition_id),
+                ('receiving_location_id','=',self.location_id.id),
+                ('is_scraped','=',False),
+                ('name','in',move_names)]}
+            return res
     
 class StockWarnInsufficientQtyScrap(models.TransientModel):
     _inherit = 'stock.warn.insufficient.qty.scrap'

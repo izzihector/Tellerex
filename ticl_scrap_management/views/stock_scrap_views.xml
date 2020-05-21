@@ -26,8 +26,8 @@
                             <page string="Scrap Items">
                                 <field name="scrap_lines" class="pointer_event" attrs="{'readonly': [('state','=','done')]}">
                                     <tree string="scrap" editable="bottom">
-                                        <field name="tel_type"/>
-                                        <field name="manufacturer_id"/>
+                                        <field name="tel_type" readonly="0"/>
+                                        <field name="manufacturer_id" readonly="0"/>
                                         <field name="product_id"/>
                                         <field name="product_uom_id" groups="uom.group_uom" invisible="1"/>
                                         <field name="lot_id" groups="stock.group_production_lot" attrs="{'required': [('ticl_checked','=', False)], 'readonly': [('ticl_checked','=', True)]}"/>
@@ -95,8 +95,8 @@
                             <page string="Scrap Items">
                                 <field name="scrap_lines" class="pointer_event" attrs="{'readonly': [('state','=','done')]}">
                                     <tree string="scrap" editable="bottom">
-                                        <field name="tel_type"/>
-                                        <field name="manufacturer_id"/>
+                                        <field name="tel_type" readonly="0"/>
+                                        <field name="manufacturer_id" readonly="0"/>
                                         <field name="product_id"/>
                                         <field name="product_uom_id" groups="uom.group_uom" invisible="0"/>
                                         <field name="lot_id" groups="stock.group_production_lot" attrs="{'required': [('ticl_checked','=', False)], 'readonly': [('ticl_checked','=', True)]}"/>
