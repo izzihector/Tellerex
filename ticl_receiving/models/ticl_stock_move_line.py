@@ -77,3 +77,21 @@ class TiclStockMoveLine(models.Model):
     sale_commission = fields.Char('Sale Commission')
     sale_check_number = fields.Char('Sale Check Number')
     sending_location_id = fields.Many2one('res.partner', string='Origin Location')
+
+
+    #@api.multi
+    def update_entries(self):
+        self.ensure_one()
+        action = self.env.ref('ticl_management.update_inventory_entries_action')
+        result = action.read()[0]
+        result['context']={'default_old_serial':self.serial_number}
+        return result
+
+
+    #@api.multi
+    def update_entries_model(self):
+        self.ensure_one()
+        action = self.env.ref('ticl_management.update_inventory_entries_action_model')
+        result = action.read()[0]
+        result['context']={'default_old_model':self.product_id.id}
+        return result
