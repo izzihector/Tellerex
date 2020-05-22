@@ -10,7 +10,7 @@
     'author': 'delaplex',
     'license': "OPL-1",
     'support': 'delaplex.com',
-    'depends': ['stock', 'ticl_management','ticl_receiving'],
+    'depends': ['stock', 'ticl_management','ticl_receiving','ticl_user_management'],
     'data': [
         'security/ticl_menu_security.xml',
         'security/ir.model.access.csv',
