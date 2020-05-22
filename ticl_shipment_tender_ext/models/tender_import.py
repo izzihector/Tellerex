@@ -47,6 +47,7 @@ class ticl_shipment_log(models.Model):
                     warehouse_vals = {}
                     vals = {}
                     warehouse = {}
+                    origin_location = False
                     for row in range(sheet.nrows):
                         dt = {'count_number': 1}
                         if row == 0:
@@ -378,7 +379,7 @@ class ticl_shipment_log(models.Model):
                             # print('\n\n\n 234567',act_date)
                             spilt_lst = ware.split('_')
                             vals.update({
-                                'receiving_location_id': int(spilt_lst[1]),
+                                'receiving_location_id': origin_location,
                                 'ticl_ship_lines': lst,
                                 'activity_date' : act_date[0]
                             })

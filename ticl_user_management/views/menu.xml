@@ -80,6 +80,11 @@
 		    <menuitem id="report_ticl_menu" name="Reporting"
           parent="ticl_shipment.ticl_ship_order_sub" sequence="6" groups="base.group_system,base.group_erp_manager"/>
 
+        <menuitem name="Pending Shipment Report" 
+            id="pending_shipment_pdf_report"
+          parent="ticl_user_management.report_ticl_menu" sequence="5"
+            action="ticl_shipment.action_pending_shipment_report"/>
+
 <!--        <menuitem name="Sold Items Report" id="ticl_inventory_xls_report.inventory_sold_items_report_child_menu"-->
 <!--            parent="report_ticl_menu" sequence="1"-->
 <!--            action="ticl_inventory_xls_report.action_sold_items_Report"/>-->

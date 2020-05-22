@@ -51,8 +51,8 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem name="Pending Shipment Report" 
+        <!-- <menuitem name="Pending Shipment Report" 
             id="pending_shipment_pdf_report"
     	    parent="ticl_user_management.report_ticl_menu" sequence="5"
-            action="action_pending_shipment_report"/>
+            action="action_pending_shipment_report"/> -->
 </odoo>

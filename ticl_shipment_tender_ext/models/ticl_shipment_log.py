@@ -158,7 +158,7 @@ class ticl_shipment_log_ext(models.Model):
 #                 "tel_available":line.tel_available,
                 "shipment_service_charges":line.shipment_service_charges,
                 "product_weight":line.product_id.product_weight,
-                "ship_stock_move_id":line.move_id.id,
+                "ship_stock_move_line_id":line.move_id.id,
                 "common_name":line.common_name,
                 "tid":line.tid,
                 "outbound_charges": outbound_charges
@@ -303,7 +303,7 @@ class ticl_shipment_log_line_ext(models.Model):
     tel_available = fields.Selection([('Y', 'Available'),('N','Pending')], string='Availablity')
     tid = fields.Char(string='TID')
     common_name = fields.Char(string='Common Name')
-    move_id = fields.Many2one('stock.move', string='Move Id')
+    move_id = fields.Many2one('stock.move.line', string='Move Id')
     outbound_charges = fields.Float(string='Outbound Charges')
     activity_date =  fields.Datetime(string='Activity Start Date')
     eqp_grp = fields.Char(string='eqp_grp')
