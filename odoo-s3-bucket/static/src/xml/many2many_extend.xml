@@ -3,7 +3,6 @@
 <templates id="template" xml:space="preserve">
     <!-- Templates modified at the web start, before loading of a database. -->
      <div t-name="FieldBinaryFileUploader">
-<!--       <div t-if="widget.mode !== 'readonly'" class="oe_add">-->
         <div class="oe_add">
             <button t-if="widget.mode !== 'readonly'" style="width: 79%;" class="btn btn-primary o_attach" title="Attach"><span class="fa fa-paperclip" aria-label="Attach"/> <t t-esc="widget.string"/></button>
             <br/>
@@ -22,21 +21,26 @@
     <!-- Remove the Manage database link, but keep the Powered by OpenERP-->
     <div t-name="FieldBinaryFileUploader.files" t-extend="FieldBinaryFileUploader.files">
         <t t-jquery="t[t-foreach*='widget.value.data'][t-as*='file']" t-operation="replace">
-<!--        <t t-jquery="t[t-if*='readonly']" t-operation="replace">-->
 
             <div t-foreach="widget.value.data" t-as="file">
+
                 <t t-if="widget.model == 'ticl.receipt.log.summary.line'">
                     <div class="Enlarge">
-                        <img style="height:100px;width:100px;" target="_blank" class="" t-att-src="widget.metadata[file.id].url" ></img>
-                        <p class="col-xs-3" style="word-break: break-word;width: 97px;"><t t-raw="file.data.name || file.data.filename"/></p>
+                        <img style="height:110px;width:230px;margin-top:5px;margin-left:8px;" target="_blank" class="" t-att-src="widget.metadata[file.id].url" ></img>
+                        <!-- <p class="col-xs-3" style="word-break: break-word;width: 97px;"><t t-raw="file.data.name || file.data.filename"/></p> -->
                         <span><img t-att-src="widget.metadata[file.id].url" class="custom" /></span>
                     </div>
+                    <div class="o_attachment_wrap">
+                    <t t-if="!file.data.upload" t-call="FieldBinaryFileUploader.attachment_preview"
+                    class="o_attachment_wrap"/>
+                    </div>
                 </t>
-                <t t-if="widget.model != 'ticl.receipt.log.summary.line'">
+               <!--  <t t-if="widget.model != 'ticl.receipt.log.summary.line'">
                     <a target="_blank" class="test_check" t-att-href="widget.metadata[file.id].url"
                        t-attf-title="#{(file.data.name || file.data.filename) + (file.data.date?' \n('+file.data.date+')':'' )}"><t t-raw="file.data.name || file.data.filename"/>
                     </a>
-                </t>
+                </t> -->
+
             </div>
 
             <style>
@@ -45,9 +49,28 @@
                     -webkit-transform: scale(5.5); /* Safari 3-8 */
                     transform: scale(5.5);
                 }
-                .Enlarge {
-                    position:relative;
+
+                .o_attachment_name {
+                    width: 85%;
+                    margin-left: -6px;
+                    margin-top: 5px;
                 }
+
+                .o_attachment_wrap {
+                    padding: 0;
+                    border-radius: 2px;
+                    border: 1px solid gray('400');
+                    width: 233px;
+                    margin-top: 10px;
+                    margin-left: 1px;
+                }
+
+
+                .Enlarge {
+                    position: relative;
+                    width: 220px;
+                    height:90px;
+                    }
 
                 .custom {
                     height: 75%;

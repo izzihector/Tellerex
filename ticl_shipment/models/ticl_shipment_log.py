@@ -474,8 +474,8 @@ class ticl_shipment_log(models.Model):
                     if type(stand_lines) == dict:
                         return stand_lines
                     self.ticl_ship_lines = stand_lines
-        if self.echo_tracking_id:
-            return True
+        # if self.echo_tracking_id:
+        #     return True
       
         for ids in self.ticl_ship_lines:
             if ids.status_not_inventory == True:
@@ -509,21 +509,21 @@ class ticl_shipment_log(models.Model):
                     'context': context,
                 }
 
-        if int(self.total_pallet) > 20 and self.echo_call == 'yes':
-            view = self.env.ref('sh_message.sh_message_wizard')
-            view_id = view or False
-            context = dict(self._context or {})
-            context['message'] = "'Pallet Quantity' must be a positive integer. '0' is acceptable. Max value is '12'."
-            return {
-                'name': 'Warning',
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'sh.message.wizard',
-                'view': [('view', 'form')],
-                'target': 'new',
-                'context': context,
-            }
+        # if int(self.total_pallet) > 20 and self.echo_call == 'yes':
+        #     view = self.env.ref('sh_message.sh_message_wizard')
+        #     view_id = view or False
+        #     context = dict(self._context or {})
+        #     context['message'] = "'Pallet Quantity' must be a positive integer. '0' is acceptable. Max value is '12'."
+        #     return {
+        #         'name': 'Warning',
+        #         'type': 'ir.actions.act_window',
+        #         'view_type': 'form',
+        #         'view_mode': 'form',
+        #         'res_model': 'sh.message.wizard',
+        #         'view': [('view', 'form')],
+        #         'target': 'new',
+        #         'context': context,
+        #     }
 
         #LTL Shipment Creation API
         if int(self.total_pallet) < 13 and int(self.total_weight) < 20000 and self.echo_call == 'yes':
@@ -974,7 +974,7 @@ class ticl_shipment_log(models.Model):
                 if self.is_error:
                     raise Warning(_(warning_message))
 
-        elif self.echo_call == 'no':
+        elif ((int(self.total_pallet) >= 1) and (self.echo_call == 'no')):
             self.state = 'picked'
             for ticl in self.ticl_ship_lines:
                 if ticl.ship_stock_move_line_id:
@@ -985,15 +985,6 @@ class ticl_shipment_log(models.Model):
                     if product_search:
                         product_search.write({'status' : 'picked','shipment_id':self.name})
 
-                # if self.shipment_type != 'warehouse_transfer':
-                #     if self.echo_tracking_id is not None:
-                #         prod = self.ticl_ship_lines.filtered(lambda z: z.tel_type.name == 'ATM' and z.product_id.ticl_product_id.name != False)
-                #         if prod:
-                #             stand_lines = self.create_stand(self,prod)
-                #             if type(stand_lines) == dict:
-                #                 return stand_lines
-                #             self.ticl_ship_lines = stand_lines
-                # self.state = 'picked'
 
             if ids.status_not_inventory == True:
                 raise UserError("Please Delete the Red Item first")
@@ -1002,7 +993,7 @@ class ticl_shipment_log(models.Model):
             view = self.env.ref('sh_message.sh_message_wizard')
             view_id = view  or False
             context = dict(self._context or {})
-            context['message']="Please check this shipment is above TL capacity 45000LB"
+            context['message']="Please check this shipment is above Pallet Quantity or capacity 45000LB"
             return{
                  'name':'Warning',
                  'type':'ir.actions.act_window',
