@@ -2,8 +2,7 @@ odoo.define('freight_charges_import.shipmentExport', function (require) {
 "use strict";
 
 var core = require('web.core');
-/*var crash_manager = require('web.crash_manager');
-*/var data = require('web.data');
+var data = require('web.data');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
 var pyUtils = require('web.py_utils');

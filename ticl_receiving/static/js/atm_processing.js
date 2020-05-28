@@ -2,7 +2,6 @@ odoo.define('ticl_receiving.atm_processing', function (require) {
 "use strict";
 
 var core = require('web.core');
-var crash_manager = require('web.crash_manager');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
