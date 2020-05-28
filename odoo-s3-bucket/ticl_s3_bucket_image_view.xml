@@ -57,7 +57,7 @@
                             </group>
                         </group>
                         <div class="o_attachment_preview"/>
-                        <!-- <div class="oe_chatter" /> -->
+                        <div class="oe_chatter" />
                         <style>.o_form_view .o_group.o_inner_group {
                             display: table-cell !important;
                             }
