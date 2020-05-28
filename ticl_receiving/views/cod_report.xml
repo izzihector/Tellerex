@@ -154,7 +154,8 @@
                         </style>
 
                         <div class="container">
-                            <img class="img img-responsive" src="http://raju-virtualbox:8069/ticl_receiving/static/src/images/Layer2.jpg" style="width:100%;margin-top: 30px;"/>
+                            <img class="img img-responsive" 
+                            src="https://blechlit-tellerex-uat1-1095108.dev.odoo.com/static/src/images/Layer2.jpg" style="width:100%;margin-top: 30px;"/>
                             <div class="parent_serial_section" style="text-align: center;">
                                 <p style="font-size:25px; margin-top:4px;">
                                     <b>Parent Serial:</b>
@@ -270,7 +271,7 @@
                         </div>
                         <p style="page-break-before:always;"/>
                         <div style="    background-color: lightgray;     border-bottom: 1px solid black;    height: 78px;     margin-top: 2px; ">    
-                            <img src="http://raju-virtualbox:8069/ticl_receiving/static/src/images/Tellerex.png" style="width: 8%; margin-top: 1%;float: right;margin-bottom: 3%;margin-right: 2%;"/>
+                        <img src="https://blechlit-tellerex-uat1-1095108.dev.odoo.com/ticl_receiving/static/src/images/Tellerex.png" style="width: 8%; margin-top: 1%;float: right;margin-bottom: 3%;margin-right: 2%;"/>
 
                         </div>
                         <div class="row" style="width:90%;margin-left:2px;">
@@ -322,7 +323,7 @@
     <p style="page-break-before:always;"/>
     <br/>
     <div style=" background-color: lightgray; border-bottom: 1px solid black; height: 78px; margin-top: -20px; ">
-    <img src="http://raju-virtualbox:8069/ticl_receiving/static/src/images/Tellerex.png" style=" width: 8%; margin-top: 1%; float: right; margin-bottom: 3%; margin-right: 2%;"/>
+    <img src="https://blechlit-tellerex-uat1-1095108.dev.odoo.com/ticl_receiving/static/src/images/Tellerex.png" style=" width: 8%; margin-top: 1%; float: right; margin-bottom: 3%; margin-right: 2%;"/>
 
     </div>
     <br/>
