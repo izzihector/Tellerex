@@ -189,7 +189,7 @@ class ticl_shipment_log(models.Model):
                             raise Exception("One of the Ship From is missing, Please review the file.")
 
                         if rcv_loc:
-                            rcv_location = self.env['res.partner'].sudo().search([
+                            rcv_location = self.env['stock.move'].sudo().search([
                                 ('name', '=', rcv_loc)], limit=1)
                             if location == rcv_location.id:
                                 vals.update({'sending_location_id': rcv_location.id})

@@ -155,7 +155,7 @@
 
                         <div class="container">
                             <img class="img img-responsive" 
-                            src="https://blechlit-tellerex-uat1-1095108.dev.odoo.com/static/src/images/Layer2.jpg" style="width:100%;margin-top: 30px;"/>
+                            src="https:https://blechlit-tellerex-uat1-1095108.dev.odoo.com/ticl_receiving/static/src/images/Layer2.jpg" style="width:100%;margin-top: 30px;"/>
                             <div class="parent_serial_section" style="text-align: center;">
                                 <p style="font-size:25px; margin-top:4px;">
                                     <b>Parent Serial:</b>
