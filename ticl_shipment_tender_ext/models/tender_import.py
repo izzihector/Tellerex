@@ -460,167 +460,167 @@ class ticl_shipment_log(models.Model):
     def shipment_drop_ship_import_ext(self,vals):
         message = 'Dropship Imported Successfully!'
         status = 's'
-        try:
-            xl = vals.get('file').split(',')
-            xlsx_file = xl[1].encode()
-            xls_file = base64.decodestring(xlsx_file)
-            wb = xlrd.open_workbook(file_contents=xls_file)
-            # condition = self.env['ticl.condition'].search([('name', '=', 'Quarantine')])
-            data = {}
-            out = {}
-            x = []
-            for sheet in wb.sheets():
-                shipFrom_list = sheet.col_values(7)
-                if '' in shipFrom_list:
-                    raise Exception("Please verify the Ship Equip From and Import again!")
-                shipFrom = [elem.strip() for elem in shipFrom_list]
-                shipFrom.pop(0)
-                shipTo_list = sheet.col_values(8)
-                if '' in shipTo_list:
-                    raise Exception("Please verify the Ship Equip To and Import again!")
-                shipTo = [elem.strip() for elem in shipTo_list]
-                shipTo.pop(0)
-                for row in range(0,len(shipFrom)):
-                    data[row] = [str(shipFrom[row])+'-'+str(shipTo[row])]
-            if data != {}:
-                for i in data:
-                    x.append(data[i][0])
-                for i in x:
-                    val = i
-                    for key, value in data.items():
-                        if val == value[0]:
-                            if val not in out.keys():
-                                out[val] = []
-                            out[val].append(key)
-            for i in out:
-                out[i] = list(set(out[i]))
-            vals = {}
-            ticl_ship_lines = []
-            activity_date = []
-            for recs in out:
-                location = recs.split('-')
-                from_location = self.env['res.partner'].search([('name','=',location[0])],limit=1)
-                to_location = self.env['res.partner'].search([('name','=',location[1])],limit=1)
-                vals['receiving_location_id'] = from_location.id
-                vals['sending_rigger_id'] = to_location.id
-                for cols in out[recs]:
-                    try:
-                        product_name = str(int(sheet.cell(cols+1, 9).value)).strip()
-                    except:
-                        product_name = str(sheet.cell(cols+1, 9).value).strip()
-                    if not product_name:
-                        self.env.cr.rollback()
-                        raise Exception("Please verify the Models and Import again!")
-                    if "." in product_name[-2:-1]:
-                        prod_lst = product_name.split('.')
-                        product_name = prod_lst[0]
-                    product = self.env['product.product'].sudo().search([('name', '=', product_name)], limit=1)
-                    condition = sheet.cell(cols+1, 11).value
-                    if condition == '':
-                        raise Exception("Please verify the Condition and Import again!")
-                    count = sheet.cell(cols+1, 10).value
-                    if count == '':
-                        raise Exception("Please verify Count and Import again!")
-                    condition_id = self.env['ticl.condition'].search([('name', '=', condition)])
-                    serial_number = str(sheet.cell(cols + 1, 1).value)
-                    if serial_number != '':
-                        count = 1
-                    if "." in serial_number[-2:-1]:
-                        serial_number = serial_number.split('.')
-                        serial_number = serial_number[0]
-                    funding_doc_type = str(sheet.cell(cols + 1, 2).value)
-                    if funding_doc_type == '':
-                        raise Exception("Please verify the Funding Doc Type and Import again!")
-                    if "." in funding_doc_type[-2:-1]:
-                        funding_doc_type = funding_doc_type.split('.')
-                        funding_doc_type = funding_doc_type[0]
-                    funding_doc_number = sheet.cell(cols + 1, 3).value
-                    if funding_doc_number == '':
-                        raise Exception("Please verify the Funding Doc Number and Import again!")
-                    if "." in funding_doc_number[-2:-1]:
-                        funding_doc_number = funding_doc_number.split('.')
-                        funding_doc_number = funding_doc_number[0]
-                    ticl_project_id = str(sheet.cell(cols + 1, 4).value)
-                    if ticl_project_id == '':
-                        raise Exception("Please verify the Project ID and Import again!")
-                    if "." in ticl_project_id[-2:-1]:
-                        ticl_project_id = ticl_project_id.split('.')
-                        ticl_project_id = ticl_project_id[0]
-                    common_name = str(sheet.cell(cols + 1, 6).value)
-                    if "." in common_name[-2:-1]:
-                        common_name = common_name.split('.')
-                        common_name = common_name[0]
-                    tid = str(sheet.cell(cols + 1, 5).value)
-                    if "." in tid[-2:-1]:
-                        tid = tid.split('.')
-                        tid = tid[0]
-                    lines = (0,0,{'funding_doc_type': funding_doc_type,'serial_number': serial_number,
-                             'funding_doc_number': funding_doc_number,'ticl_project_id':ticl_project_id,
-                             'tid': tid,
-                             'common_name': common_name,'count_number': count,'condition_id': condition_id.id,
-                             'product_id': product.id,'tel_type': product.categ_id.id,'manufacturer_id': product.manufacturer_id.id})
-                    ticl_ship_lines.append(lines)
-                    dft = sheet.cell(cols+1, 0).value
-                    if isinstance(dft, float) == True or isinstance(dft, int) == True:
-                        x = datetime(*xlrd.xldate_as_tuple(dft, wb.datemode))
-                        sp = str(x).split(' ')
-                        dft = sp[0]
-                        if '/' in dft:
-                            x = dft.split('/')
-                        elif '-' in dft:
-                            x = dft.split('-')
-                        dates = datetime(int(x[0]), int(x[1]), int(x[2]), 00, 00, 00)
-                        # dates = datetime(int(dft[0:4]), int(dft[-2:]), int(dft[5:7]), 00, 00, 00)
-                    else:
-                        if '/' in dft:
-                            x = dft.split('/')
-                        elif '-' in dft:
-                            x = dft.split('-')
-                        dates = datetime(int(x[2]), int(x[0]), int(x[1]), 00, 00, 00)
-                        # dates = datetime(int(dft[-4:]), int(dft[:2]), int(dft[3:5]), 00, 00, 00)
-                    eqpDate = str(dates).split(" ")
-                    eqpDate = eqpDate[0].split("-")
-                    eqpDay, eqpMonth, eqpYr = int(eqpDate[2]), int(eqpDate[1]), int(eqpDate[0])
-                    act_date = datetime(eqpYr, eqpMonth, eqpDay)
-                    print('\n\n\n act_date',act_date,'act_date \n\n\n')
-                    activity_date.append(act_date.date().strftime("%m/%d/%Y"))
+        #try:
+        xl = vals.get('file').split(',')
+        xlsx_file = xl[1].encode()
+        xls_file = base64.decodestring(xlsx_file)
+        wb = xlrd.open_workbook(file_contents=xls_file)
+        # condition = self.env['ticl.condition'].search([('name', '=', 'Quarantine')])
+        data = {}
+        out = {}
+        x = []
+        for sheet in wb.sheets():
+            shipFrom_list = sheet.col_values(7)
+            if '' in shipFrom_list:
+                raise Exception("Please verify the Ship Equip From and Import again!")
+            shipFrom = [elem.strip() for elem in shipFrom_list]
+            shipFrom.pop(0)
+            shipTo_list = sheet.col_values(8)
+            if '' in shipTo_list:
+                raise Exception("Please verify the Ship Equip To and Import again!")
+            shipTo = [elem.strip() for elem in shipTo_list]
+            shipTo.pop(0)
+            for row in range(0,len(shipFrom)):
+                data[row] = [str(shipFrom[row])+'-'+str(shipTo[row])]
+        if data != {}:
+            for i in data:
+                x.append(data[i][0])
+            for i in x:
+                val = i
+                for key, value in data.items():
+                    if val == value[0]:
+                        if val not in out.keys():
+                            out[val] = []
+                        out[val].append(key)
+        for i in out:
+            out[i] = list(set(out[i]))
+        vals = {}
+        ticl_ship_lines = []
+        activity_date = []
+        for recs in out:
+            location = recs.split('-')
+            from_location = self.env['res.partner'].search([('name','=',location[0])],limit=1)
+            to_location = self.env['res.partner'].search([('name','=',location[1])],limit=1)
+            vals['receiving_location_id'] = from_location.id
+            vals['sending_rigger_id'] = to_location.id
+            for cols in out[recs]:
+                try:
+                    product_name = str(int(sheet.cell(cols+1, 9).value)).strip()
+                except:
+                    product_name = str(sheet.cell(cols+1, 9).value).strip()
+                if not product_name:
+                    self.env.cr.rollback()
+                    raise Exception("Please verify the Models and Import again!")
+                if "." in product_name[-2:-1]:
+                    prod_lst = product_name.split('.')
+                    product_name = prod_lst[0]
+                product = self.env['product.product'].sudo().search([('name', '=', product_name)], limit=1)
+                condition = sheet.cell(cols+1, 11).value
+                if condition == '':
+                    raise Exception("Please verify the Condition and Import again!")
+                count = sheet.cell(cols+1, 10).value
+                if count == '':
+                    raise Exception("Please verify Count and Import again!")
+                condition_id = self.env['ticl.condition'].search([('name', '=', condition)])
+                serial_number = str(sheet.cell(cols + 1, 1).value)
+                if serial_number != '':
+                    count = 1
+                if "." in serial_number[-2:-1]:
+                    serial_number = serial_number.split('.')
+                    serial_number = serial_number[0]
+                funding_doc_type = str(sheet.cell(cols + 1, 2).value)
+                if funding_doc_type == '':
+                    raise Exception("Please verify the Funding Doc Type and Import again!")
+                if "." in funding_doc_type[-2:-1]:
+                    funding_doc_type = funding_doc_type.split('.')
+                    funding_doc_type = funding_doc_type[0]
+                funding_doc_number = sheet.cell(cols + 1, 3).value
+                if funding_doc_number == '':
+                    raise Exception("Please verify the Funding Doc Number and Import again!")
+                if "." in funding_doc_number[-2:-1]:
+                    funding_doc_number = funding_doc_number.split('.')
+                    funding_doc_number = funding_doc_number[0]
+                ticl_project_id = str(sheet.cell(cols + 1, 4).value)
+                if ticl_project_id == '':
+                    raise Exception("Please verify the Project ID and Import again!")
+                if "." in ticl_project_id[-2:-1]:
+                    ticl_project_id = ticl_project_id.split('.')
+                    ticl_project_id = ticl_project_id[0]
+                common_name = str(sheet.cell(cols + 1, 6).value)
+                if "." in common_name[-2:-1]:
+                    common_name = common_name.split('.')
+                    common_name = common_name[0]
+                tid = str(sheet.cell(cols + 1, 5).value)
+                if "." in tid[-2:-1]:
+                    tid = tid.split('.')
+                    tid = tid[0]
+                lines = (0,0,{'funding_doc_type': funding_doc_type,'serial_number': serial_number,
+                         'funding_doc_number': funding_doc_number,'ticl_project_id':ticl_project_id,
+                         'tid': tid,
+                         'common_name': common_name,'count_number': count,'condition_id': condition_id.id,
+                         'product_id': product.id,'tel_type': product.categ_id.id,'manufacturer_id': product.manufacturer_id.id})
+                ticl_ship_lines.append(lines)
+                dft = sheet.cell(cols+1, 0).value
+                if isinstance(dft, float) == True or isinstance(dft, int) == True:
+                    x = datetime(*xlrd.xldate_as_tuple(dft, wb.datemode))
+                    sp = str(x).split(' ')
+                    dft = sp[0]
+                    if '/' in dft:
+                        x = dft.split('/')
+                    elif '-' in dft:
+                        x = dft.split('-')
+                    dates = datetime(int(x[0]), int(x[1]), int(x[2]), 00, 00, 00)
+                    # dates = datetime(int(dft[0:4]), int(dft[-2:]), int(dft[5:7]), 00, 00, 00)
+                else:
+                    if '/' in dft:
+                        x = dft.split('/')
+                    elif '-' in dft:
+                        x = dft.split('-')
+                    dates = datetime(int(x[2]), int(x[0]), int(x[1]), 00, 00, 00)
+                    # dates = datetime(int(dft[-4:]), int(dft[:2]), int(dft[3:5]), 00, 00, 00)
+                eqpDate = str(dates).split(" ")
+                eqpDate = eqpDate[0].split("-")
+                eqpDay, eqpMonth, eqpYr = int(eqpDate[2]), int(eqpDate[1]), int(eqpDate[0])
+                act_date = datetime(eqpYr, eqpMonth, eqpDay)
+                print('\n\n\n act_date',act_date,'act_date \n\n\n')
+                activity_date.append(act_date.date().strftime("%m/%d/%Y"))
 
-                activity_date.sort()
-                vals['activity_date_new'] = activity_date[0]
-                import dateutil.parser
-                d = dateutil.parser.parse(vals['activity_date_new']).date()
-                vals['activity_date_new'] = d
-                dat = datetime.strptime(str(activity_date[0])+ ' 00:00:00', '%m/%d/%Y %H:%M:%S')
-                vals['delivery_date_new'] = dat - timedelta(days=7)
-                today_day = (datetime.strptime(str(real_datetime.datetime.today()).split(' ')[0] + " 00:00:00",
-                                               '%Y-%m-%d %H:%M:%S').weekday() + 1) % 7
-                if today_day in [0, 1, 2, 3]:
-                    vals['pick_up_date_new'] = datetime.strptime(
-                        str(real_datetime.datetime.today()).split(' ')[0] + " 00:00:00", '%Y-%m-%d %H:%M:%S') + timedelta(
-                        days=2)
-                elif today_day in [4, 5]:
-                    vals['pick_up_date_new'] = datetime.strptime(
-                        str(real_datetime.datetime.today()).split(' ')[0] + " 00:00:00", '%Y-%m-%d %H:%M:%S') + timedelta(
-                        days=4)
-                elif today_day in [6]:
-                    vals['pick_up_date_new'] = datetime.strptime(
-                        str(real_datetime.datetime.today()).split(' ')[0] + " 00:00:00", '%Y-%m-%d %H:%M:%S') + timedelta(
-                        days=3)
-                vals['ticl_ship_lines'] = ticl_ship_lines
-                # ship_id = self.env['ticl.shipment.log'].search([],order="id desc",limit=1)
-                # last_ship_name = ship_id.name.split('/')
-                # new_ship_name = int(last_ship_name[1]) + 1
-                # vals['name'] = 'SM/'+str(new_ship_name)
-                vals['shipment_types'] = 'Regular'
-                ship_log = self.env['ticl.shipment.log.ext.drop'].create(vals)
-                ship_log.picked_shipment_log_ext_drop()
-                activity_date = []
-                vals ={}
-                ticl_ship_lines = []
-        except Exception as e:
-            self._cr.rollback()
-            status = 'n'
-            message = str(e)
+            activity_date.sort()
+            vals['activity_date_new'] = activity_date[0]
+            import dateutil.parser
+            d = dateutil.parser.parse(vals['activity_date_new']).date()
+            vals['activity_date_new'] = d
+            dat = datetime.strptime(str(activity_date[0])+ ' 00:00:00', '%m/%d/%Y %H:%M:%S')
+            vals['delivery_date_new'] = dat - timedelta(days=7)
+            today_day = (datetime.strptime(str(real_datetime.datetime.today()).split(' ')[0] + " 00:00:00",
+                                           '%Y-%m-%d %H:%M:%S').weekday() + 1) % 7
+            if today_day in [0, 1, 2, 3]:
+                vals['pick_up_date_new'] = datetime.strptime(
+                    str(real_datetime.datetime.today()).split(' ')[0] + " 00:00:00", '%Y-%m-%d %H:%M:%S') + timedelta(
+                    days=2)
+            elif today_day in [4, 5]:
+                vals['pick_up_date_new'] = datetime.strptime(
+                    str(real_datetime.datetime.today()).split(' ')[0] + " 00:00:00", '%Y-%m-%d %H:%M:%S') + timedelta(
+                    days=4)
+            elif today_day in [6]:
+                vals['pick_up_date_new'] = datetime.strptime(
+                    str(real_datetime.datetime.today()).split(' ')[0] + " 00:00:00", '%Y-%m-%d %H:%M:%S') + timedelta(
+                    days=3)
+            vals['ticl_ship_lines'] = ticl_ship_lines
+            # ship_id = self.env['ticl.shipment.log'].search([],order="id desc",limit=1)
+            # last_ship_name = ship_id.name.split('/')
+            # new_ship_name = int(last_ship_name[1]) + 1
+            # vals['name'] = 'SM/'+str(new_ship_name)
+            vals['shipment_types'] = 'Regular'
+            ship_log = self.env['ticl.shipment.log.ext.drop'].create(vals)
+            ship_log.picked_shipment_log_ext_drop()
+            activity_date = []
+            vals ={}
+            ticl_ship_lines = []
+        # except Exception as e:
+        #     self._cr.rollback()
+        #     status = 'n'
+        #     message = str(e)
         return {'message': message, 'status': status}
 
     
