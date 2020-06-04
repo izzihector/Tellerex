@@ -83,7 +83,7 @@ class ticl_shipment_log_ext(models.Model):
             'equipment_date':self.equipment_date,
             'shipment_type':self.shipment_types,
 #             'ship_stock_move_id':self.id,
-            'tender_stock_move_id':self.id,
+            #'tender_stock_move_id':self.id,
             'appointment_date_new':self.pick_up_date_new,
             'activity_date_new': self.activity_date_new,
             'hr_employee_id': emp.id,
