@@ -230,7 +230,7 @@ class ticl_shipment_log(models.Model):
             'target': 'new',
         }
         
-    @api.model
+    #@api.model
     def unlink(self):
         move_id = self.env['stock.move'].search([('shipment_id', '=', self.name)])
         if move_id:
