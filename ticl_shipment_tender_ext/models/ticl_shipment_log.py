@@ -3,6 +3,7 @@ from datetime import datetime,timedelta
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import datetime as real_datetime
+import logging
 _logger = logging.getLogger(__name__)
 
 class ticl_shipment_log_ext(models.Model):
