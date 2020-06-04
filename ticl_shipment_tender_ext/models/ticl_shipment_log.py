@@ -86,6 +86,7 @@ class ticl_shipment_log_ext(models.Model):
             'activity_date_new': self.activity_date_new,
             'hr_employee_id': emp.id,
             }
+        print("=====vals==",vals)
         ticl_ship_lines = []
         pending = self.ticl_ship_lines.filtered(lambda x: x.tel_available == 'N')
         if pending:
@@ -105,6 +106,7 @@ class ticl_shipment_log_ext(models.Model):
         
         for line in self.ticl_ship_lines:
             if not self.sending_location_id.id:
+                print("-------rrrrrr")
                 domain = [
                         ('product_id','=',line.product_id.id),
                         ('status','=','inventory')
@@ -112,8 +114,9 @@ class ticl_shipment_log_ext(models.Model):
                     
                 if line.serial_number:
                     domain += [('serial_number','=',line.serial_number)]
-                moves = self.env['stock.move'].sudo().search(domain)
-                receiving_location_id = moves[0].location_dest_id.id
+                moves = self.env['stock.move.line'].sudo().search(domain)
+                receiving_location_id = moves[0].ticl_warehouse_id.id
+                print("-------rrrrrr",receiving_location_id)
             if line.tel_type.name == "ATM":                   
                 rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound per ATM / Pallet')])
                 outbound_charges = rec_log.shipment_service_charges
@@ -170,6 +173,7 @@ class ticl_shipment_log_ext(models.Model):
         #         ticl_ship_lines += stand_lines
         vals.update({'ticl_ship_lines':ticl_ship_lines,'sending_location_id':self.receiving_location_id.id})
         shp_log = self.env['ticl.shipment.log'].create(vals)
+        print("==shp_log====",shp_log)
         self.name = shp_log.name
         self.state = 'approved'
         return True

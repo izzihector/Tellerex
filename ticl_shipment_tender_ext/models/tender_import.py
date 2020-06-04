@@ -189,7 +189,7 @@ class ticl_shipment_log(models.Model):
                             raise Exception("One of the Ship From is missing, Please review the file.")
 
                         if rcv_loc:
-                            rcv_location = self.env['stock.move'].sudo().search([
+                            rcv_location = self.env['res.partner'].sudo().search([
                                 ('name', '=', rcv_loc)], limit=1)
                             if location == rcv_location.id:
                                 vals.update({'sending_location_id': rcv_location.id})
@@ -205,6 +205,7 @@ class ticl_shipment_log(models.Model):
                                     ware_name = float(warehouse_name)
                                     origin_location = self.env['stock.location'].sudo().search([
                                         ('warehouse_key', '=', int(ware_name))], limit=1).id
+                                    print("===8888888888888==",origin_location)
                                     # origin_location = self.env['stock.location'].sudo().search([
                                     #     ('name', '=', warehouse_name),
                                     #     ('state', '!=', False)], limit=1)
@@ -316,7 +317,7 @@ class ticl_shipment_log(models.Model):
                                             ('serial_number', '=', serial_number),
                                             ('ticl_warehouse_id', '=', origin_location)
                                         ], limit=1)
-
+                                        print("==movemove====",move)
                                     if warehouse_name and not move:
                                         dict_ky = str(rcv_location.id) + '_' + str(origin_location)
                                         vals.update({'receiving_location_id': origin_location})
@@ -325,22 +326,26 @@ class ticl_shipment_log(models.Model):
                                             raise Exception("ATM %s is in quarantine state,So can not be Shipped !" % (
                                                 serial_number))
 
-                                        dict_ky = str(rcv_location.id) + '_' + str(move.location_dest_id.id)
+                                        dict_ky = str(rcv_location.id) + '_' + str(move.ticl_warehouse_id.id)
+                                        print("==dict_ky===",dict_ky)
                                         dt.update({'tel_available': 'Y'})
                                         if dict_ky in warehouse_vals:
                                             ware_lst = warehouse_vals.get(dict_ky)
                                             dt.update({'move_id': move.id})
                                             ware_lst.append(dt)
+                                            print("==aaaaaaaaaaaaaa===",ware_lst.append(dt))
                                             warehouse_vals.update({dict_ky: ware_lst})
                                             # move.status = 'assigned'
                                         else:
                                             dt.update({'move_id': move.id})
                                             warehouse_vals.update({dict_ky: [dt]})
+                                            print("==bbbbbbbbbbbbbb===",warehouse_vals)
                                             # move.status = 'assigned'
                                     else:
                                         warehouse_list = []
                                         dt.update({'tel_available': 'N'})
-                                        warehouse_list.append((0, 0, dt))
+                                        abc = warehouse_list.append((0, 0, dt))
+
                                         vals.update({'ticl_ship_lines': warehouse_list})
                                         dat = datetime.strptime(vals['activity_date_new']+" 00:00:00", '%Y-%m-%d %H:%M:%S')
                                         vals['delivery_date_new'] = dat - timedelta(days=7)
@@ -361,6 +366,7 @@ class ticl_shipment_log(models.Model):
                             act_date = []
                             eqp_dict = {}
                             for data in warehouse_vals.get(ware):
+                                print('datadatadatadatadata', data)
                                 #                                 warehouse_list.append((0,0,data))
                                 if data.get('eqp_grp') in eqp_dict:
                                     eqp_lst = eqp_dict.get(data.get('eqp_grp'))
@@ -379,10 +385,11 @@ class ticl_shipment_log(models.Model):
                             # print('\n\n\n 234567',act_date)
                             spilt_lst = ware.split('_')
                             vals.update({
-                                'receiving_location_id': origin_location,
+                                'receiving_location_id': int(spilt_lst[1]),
                                 'ticl_ship_lines': lst,
                                 'activity_date' : act_date[0]
                             })
+                            print('vals------------------', vals,origin_location)
                             b = str(vals['activity_date'])
                             import dateutil.parser
                             d = dateutil.parser.parse(b).date()
