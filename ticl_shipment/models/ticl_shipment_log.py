@@ -311,7 +311,7 @@ class ticl_shipment_log(models.Model):
             for lines in range(len(vals['ticl_ship_lines'])):
                 type_id = self.env['product.category'].search([('id','=',vals['ticl_ship_lines'][lines][2]['tel_type'])])
                 condition_id = self.env['ticl.condition'].search([('name', '=', 'Quarantine')])
-                if type_id.name != 'ATM':
+                if type_id.name != 'ATM' and self.dropship_state == 'no':
                     if vals['ticl_ship_lines'][lines][2].get('ship_stock_move_line_id',False):
                         x = self.env['stock.move.line'].search(
                             [('id', '=', vals['ticl_ship_lines'][lines][2]['ship_stock_move_line_id'])],limit=1)
