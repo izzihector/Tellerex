@@ -715,8 +715,8 @@ class ticl_shipment_log(models.Model):
                                     if ticl.ship_stock_move_line_id:
                                         ticl.ship_stock_move_line_id.write({'status' : self.state,'shipment_id':self.name})
 
-                                # if self.tender_stock_move_id:
-                                #     self.tender_stock_move_id.write({'state' : self.state,'echo_tracking_id' : self.echo_tracking_id})
+                                if self.tender_stock_move_id:
+                                    self.tender_stock_move_id.write({'state' : self.state,'echo_tracking_id' : self.echo_tracking_id})
 
                                 # for ticl in self.ticl_ship_lines:
                                 #     if ticl.serial_number:

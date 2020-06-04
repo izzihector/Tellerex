@@ -3,6 +3,7 @@ from datetime import datetime,timedelta
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import datetime as real_datetime
+_logger = logging.getLogger(__name__)
 
 class ticl_shipment_log_ext(models.Model):
     _name = 'ticl.shipment.log.ext'
@@ -86,7 +87,7 @@ class ticl_shipment_log_ext(models.Model):
             'activity_date_new': self.activity_date_new,
             'hr_employee_id': emp.id,
             }
-        print("=====vals==",vals)
+        _logger.warning("=====vals==",vals)
         ticl_ship_lines = []
         pending = self.ticl_ship_lines.filtered(lambda x: x.tel_available == 'N')
         if pending:
@@ -164,7 +165,7 @@ class ticl_shipment_log_ext(models.Model):
                 "ship_stock_move_line_id":line.move_id.id,
                 "common_name":line.common_name,
                 "tid":line.tid,
-                #"outbound_charges": outbound_charges
+                "outbound_charges": outbound_charges
             }))
         prod = self.ticl_ship_lines.filtered(lambda z: z.tel_type.name == 'ATM' and z.product_id.ticl_product_id.name != False)
         # if prod:
