@@ -117,25 +117,25 @@ class ticl_shipment_log_ext(models.Model):
                 moves = self.env['stock.move.line'].sudo().search(domain)
                 receiving_location_id = moves[0].ticl_warehouse_id.id
                 print("-------rrrrrr",receiving_location_id)
-            if line.tel_type.name == "ATM":                   
-                rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound per ATM / Pallet')])
-                outbound_charges = rec_log.shipment_service_charges
+            # if line.tel_type.name == "ATM":                   
+            #     rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound per ATM / Pallet')])
+            #     outbound_charges = rec_log.shipment_service_charges
             
-            if line.tel_type.name == "Signage":            
-                rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound Services per Signage Piece')])
-                outbound_charges = rec_log.shipment_service_charges
+            # if line.tel_type.name == "Signage":            
+            #     rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound Services per Signage Piece')])
+            #     outbound_charges = rec_log.shipment_service_charges
 
-            if line.tel_type.name == "XL":
-                rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound Services for XL Items')])
-                outbound_charges = rec_log.shipment_service_charges
+            # if line.tel_type.name == "XL":
+            #     rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound Services for XL Items')])
+            #     outbound_charges = rec_log.shipment_service_charges
 
-            if line.tel_type.name == "Accessory":
-                rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound per ATM / Pallet')])
-                outbound_charges = rec_log.shipment_service_charges
+            # if line.tel_type.name == "Accessory":
+            #     rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound per ATM / Pallet')])
+            #     outbound_charges = rec_log.shipment_service_charges
 
-            if line.tel_type.name == "Lockbox":
-                rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound Small Item (non-freight)')])
-                outbound_charges = rec_log.shipment_service_charges 
+            # if line.tel_type.name == "Lockbox":
+            #     rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound Small Item (non-freight)')])
+            #     outbound_charges = rec_log.shipment_service_charges 
             lot = self.env['stock.production.lot'].search([('name', '=', line.serial_number)])
             lot_id = 0
             for l in lot:

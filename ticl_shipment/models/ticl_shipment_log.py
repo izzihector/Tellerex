@@ -1739,7 +1739,7 @@ class ticl_shipment_log(models.Model):
             if len(self.ticl_ship_lines) == 0:
                 raise Warning(_('You can not shipped shipment without inventory lines.'))
             self.state = 'shipped'
-            if self.tender_stock_move_id:
+            if self.tender_stock_move_id or False:
                 self.tender_stock_move_id.write({'state' : self.state,'echo_tracking_id' : self.echo_tracking_id})
             
             for ticl in self.ticl_ship_lines:
