@@ -54,7 +54,7 @@ class ticl_shipment_log_ext(models.Model):
         vals['name'] = sequence
         return super(ticl_shipment_log_ext, self).create(vals)
     
-    # @api.multi
+    @api.model
     def picked_shipment_log_ext(self):
        # location = self.env['stock.location'].sudo().search([('name','=',self.warehouse_id.name)], limit=1)
         today_day = datetime.strptime(str(real_datetime.datetime.today()),
@@ -83,7 +83,7 @@ class ticl_shipment_log_ext(models.Model):
             'equipment_date':self.equipment_date,
             'shipment_type':self.shipment_types,
 #             'ship_stock_move_id':self.id,
-            #'tender_stock_move_id':self.id,
+            'tender_stock_move_id':self.id,
             'appointment_date_new':self.pick_up_date_new,
             'activity_date_new': self.activity_date_new,
             'hr_employee_id': emp.id,
