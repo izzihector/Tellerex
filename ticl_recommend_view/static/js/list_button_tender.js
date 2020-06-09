@@ -24,8 +24,10 @@ ListController.include({
 
     renderButtons: function () {
         this._super.apply(this, arguments);
+        if (this.$buttons){
         this.$buttons.on('click', '.o_button_update_view', this._uploadImage);
         this.$buttons.on('click', '.o_button_export_to_excel', this._exportExcel);
+      }
 
     },
     _uploadImage: function () {
