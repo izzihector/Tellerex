@@ -23,10 +23,12 @@ ListController.include({
 //        	var data = ['tender','Import Tender File'];
 //        	new tenderImport(this, data).open();
 //        });
+    if (this.$buttons){
         this.$buttons.on('click', '.o_button_import_atm_photos', function () {
         	var data = ['asn','Import ATM Processing Images'];
         	new tenderImport(this, data).open();
         });
+    }
     }
 });
 

@@ -18,18 +18,20 @@ ListController.include({
 
     renderButtons: function () {
         this._super.apply(this, arguments);
-        
+        if (this.$buttons){
         this.$buttons.on('click', '.btn_frt_chrg_import_shipment', function () {
         	//alert('ggg');
         	var data = ['Freight Charges Import','shipment'];
         	new shipmentImport(this, data).open();
         });
+
     
         this.$buttons.on('click', '.btn_frt_chrg_import_receipt', function () {
         	//alert('ggg');
         	var data = ['Freight Charges Import','receipt'];
         	new shipmentImport(this, data).open();
         });
+    }
     }
 });
 
