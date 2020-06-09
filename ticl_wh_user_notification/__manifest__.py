@@ -15,7 +15,7 @@
     "website": "http://www.delaplex.in",
     "author": "Delaplex",
     "contributors": ["Delaplex Team"],
-    "depends": ['web', 'base', 'mail', 'stock','ticl_management','ticl_shipment','ticl_cancel_shipment_reason'],
+    "depends": ['web', 'base', 'mail', 'stock','ticl_management','ticl_shipment'],
     "data": [
             'security/ir.model.access.csv',
             'views/ticl_wh_user_notification.xml',

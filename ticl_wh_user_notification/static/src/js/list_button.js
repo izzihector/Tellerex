@@ -18,7 +18,9 @@ ListController.include({
 
     renderButtons: function () {
         this._super.apply(this, arguments);
+		if (this.$buttons) {
          this.$buttons.on('click', '.btn_shipment_notification', this._onShipmentRecord.bind(this));
+		}
     },
     _onShipmentRecord: function (event) {
         var self = this;

@@ -263,39 +263,39 @@ class ticl_receipt_line(models.Model):
 
 
 # TICL Service Charges Fnction 
-    @api.depends('tel_type', 'xl_items', 'service_price', 'repalletize')
-    def _total_service_price(self):
-        rec_repalletize = self.env['ticl.service.charge'].search([('name', '=', 'Repalletize')])
-        for line in self:
-            rec_log = self.env['ticl.service.charge'].search([('name', '=', 'ATM'),('monthly_service_charge', '=', False)])
-            if line.tel_type.name == "ATM":
-                line.service_price = rec_log.service_price
-                if line.repalletize == "y":
-                    line.service_price = rec_log.service_price + rec_repalletize.service_price 
+    # @api.depends('tel_type', 'xl_items', 'service_price', 'repalletize')
+    # def _total_service_price(self):
+    #     rec_repalletize = self.env['ticl.service.charge'].search([('name', '=', 'Repalletize')])
+    #     for line in self:
+    #         rec_log = self.env['ticl.service.charge'].search([('name', '=', 'ATM'),('monthly_service_charge', '=', False)])
+    #         if line.tel_type.name == "ATM":
+    #             line.service_price = rec_log.service_price
+    #             if line.repalletize == "y":
+    #                 line.service_price = rec_log.service_price + rec_repalletize.service_price 
 
-            rec_signage = self.env['ticl.service.charge'].search([('name', '=', 'Signage'),('xl_items', '=', 'y'),('monthly_service_charge', '=', False)])
-            if line.tel_type.name == "Signage" and line.xl_items == "y":
-                line.service_price = rec_signage.service_price
-                if line.repalletize == "y":
-                    line.service_price = rec_signage.service_price + rec_repalletize.service_price
+    #         rec_signage = self.env['ticl.service.charge'].search([('name', '=', 'Signage'),('xl_items', '=', 'y'),('monthly_service_charge', '=', False)])
+    #         if line.tel_type.name == "Signage" and line.xl_items == "y":
+    #             line.service_price = rec_signage.service_price
+    #             if line.repalletize == "y":
+    #                 line.service_price = rec_signage.service_price + rec_repalletize.service_price
 
-            rec_signage = self.env['ticl.service.charge'].search([('name', '=', 'Signage'),('xl_items', '=', 'n'),('monthly_service_charge', '=', False)])
-            if line.tel_type.name == "Signage" and line.xl_items == "n":
-                line.service_price = rec_signage.service_price
-                if line.repalletize == "y":
-                    line.service_price = rec_signage.service_price + rec_repalletize.service_price
+    #         rec_signage = self.env['ticl.service.charge'].search([('name', '=', 'Signage'),('xl_items', '=', 'n'),('monthly_service_charge', '=', False)])
+    #         if line.tel_type.name == "Signage" and line.xl_items == "n":
+    #             line.service_price = rec_signage.service_price
+    #             if line.repalletize == "y":
+    #                 line.service_price = rec_signage.service_price + rec_repalletize.service_price
 
-            rec_accessory = self.env['ticl.service.charge'].search([('name', '=', 'Accessory'),('xl_items', '=', 'y'),('monthly_service_charge', '=', False)])
-            if line.tel_type.name == 'Accessory' and line.xl_items == 'y':
-                line.service_price = rec_accessory.service_price
-                if line.repalletize == "y":
-                    line.service_price = rec_accessory.service_price + rec_repalletize.service_price
+    #         rec_accessory = self.env['ticl.service.charge'].search([('name', '=', 'Accessory'),('xl_items', '=', 'y'),('monthly_service_charge', '=', False)])
+    #         if line.tel_type.name == 'Accessory' and line.xl_items == 'y':
+    #             line.service_price = rec_accessory.service_price
+    #             if line.repalletize == "y":
+    #                 line.service_price = rec_accessory.service_price + rec_repalletize.service_price
 
-            rec_accessory = self.env['ticl.service.charge'].search([('name', '=', 'Accessory'),('xl_items', '=', 'n'),('monthly_service_charge', '=', False)])
-            if line.tel_type.name == 'Accessory' and line.xl_items == 'n':
-                line.service_price = rec_accessory.service_price
-                if line.repalletize == "y":
-                    line.service_price = rec_accessory.service_price + rec_repalletize.service_price
+    #         rec_accessory = self.env['ticl.service.charge'].search([('name', '=', 'Accessory'),('xl_items', '=', 'n'),('monthly_service_charge', '=', False)])
+    #         if line.tel_type.name == 'Accessory' and line.xl_items == 'n':
+    #             line.service_price = rec_accessory.service_price
+    #             if line.repalletize == "y":
+    #                 line.service_price = rec_accessory.service_price + rec_repalletize.service_price
 
                 
 
@@ -317,8 +317,7 @@ class ticl_receipt_line(models.Model):
     tel_cod = fields.Selection([('Y', 'Y'),('N','N')], string='COD')
     xl_items = fields.Selection(string="XL", selection=[('y', 'Y'), ('n', 'N')], default='y')
     hide_cod = fields.Boolean(string="Hide COD")
-    #service_price = fields.Float(string='Price')
-    service_price = fields.Float(string='Price', compute ='_total_service_price')
+    service_price = fields.Float(string='Price')
     check_move_inventory = fields.Boolean(string="Move Inventory")
     hide_xl_items = fields.Boolean(string="Hide XL")
     repalletize = fields.Selection(string="Repalletize", selection=[('y', 'Y'), ('n', 'N')], default='n')

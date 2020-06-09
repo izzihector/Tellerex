@@ -61,8 +61,7 @@
                               readonly="1"/>                           
                            <field name="sending_location_id" style="width:70%" 
                             readonly="1"/>
-                            <field name="receiving_location_id"  style="width:70%"
-                            domain="[('is_warehouse','=',True)]" readonly="1"/>
+                            <field name="receiving_location_id"  style="width:70%" readonly="1"/>
                             <field name="property_stock_supplier"  style="width:70%" invisible="1"/>
                             <field name="hr_employee_id" style="width:70%" readonly="0" 
                                 options="{'no_create': True, 'no_create_edit':True}"/>
@@ -309,8 +308,7 @@
                             readonly="1"/>                           
                            <field name="sending_location_id" style="width:70%" 
                            readonly="1"/>
-                            <field name="receiving_location_id"  style="width:70%"
-                            domain="[('is_warehouse','=',True)]" readonly="1"/>
+                            <field name="receiving_location_id"  style="width:70%" readonly="1"/>
                             <field name="hr_employee_id" style="width:70%" readonly="1"/>
                             <field name="receipt_type" readonly="1"/>
                             <field name="old_name" readonly="1"/>

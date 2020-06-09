@@ -13,7 +13,8 @@
                     <field name="checkout_time"  widget="time"/>
                 </xpath>
                 <xpath expr="//field[@name='warehouse_email']" position="after">
-                    <field name="ticl_email_ids" widget="many2many_tags" domain="[('warehouse_notify', '=', True)]" options="{'no_create': True, 'no_create_edit':True}" string="Shipment Notifications recipients"
+                    <field name="ticl_email_ids" widget="many2many_tags" 
+                    string="Shipment Notifications recipients"
                     placeholder="Emails"
                     />
                 </xpath>

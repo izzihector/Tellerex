@@ -24,11 +24,13 @@ ListController.include({
 //        	var data = ['tender','Import Tender File'];
 //        	new tenderImport(this, data).open();
 //        });
+    if (this.$buttons){
         this.$buttons.on('click', '.o_button_import_asn', function () {
         	
         	var data = ['asn','Import Inbound Tender File'];
         	new tenderImport(this, data).open();
         });
+    }
     }
 });
 

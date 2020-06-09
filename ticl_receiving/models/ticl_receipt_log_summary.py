@@ -1004,7 +1004,7 @@ class ticl_receipt_log_summary_line(models.Model):
             if line.atm_data_destroyed == True and line.condition_id.name == 'To Recommend' or line.condition_id.name == 'Significant Damage' or line.condition_id.name == 'Refurb Required':
                 line.cod_charges = rec_cod_charges.service_price
             else:
-               line.cod_charges = 0.00       
+                line.cod_charges = 0.00       
 
     name = fields.Text(string='Description')
     received_date = fields.Date(string='Received Date',track_visibility='onchange')

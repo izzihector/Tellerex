@@ -85,7 +85,7 @@
                                     <field name="repalletize" invisible="1"/>
                                     <field name="received_date" widget="date" invisible="1"/>
                                     <field name="tel_note" placeholder="Please Comments Here...." readonly="1"/>
-                                    <field name="service_price" invisible="1"/>
+                                    <!-- <field name="service_price" invisible="1"/> -->
                                     <field name="check_move_inventory" invisible="1"/>
                                 </tree>
                             </field>
