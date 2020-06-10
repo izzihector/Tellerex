@@ -43,12 +43,12 @@ class ticl_stock_used_atm_report(models.TransientModel):
     inventory_report_printed = fields.Boolean('Inbound Inventory Report')
     print_type = fields.Selection([('excel','Excel'),('pdf','PDF')], string='Print Type')
     warehouse_ids = fields.Many2many('stock.location', string='Warehouse')
-    location_id = fields.Many2many('stock.location', string='Location Name')
+    #location_id = fields.Many2many('stock.location', string='Location Name')
     condition_id = fields.Many2one('ticl.condition', string="Type",default=default_condition)
 
 
 
-    @api.multi
+    #@api.multi
     def action_print_used_atm_report(self):
         if self.print_type == 'pdf':
 
@@ -110,9 +110,9 @@ class ticl_stock_used_atm_report(models.TransientModel):
                 worksheet.write_merge(0, 0, 0, 10, heading, easyxf(
                     'font:height 210; align: horiz center;pattern: pattern solid, fore_color yellow; font: color black; font:bold True;' "borders: top thin,bottom thin"))
 
-                inventory_objs = self.env['stock.move'].search([('received_date', '>=', date_split_1[0] +' 00:00:00'),
+                inventory_objs = self.env['stock.move.line'].search([('received_date', '>=', date_split_1[0] +' 00:00:00'),
                                                                      ('received_date', '<=', date_split_2[0] +' 23:59:59'),
-                                                                ('location_dest_id', '=', self.warehouse_ids.ids),
+                                                                ('ticl_warehouse_id', '=', self.warehouse_ids.ids),
                                                                 ('condition_id', 'in',
                                                                  [to_recommend.id, ref_required.id, sig_damage.id, quarantine.id]),
                                                                 ('status', '=','inventory')
@@ -128,7 +128,7 @@ class ticl_stock_used_atm_report(models.TransientModel):
                     worksheet.write(row, 2, inventory.serial_number or '')
                     worksheet.write(row, 3, inventory.product_uom_qty or '')
                     worksheet.write(row, 4, inventory.status or '')
-                    worksheet.write(row, 5, inventory.location_dest_id.name or '')
+                    worksheet.write(row, 5, inventory.ticl_warehouse_id.name or '')
                     worksheet.write(row, 6, inventory.condition_id.name or '')
                     worksheet.write(row, 7, inventory.categ_id.name or '')
                     worksheet.write(row, 8, inventory.received_date, date_format or '')
@@ -152,7 +152,7 @@ class ticl_stock_used_atm_report(models.TransientModel):
                 }
 
 
-    @api.multi
+    #@api.multi
     def get_receive_date_values(self,received_date):
         rd_date = str(received_date).split(" ")
         rd = rd_date[0].split('-')
@@ -160,7 +160,7 @@ class ticl_stock_used_atm_report(models.TransientModel):
         dates = '{0}'.format(rd_date)
         return dates
 
-    @api.multi
+    #@api.multi
     def get_processed_date_values(self,processed_date):
         if processed_date:
             pd_date = str(processed_date).split(" ")
@@ -169,7 +169,7 @@ class ticl_stock_used_atm_report(models.TransientModel):
             dates = '{0}'.format(pd_date)
             return dates
 
-    @api.multi
+    #@api.multi
     def get_from_date_values(self, from_date):
         frm_date = str(from_date).split(" ")
         rd = frm_date[0].split('-')
@@ -177,7 +177,7 @@ class ticl_stock_used_atm_report(models.TransientModel):
         dates = '{0}'.format(frm_date)
         return dates
 
-    @api.multi
+    #@api.multi
     def get_to_date_values(self, to_date):
         to_dt = str(to_date).split(" ")
         rd = to_dt[0].split('-')
@@ -186,7 +186,7 @@ class ticl_stock_used_atm_report(models.TransientModel):
         return dates
 
 
-    @api.multi
+    #@api.multi
     def get_used_atm_report_values(self,data=None):
         date_split_1 = str(self.from_date).split(" ")
         date_split_2 = str(self.to_date).split(" ")
@@ -194,9 +194,9 @@ class ticl_stock_used_atm_report(models.TransientModel):
         ref_required = self.env['ticl.condition'].search([('name', '=', 'Refurb Required')])
         sig_damage = self.env['ticl.condition'].search([('name', '=', 'Significant Damage')])
         quarantine = self.env['ticl.condition'].search([('name', '=', 'Quarantine')])
-        docs = self.env['stock.move'].search([('received_date', '>=', date_split_1[0] +' 00:00:00'),
+        docs = self.env['stock.move.line'].search([('received_date', '>=', date_split_1[0] +' 00:00:00'),
                                                         ('received_date', '<=', date_split_2[0] +' 23:59:59'),
-                                                        ('location_dest_id', '=',self.warehouse_ids.ids),
+                                                        ('ticl_warehouse_id', '=',self.warehouse_ids.ids),
                                                         ('status', '=','inventory'),
                                                         ('condition_id', 'in',[to_recommend.id,ref_required.id,sig_damage.id, quarantine.id])])        
         return docs

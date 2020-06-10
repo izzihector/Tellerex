@@ -20,7 +20,7 @@
                         <group  attrs="{'invisible':[('inventory_report_printed','=',True)]}">
                         <field name="warehouse_ids" required="1"
                         style="width:200px;" widget="many2many_tags"
-                        options="{'no_quick_create':True,'no_create_edit':True}" domain="[('is_warehouse', '=', True)]"/>
+                        options="{'no_quick_create':True,'no_create_edit':True}" domain="[('is_location', '=', True)]"/>
                         </group>
                         <group>
                         <field name="print_type" required="1"
@@ -51,7 +51,7 @@
             <field name="name">Processed ATM Stock Report</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ticl.stock.used.atm.report</field>
-            <field name="view_type">form</field>
+            <field name="binding_view_types">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>

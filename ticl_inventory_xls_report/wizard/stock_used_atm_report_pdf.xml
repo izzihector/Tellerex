@@ -55,7 +55,7 @@
                                     <t t-esc="inventory.status"/>
                                 </td>
                                 <td>
-                                    <t t-esc="inventory.location_dest_id.name"/>
+                                    <t t-esc="inventory.ticl_warehouse_id.name"/>
                                 </td>
                                 <td>
                                     <t t-esc="inventory.condition_id.name"/>

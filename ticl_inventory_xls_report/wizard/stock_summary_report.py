@@ -39,7 +39,7 @@ class ticstockreport(models.TransientModel):
     inventory_report_printed = fields.Boolean('Inbound Inventory Report')
     print_type = fields.Selection([('excel','Excel'),('pdf','PDF')], string='Print Type')
     warehouse_ids = fields.Many2many('stock.location', string='Warehouse')
-    location_id = fields.Many2many('stock.location', string='Location Name')
+    #location_id = fields.Many2many('stock.location', string='Location Name')
 
 
     #@api.multi
@@ -101,7 +101,7 @@ class ticstockreport(models.TransientModel):
                 heading = 'Received Stock Summary Report'
                 worksheet.write_merge(0, 0, 0, 8, heading, easyxf(
                     'font:height 210; align: horiz center;pattern: pattern solid, fore_color yellow; font: color black; font:bold True;' "borders: top thin,bottom thin"))
-                inventory_objs = self.env['stock.move'].search([('received_date', '>=', date_split_1[0] +' 00:00:00'),('received_date', '<=', date_split_2[0] +' 23:59:59'),('location_dest_id', '=',self.warehouse_ids.ids)])
+                inventory_objs = self.env['stock.move.line'].search([('received_date', '>=', date_split_1[0] +' 00:00:00'),('received_date', '<=', date_split_2[0] +' 23:59:59'),('ticl_warehouse_id', '=',self.warehouse_ids.ids)])
                 list=[]
                 single_list = ''
                 for i in inventory_objs:
@@ -121,7 +121,7 @@ class ticstockreport(models.TransientModel):
                         worksheet.write(row, 5, inventory.condition_id.name or '')
                         worksheet.write(row, 6, '{0} {1}'.format(days[ans], reveived_date) or '')
                         worksheet.write(row, 7, inventory.origin or '')
-                        worksheet.write(row, 8, inventory.location_dest_id.name or '')
+                        worksheet.write(row, 8, inventory.ticl_warehouse_id.name or '')
 
                         row += 1
                     elif count >1:
@@ -136,7 +136,7 @@ class ticstockreport(models.TransientModel):
                                 worksheet.write(row, 5, inv.condition_id.name or '')
                                 worksheet.write(row, 6, '{0} {1}'.format(days[ans],reveived_date) or '')
                                 worksheet.write(row, 7, inventory.origin or '')
-                                worksheet.write(row, 8, inventory.location_dest_id.name or '')
+                                worksheet.write(row, 8, inventory.ticl_warehouse_id.name or '')
 
                                 row += 1
                             single_list = inventory.origin
@@ -193,9 +193,9 @@ class ticstockreport(models.TransientModel):
     def get_report_values(self,data=None):
         date_split_1 = str(self.from_date).split(" ")
         date_split_2 = str(self.to_date).split(" ")
-        docs = self.env['stock.move'].search([('received_date', '>=', date_split_1[0] +' 00:00:00'),
+        docs = self.env['stock.move.line'].search([('received_date', '>=', date_split_1[0] +' 00:00:00'),
                                               ('received_date', '<=', date_split_2[0] +' 23:59:59'),
-                                            ('location_dest_id', '=',self.warehouse_ids.ids)])
+                                            ('ticl_warehouse_id', '=',self.warehouse_ids.ids)])
         lst = []
         lst_2 = []
         origin =''
@@ -213,7 +213,7 @@ class ticstockreport(models.TransientModel):
                     'manufacturer_id': i.manufacturer_id.name,
                     'received_date': i.received_date,
                     'origin': i.origin,
-                    'location_dest_id': i.location_dest_id.name })
+                    'ticl_warehouse_id': i.ticl_warehouse_id.name })
                 elif count_origin >1 :
                     summary_log = self.env['ticl.receipt'].search([('name', '=', i.origin)]).ticl_receipt_lines
                     for inv in summary_log:
@@ -225,6 +225,6 @@ class ticstockreport(models.TransientModel):
                                     'manufacturer_id': inv.manufacturer_id.name,
                                     'received_date': i.received_date,
                                     'origin': i.origin,
-                                    'location_dest_id': i.location_dest_id.name})
+                                    'ticl_warehouse_id': i.ticl_warehouse_id.name})
                 origin = i.origin
         return lst

@@ -16,7 +16,7 @@
                                     <field name="to_date" required="1" style="width:200px;" widget="date"/>
                                </group>
                                 <group> <field name="warehouse_ids" required="1"
-                                        style="width:200px;" widget="many2many_tags" domain="[('is_warehouse', '=', True)]"/></group>
+                                        style="width:200px;" widget="many2many_tags" domain="[('is_location', '=', True)]"/></group>
                                  <group> <field name="print_type" required="1"
                                         style="width:200px;"/></group>
                            </group>
@@ -44,7 +44,7 @@
             <field name="name">Received Stock Summary Report</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ticl.stock.report</field>
-            <field name="view_type">form</field>
+            <field name="binding_view_types">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
