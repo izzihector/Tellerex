@@ -1320,13 +1320,13 @@ class ticl_receipt_line(models.Model):
                     raise UserError('Serial Number already exists in Packed !')
 
 # XL FUnction for Validation
-    @api.onchange('tel_type')
-    def onchange_tel_type(self):
-        for line in self:
-            if line.tel_type.name != 'ATM':
-                self.xl_items = 'y'
-            else:
-                self.xl_items = 'n'
+    # @api.onchange('tel_type')
+    # def onchange_tel_type(self):
+    #     for line in self:
+    #         if line.tel_type.name != 'ATM':
+    #             self.xl_items = 'y'
+    #         else:
+    #             self.xl_items = 'n'
 
     # Filter Product Basis of Product TYpe
     # @api.onchange('tel_type', 'condition_id', 'manufacturer_id')

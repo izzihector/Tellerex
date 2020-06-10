@@ -55,7 +55,7 @@ class ticl_recommend_model(models.Model):
             else:
                 recs['m_id'] = manufacturer_id.name
             self.env['ticl.recommend.model'].create(recs)
-        self._cr.execute("""select stock_move_line.status as status,stock_move_line.tel_note as tel_note,location_dest_id as sending_location_id,CAST(received_date AS DATE) AS delivery_date,CAST(DATE_PART('day', NOW()::timestamp - received_date::timestamp) as int) AS ticl_age,
+        self._cr.execute("""select stock_move_line.status as status,stock_move_line.tel_note as tel_note,ticl_warehouse_id as sending_location_id,CAST(received_date AS DATE) AS delivery_date,CAST(DATE_PART('day', NOW()::timestamp - received_date::timestamp) as int) AS ticl_age,
         manufacturer_id,product_id,serial_number,condition_id from stock_move_line,ticl_condition,stock_location  where ticl_condition.name = 'To Recommend' and stock_location.is_location = True and stock_move_line.ticl_warehouse_id = stock_location.id and
         stock_move_line.condition_id = ticl_condition.id and stock_move_line.status in ('inventory','assigned');
         """)
