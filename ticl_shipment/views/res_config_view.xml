@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
   <data>
-    <!-- Authontivation Setting for Echo  
+     <!-- Authontivation Setting for Echo  --> 
     <record id="view_authontivation_connection_settings" model="ir.ui.view">
         <field name="name">view.auth.config.settings</field>
         <field name="model">res.config.settings</field>
@@ -25,6 +25,6 @@
                 </div>
             </xpath>
         </field>
-    </record>-->
+    </record>
   </data>
 </odoo>
