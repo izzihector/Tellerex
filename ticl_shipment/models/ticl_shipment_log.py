@@ -232,7 +232,7 @@ class ticl_shipment_log(models.Model):
         
     #@api.model
     def unlink(self):
-        move_id = self.env['stock.move'].search([('shipment_id', '=', self.name)])
+        move_id = self.env['stock.move.line'].search([('shipment_id', '=', self.name)])
         if move_id:
             for mv in move_id:
                 mv.write({'status': 'inventory', 'shipment_id':''})

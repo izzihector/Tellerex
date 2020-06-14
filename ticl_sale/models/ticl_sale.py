@@ -191,6 +191,8 @@ class SaleOrder(models.Model):
 		moves = self.env['stock.move'].search([('picking_id','in',self.picking_ids.ids)])
 		#Contract comission calculation
 		self.get_comission_product(self.date_order)
+		for pick in self.picking_ids:
+			pick.write({'user_id':self.user_id.id})		
 		#Move record from sale order line to picking from line
 # 		user_mvs = []
 		for line in  self.order_line:

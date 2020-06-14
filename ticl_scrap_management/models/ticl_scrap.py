@@ -53,7 +53,7 @@ class ticl_scrap_stock(models.Model):
                 scrap_line[0].lot_id.is_scraped = True
             mv = self.env['stock.move.line'].search(scrap_line[1],
                                                        limit=int(scrap_line[0].scrap_qty))
-            mv.sudo().write({'status':'recycled','recycled_date':scrap_line[0].date_expected_new,'scrap_tel_note': scrap_line[0].scrap_tel_note})
+            mv.sudo().write({'status':'recycled','scrap_line_id':scrap_line[0].id,'recycled_date':scrap_line[0].date_expected_new,'scrap_tel_note': scrap_line[0].scrap_tel_note})
 
 
     

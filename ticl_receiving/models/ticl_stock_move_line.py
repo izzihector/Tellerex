@@ -41,6 +41,7 @@ class TiclStockMoveLine(models.Model):
     processed_date = fields.Date(sring='Date Processed')
     recycled_date = fields.Date(sring='Recycled Date')
     scrap_tel_note = fields.Char(string='recycled Comments')
+    scrap_line_id = fields.Many2one('stock.scrap.line', string="Scrap Line ID")
 
     monthly_service_charge = fields.Float(string='Monthly Service Charges', store=True)
     monthly_service_charge_total = fields.Char(string='Monthly Service Charges')
@@ -95,3 +96,54 @@ class TiclStockMoveLine(models.Model):
         result = action.read()[0]
         result['context']={'default_old_model':self.product_id.id}
         return result
+
+
+    def write(self, values):
+        print("\n Inside write")
+        for i in self:
+            print("inside move line ")
+            tel_receipt_summary_line = self.env['ticl.receipt.log.summary.line'].search(
+                [('tel_unique_no', '=', i.tel_unique_no)])
+
+
+            if 'condition_id' in values.keys():
+                if values['condition_id'] == 5:
+                    x = self.env['ticl.refurbishment.charge'].search([('name', '=', 'Refurb Complete')])
+                    values['refurbishment_charges'] = x.service_price
+                elif values['condition_id'] != 5:
+                    values['refurbishment_charges'] = 0
+                if 'condition' not in dict(self._context):
+                    self.inv_update_condition(values)
+            if 'tel_note' in values.keys():
+                tel_receipt_summary_line.write({'tel_note': values['tel_note']})
+            if 'cod_comments' in values.keys():
+                tel_receipt_summary_line.write({'cod_comments': values['cod_comments']})
+            if 'scrap_tel_note' in values.keys():
+                print("inside1")
+                if self.scrap_line_id:
+                    self.scrap_line_id.write({'scrap_tel_note': values['scrap_tel_note']})
+
+        return super(TiclStockMoveLine, self).write(values)
+
+    def inv_update_condition(self, vals):
+        print("\n \n inside inv update condiytion of stock move line ")
+        if vals['condition_id']:
+            print("inside vals ")
+            tables = [
+                {'ticl_receipt_log_summary_line': 'condition_id'},
+                {'stock_production_lot': 'condition_id'},
+            ]
+
+            for table in tables:
+                k = [*table.keys()]
+                v = [*table.values()]
+                query = 'UPDATE ' + str(k[0]) + ' SET ' + str(v[0]) + '= %s WHERE ' + str(v[0]) + ' = %s'
+                if k[0] == 'stock_production_lot' and self.serial_number:
+                    query += ' and ' + 'name' + ' = %s'
+                    self._cr.execute(query, (vals['condition_id'], self.condition_id.id, self.serial_number))
+                elif k[0] == 'stock_production_lot' and not self.serial_number:
+                    pass
+                else:
+                    query += ' and ' + 'tel_unique_no' + ' = %s'
+                    self._cr.execute(query, (vals['condition_id'], self.condition_id.id, self.tel_unique_no))
+        return True

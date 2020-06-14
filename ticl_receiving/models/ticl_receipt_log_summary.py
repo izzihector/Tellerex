@@ -289,6 +289,8 @@ class ticl_receipt_log_summary(models.Model):
             'name': _('COD ATM(P)'),
             'type': 'ir.actions.act_window',
             'res_model': 'ticl.receipt.log.summary.line',
+            'views': [[self.env.ref('ticl_receiving.ticl_receipt_log_summary_tree_view_atm_process').id, 'tree'],
+                      [self.env.ref('ticl_receiving.ticl_receipt_log_summary_form_view_placard').id, 'form']],
             'target': 'current',
         }
         atm_count_ids = self.env['ticl.receipt.log.summary.line'].search(
@@ -298,7 +300,7 @@ class ticl_receipt_log_summary(models.Model):
             if ids.tel_type.name == 'ATM' and ids.condition_id.name in ('Refurb Required - L1','Refurb Required - L2','Significant Damage') or ids.condition_id.name == 'To Recommend' or ids.condition_id.name == 'Quarantine':
                 condition_ids.append(ids.id)
         if len(condition_ids) >= 1:
-            action['view_mode'] = 'tree,form'
+            # action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', condition_ids)]
         return action
 
@@ -314,6 +316,7 @@ class ticl_receipt_log_summary(models.Model):
             'name': _('Placards(P)'),
             'type': 'ir.actions.act_window',
             'res_model': 'ticl.receipt.log.summary.line',
+            'view_id': self.env.ref('ticl_receiving.ticl_receipt_log_summary_tree_view_placard').id,
             'target': 'current',
         }
         placards_count_ids = self.env['ticl.receipt.log.summary.line'].search(
