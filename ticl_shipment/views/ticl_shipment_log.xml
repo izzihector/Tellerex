@@ -31,7 +31,7 @@
 
                     <button name="import_shipment" class="oe_highlight" 
                         string="Import" type="object"
-                        attrs="{'invisible': [('state', '!=', 'draft')]}" invisible="1"/>
+                        attrs="{'invisible': [('state', '!=', 'draft')]}"/>
 
                     <button name="revert_shipment" class="oe_highlight"
                                 string="Revert Shipment to Draft" type="object"
