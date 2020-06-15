@@ -86,17 +86,17 @@ class SaleOrder(models.Model):
 		return super(SaleOrder, self).create(vals_list)
 
 	#@api.model
-	# def write(self, vals_list):
-	# 	if 'order_line' in vals_list.keys():
-	# 		for i in range(len(self.order_line), len(vals['order_line'])):
-	# 			if vals_list['order_line'][i][2] != False:
-	# 				vals_list['order_line'][i][2]['disassembly_unit'] = self.sale_unit
-	# 				# vals['order_line'][i][2]['unit_type'] = self.unit_type
-	# 	if 'check_number' in vals_list.keys():
-	# 		if self.po_ids:
-	# 			po_id = self.env['purchase.order'].search([('name','=',self.po_ids.name)])
-	# 			po_id.write({'check_number':vals_list['check_number']})
-	# 	return super(SaleOrder, self).write(vals_list)
+	def write(self, vals_list):
+		if 'order_line' in vals_list.keys():
+			for i in range(len(self.order_line), len(vals['order_line'])):
+				if vals_list['order_line'][i][2] != False:
+					vals_list['order_line'][i][2]['disassembly_unit'] = self.sale_unit
+					# vals['order_line'][i][2]['unit_type'] = self.unit_type
+		if 'check_number' in vals_list.keys():
+			if self.po_ids:
+				po_id = self.env['purchase.order'].search([('name','=',self.po_ids.name)])
+				po_id.write({'check_number':vals_list['check_number']})
+		return super(SaleOrder, self).write(vals_list)
 
 	@api.onchange('sale_unit','unit_type','sale_type')
 	def on_change_sale_unit(self):
