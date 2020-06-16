@@ -85,7 +85,7 @@ class SaleOrder(models.Model):
 				# vals['order_line'][i][2]['unit_type'] = vals['unit_type']
 		return super(SaleOrder, self).create(vals_list)
 
-	@api.model
+	#@api.model
 	def write(self, vals_list):
 		if 'order_line' in vals_list.keys():
 			for i in range(len(self.order_line), len(vals['order_line'])):
