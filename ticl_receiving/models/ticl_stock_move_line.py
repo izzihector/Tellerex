@@ -41,7 +41,7 @@ class TiclStockMoveLine(models.Model):
     processed_date = fields.Date(sring='Date Processed')
     recycled_date = fields.Date(sring='Recycled Date')
     scrap_tel_note = fields.Char(string='recycled Comments')
-    scrap_line_id = fields.Many2one('stock.scrap.line', string="Scrap Line ID")
+    #scrap_line_id = fields.Many2one('stock.scrap.line', string="Scrap Line ID")
 
     monthly_service_charge = fields.Float(string='Monthly Service Charges', store=True)
     monthly_service_charge_total = fields.Char(string='Monthly Service Charges')
