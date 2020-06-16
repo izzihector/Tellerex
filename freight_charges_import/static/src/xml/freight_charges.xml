@@ -1,0 +1,41 @@
+<templates id="template" xml:space="preserve">
+	<t t-extend="ListView.buttons">
+		<t t-jquery="div.o_list_buttons" t-operation="append">
+		
+	           
+	         
+	           <t t-if="widget.modelName == 'ticl.shipment.log'">
+		             <button type="button" class="btn btn-primary btn_frt_chrg_import_shipment">
+			            Freight Charges Import
+			        </button>
+			        
+	        	</t>
+	        	<t t-if="widget.modelName == 'ticl.receipt.log.summary'">
+		             <button type="button" class="btn btn-primary btn_frt_chrg_import_receipt">
+			            Freight Charges Import
+			        </button>
+			        
+	        	</t>
+	        	
+	     </t>
+	 </t>
+	 
+	<div t-name="FreightChargesImportDialog" class="o_export">
+	 	
+	 	<div class="float-right asn" style="display: unset !important;">
+		 	<span class="tender_tooltip">
+		 		<img class="tender_img" src="/ticl_inbound_import/static/src/img/information-icon.png"></img>
+		 		<span class="tn_tooltiptext">You can download Freight Charges file template from here.</span>
+		 		<a style="float:right;" 
+		 		href="/freight_charges_import/static/src/excel_template/FreightCharges_Template.xlsx">Download Template</a>
+		 	</span>
+		 	
+	 	</div>
+	 	<form method="post" enctype="multipart/form-data" role="form" id="tender_form">	 
+		<input type="file" multiple="true" class="form-control" id="fileinput" name="shipment" />
+			    
+		</form>
+		
+	</div>
+	 
+</templates>

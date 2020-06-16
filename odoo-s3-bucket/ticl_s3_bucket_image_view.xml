@@ -30,33 +30,34 @@
                         <group attrs="{'invisible': [('state', '==', 'cleaned')]}">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                            <group string='ATM Images (5 Images Required)' class="o_group o_inner_group o_group_col_3"
-                                   style="width:32%">
-
-                                <!-- <field name="import_files" widget="import_button"/> -->
-                                <field name="attachment_ids" widget="many2many_binary" colspan="2"
-                                       string="Upload ATM Images" nolabel="1"/>
+                            <group string='ATM Images(5 Images Required)' 
+                            class="o_group o_inner_group o_group_col_3" style="width:32%">
+                            <field name="attachment_ids" widget="many2many_binary" colspan="2"
+                            string="Upload ATM Images" nolabel="1"
+                            class="fa fa-times o_attachment_delete_cross" 
+                            style="width:115%;margin-top:-20px;"/>
                             </group>
-                            <group string="EPP Images (2 Images Required)" class="o_group o_inner_group o_group_col_3 " 
-                                   style="width:35%;">
-                                <span>
-                                    <!-- <field name="import_files_epp" widget="import_button_epp"/> -->
-                                    <field name="attachment_ids_epp" widget="many2many_binary" colspan="2"
-                                         attrs="{'invisible':[('atm_count','!=',5)]}"  string="Upload EPP Images" nolabel="1"/>
-                                </span>
+                            <group string="EPP Images(2 Images Required)" 
+                            class="o_group o_inner_group o_group_col_3" style="width:38%;">
+                     <!--        <span> -->
+                            <field name="attachment_ids_epp" widget="many2many_binary" colspan="2"
+                            attrs="{'invisible':[('atm_count','!=',5)]}"  
+                            string="Upload EPP Images" nolabel="1"
+                            style="width:115%;margin-top:-10px;"/>
+                                <!-- </span> -->
                             </group>
-                            <group string="Hard Disk Images (2 Images Required)" class="o_group o_inner_group col-sm-3">
-                                <span>
-
-                                    <field name="attachment_ids_hdd" widget="many2many_binary" colspan="2"
-                                       attrs="{'invisible':['|',('atm_count','!=',5),('epp_count','!=',2)]}"    string="Upload HDD Images" nolabel="1"/>
-                                </span>
+                            <group string="Hard Disk Images(2 Images Required)" 
+                            class="o_group o_inner_group o_group_col_3" style="width:35%;">
+                            <span>
+                            <field name="attachment_ids_hdd" widget="many2many_binary" colspan="3"
+                            attrs="{'invisible':['|',('atm_count','!=',5),('epp_count','!=',2)]}"
+                            string="Upload HDD Images" nolabel="1"
+                            style="width:320px;margin-top:-10px;"/>
+                            </span>
                             </group>
-
-
                         </group>
-                        <div class="o_attachment_preview"  />
-                      <div class="oe_chatter" />
+                        <div class="o_attachment_preview"/>
+                        <div class="oe_chatter" />
                         <style>.o_form_view .o_group.o_inner_group {
                             display: table-cell !important;
                             }
@@ -65,6 +66,10 @@
                             color: #525252 !important;
                             font-weight: bold !important;
                             font-size: 18px !important;
+                            }
+
+                            .o_attachment_delete_cross {
+                                color: white;
                             }
 
                         </style>

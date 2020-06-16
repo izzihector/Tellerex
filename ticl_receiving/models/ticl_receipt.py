@@ -282,7 +282,7 @@ class ticl_receipt(models.Model):
                                       ('Expedited', 'Expedited'),('Non Freight','Non Freight'),
                                       ('Re-Consignment', 'Re-Consignment'),('warehouse_transfer', 'Warehouse Transfer')], 
                                        string='Receipt Type'
-                                      ,default='Inventory Transfer',track_visibility='onchange')
+                                      ,default='Regular',track_visibility='onchange')
 
 
     #onchange Receipt Type
@@ -321,6 +321,18 @@ class ticl_receipt(models.Model):
     #     self.write({'state': 'pending'})
 
 
+    #import receipt
+    def import_receipt(self):
+        view = self.env.ref('ticl_import.wizard_import_work_order')
+        return {
+            'name': 'Warning',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'import.work.order',
+            'view': [('view', 'form')],
+            'target': 'new',
+        }
 
 #Basic RTE3MDU1OTpiMjRmYWRmYS0yNjkwLTQ3NDgtOThjMi1lYWEzNTViNTViMjQ=
 #Echo API POST INTEGRATION With Receipts Creations
@@ -858,13 +870,17 @@ class ticl_receipt(models.Model):
                                 #             })
 
                                 # Update Other Fields
+
+                                EstimatedDeliveryDate = request_data.get('EstimatedDeliveryDate')
+                                delivery_date = datetime.strptime(str(EstimatedDeliveryDate),'%m/%d/%Y').strftime("%Y-%m-%d")
+                                log.write({'estimated_delivery_date': delivery_date})
+
                                 log.write({
                                     'shipment_status' : request_data.get('ShipmentStatus'),
                                     'shipping_carrier_name' : request_data.get('CarrierName'),
                                     'unit_of_weight' : request_data.get('UnitOfWeight'),
                                     'total_weight' : request_data.get('TotalWeight'),
-                                    'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate'),
-                                    'tel_note' : request_data.get('EstimatedDeliveryDate'),
+                                    #'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate'),
                                     'total_cost' : request_data.get('TotalCost'),
                                        
                                     })
@@ -880,10 +896,10 @@ class ticl_receipt(models.Model):
                                             "ticl_units": line.get("Units")
                                         }
                                 log.ticl_receipt_payment_lines = [(0, 0, cost_lines)]
-                            # estimated_delivery_date = request_data.get('EstimatedDeliveryDate')
-                            # print("=====ddddddddddddddd",estimated_delivery_date)
-                            # self.estimated_delivery_date = str(estimated_delivery_date)
-                            # print("=====ddddddddddddddd",self.estimated_delivery_date)
+
+                            EstimatedDeliveryDate = request_data.get('EstimatedDeliveryDate')
+                            delivery_date = datetime.strptime(str(EstimatedDeliveryDate),'%m/%d/%Y').strftime("%Y-%m-%d")
+                            log.write({'estimated_delivery_date': delivery_date})
 
                             # Update Other Fields
                             log.write({
@@ -891,7 +907,7 @@ class ticl_receipt(models.Model):
                                     'shipping_carrier_name' : request_data.get('CarrierName'),
                                     'unit_of_weight' : request_data.get('UnitOfWeight'),
                                     'total_weight' : request_data.get('TotalWeight'),
-                                    'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate').strftime('%m/%d/%Y'),
+                                    #'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate').strftime('%m/%d/%Y'),
                                     'total_cost' : request_data.get('TotalCost'),
                                 })
 
@@ -1141,16 +1157,17 @@ class ticl_receipt(models.Model):
                         'tel_cod':tel_line.tel_cod,
                         'xl_items': tel_line.xl_items,
                         'check_atm': tel_line.check_atm,
-                        # 'inbound_charges':tel_line.inbound_charges,
+                        'inbound_charges':tel_line.inbound_charges,
                         'associated_fees':tel_line.associated_fees,
                         'misc_log_time':tel_line.misc_log_time,
                         'misc_charges':tel_line.misc_charges,
                         'service_price':tel_line.service_price,
-
+                        #'tel_unique_no':tel_line.tel_unique_no,
                         'check_move_inventory': True,
                         'repalletize': tel_line.repalletize,
                         'repalletize_charge':tel_line.repalletize_charge,
                     }
+                    #print("===ticl_receipt_summary_lines==",ticl_receipt_summary_lines)
                     #count_number = int(tel_line.count_number) - tel_line.quarantine_count
                     tel_line.status_inv = 'y'
 
@@ -1183,8 +1200,8 @@ class ticl_receipt(models.Model):
 
         receipt_log_ids = self.env['ticl.receipt'].search(
                        [('name', '=', self.name)], limit=1)
-        # if self.receipt_type != 'warehouse_transfer':
-        #     self.env['ticl.monthly.service.line'].create_detail_mnth_service_inv(self, 'receipt')
+        if self.receipt_type != 'warehouse_transfer':
+            self.env['ticl.monthly.service.line'].create_detail_mnth_service_inv(self, 'receipt')
         #self.env['ticl.fright.service.line'].create_detail_mnth_fright_inv(self,'receipt')
         action =self.env.ref('ticl_receiving.ticl_action_receipt_log_summary').read()[0]
         action['views'] = [(self.env.ref('ticl_receiving.ticl_receipt_log_summary_form_view').id, 'form')]
@@ -1303,13 +1320,13 @@ class ticl_receipt_line(models.Model):
                     raise UserError('Serial Number already exists in Packed !')
 
 # XL FUnction for Validation
-    @api.onchange('tel_type')
-    def onchange_tel_type(self):
-        for line in self:
-            if line.tel_type.name != 'ATM':
-                self.xl_items = 'y'
-            else:
-                self.xl_items = 'n'
+    # @api.onchange('tel_type')
+    # def onchange_tel_type(self):
+    #     for line in self:
+    #         if line.tel_type.name != 'ATM':
+    #             self.xl_items = 'y'
+    #         else:
+    #             self.xl_items = 'n'
 
     # Filter Product Basis of Product TYpe
     # @api.onchange('tel_type', 'condition_id', 'manufacturer_id')
@@ -1409,47 +1426,47 @@ class ticl_receipt_line(models.Model):
 
     # #TICL Service Charges Function
     # @api.depends('tel_type','xl_items')
-    # def _ticl_service_price(self):
-    #     for line in self:
-    #         if line.tel_type.name == "ATM":
-    #             rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
-    #             if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
-    #                 line.inbound_charges = rec_log.service_price
-    #
-    #         if line.tel_type.name == "Signage" and line.xl_items =='y':
-    #             rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
-    #             if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
-    #                 line.inbound_charges = rec_log.service_price
-    #
-    #         if line.tel_type.name == "Accessory" and line.xl_items =='y':
-    #             rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
-    #             if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
-    #                 line.inbound_charges = rec_log.service_price
-    #
-    #         if line.tel_type.name == "Signage" and line.xl_items == 'n':
-    #             rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
-    #             if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
-    #                 line.inbound_charges = rec_log.service_price
-    #
-    #         if line.tel_type.name == "Accessory" and line.xl_items =='n':
-    #             rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
-    #             if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
-    #                 line.inbound_charges = rec_log.service_price
-    #
-    #         if line.tel_type.name == "Lockbox" and line.xl_items =='n':
-    #             rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
-    #             if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
-    #                 line.inbound_charges = rec_log.service_price
-    #
-    #         if line.tel_type.name == "Lockbox" and line.xl_items =='y':
-    #             rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
-    #             if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
-    #                 line.inbound_charges = rec_log.service_price
-    #
-    #         if line.tel_type.name == "XL" and line.xl_items =='y':
-    #             rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
-    #             if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
-    #                 line.inbound_charges = rec_log.service_price
+    def _ticl_service_price(self):
+        for line in self:
+            if line.tel_type.name == "ATM":
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Signage" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Accessory" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Signage" and line.xl_items == 'n':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Accessory" and line.xl_items =='n':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Lockbox" and line.xl_items =='n':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Lockbox" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "XL" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
 
     #Total Line Weight
     @api.depends('line_item_weight','count_number','product_weight','tel_type')
@@ -1464,6 +1481,7 @@ class ticl_receipt_line(models.Model):
                 
 
     name = fields.Text(string='Description')
+    tel_unique_no = fields.Char(string="Unique Id")
     received_date = fields.Date(string='Received Date', related='ticl_receipt_id.delivery_date', store=True)
     check_asn = fields.Boolean(string="Check ASN")
     ticl_receipt_id = fields.Many2one('ticl.receipt', invisible=1)
@@ -1484,9 +1502,8 @@ class ticl_receipt_line(models.Model):
     xl_items = fields.Selection(string="XL", selection=[('y', 'Y'), ('n', 'N')], default='y')
     hide_cod = fields.Boolean(string="Hide COD")
     status_inv = fields.Selection(string="Moved to Inventory", selection=[('y', 'Y'), ('n', 'N')])
-    #service_price = fields.Float(string='Price')
 
-    inbound_charges = fields.Float(string='Inbound Charges')
+    inbound_charges = fields.Float(string='Inbound Charges',store=True, compute=_ticl_service_price)
     misc_log_time = fields.Char(string='Misc Log Time', default=0)
     misc_charges = fields.Float(string='Misc Charges', compute=_total_misc_charges)
     associated_fees = fields.Float(string='Associated Fees') 

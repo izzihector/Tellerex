@@ -1,0 +1,118 @@
+<odoo>
+	<data>
+<!--		<menuitem id="ticl_management.configuration_ticl_menu" name="Configuration" groups="ticl_shipment_hide_menu_group" sequence="7"/>-->
+	    <menuitem name="Configuration" id="ticl_management.configuration_menu" groups="base.group_system,base.group_erp_manager" sequence="7"/>
+	    <!-- Users -->
+		<menuitem name="Users" id="user_menus" parent="ticl_management.configuration_menu"/>
+		<menuitem id="users" name="Users" 
+            parent="user_menus" action="base.action_res_users" sequence="1"/>
+        <menuitem id="employees" name="Employees" 
+            parent="user_menus" action="hr.open_view_employee_list_my" sequence="2"/>
+            
+         <!-- Common master -->
+         
+         <menuitem name="Common Masters" id="common_masters" parent="ticl_management.configuration_menu"/>
+         
+         <menuitem id="ticl_management.manufacturer_management_ticl_order" name="Manufacturer" 
+            parent="common_masters" action="ticl_management.action_manufacturer_tel_order" sequence="1"/>
+            
+         <menuitem id="product_categories" name="Product Categories" 
+            parent="common_masters" action="product.product_category_action_form" sequence="2"/>
+            
+         <menuitem id="ticl_product" name="Products" 
+            parent="common_masters" action="stock.product_template_action_product" sequence="3"/>
+            
+         <menuitem id="ticl_warehouse" name="Warehouses" 
+            parent="common_masters" action="stock.action_warehouse_form" sequence="4"/>
+            
+         <menuitem id="ticl_location" name="Locations" 
+            parent="common_masters" action="stock.action_location_form" sequence="5"/>
+            
+         <menuitem id="ticl_management.city_management_ticl_order" name="City Details" 
+            parent="common_masters" action="ticl_management.action_ticl_city" sequence="6"/>
+            
+         <menuitem id="ticl_management.rigger_management_ticl_order" name="Rigger Address" 
+            parent="common_masters" action="ticl_management.action_ticl_rigger" sequence="7"/>
+         
+         
+         <menuitem id="ticl_management.condition_management_ticl_order" name="Condition" 
+            parent="common_masters" action="ticl_management.action_ticl_condition" sequence="8"/>
+            
+         <menuitem id="ticl_management.shipping_carrier_ticl_order" name="Shipping Carrier" 
+            parent="common_masters" action="ticl_management.action_shipping_carrier" sequence="9" />
+
+
+          <menuitem id="ticl_management.ticl_epp_manufacturer" name="EPP Manufacturer" 
+            parent="common_masters" action="ticl_management.action_ticl_epp_manufacturer" sequence="10" />
+
+        <menuitem id="ticl_management.ticl_hdd_manufacturer" name="HDD Manufacturer" 
+            parent="common_masters" action="ticl_management.action_ticl_hdd_manufacturer" sequence="11" />
+            
+<!--        <menuitem id="ticl_sale.ticl_Pallet_count" name="Product Count per Pallet" -->
+<!--            parent="common_masters" -->
+<!--            action="ticl_sale.action_ticl_pallet_count" sequence="20"/>-->
+            
+            
+         <!-- Service Charges -->
+         <menuitem name="Service Charges" id="service_charges" parent="ticl_management.configuration_menu"/>
+         
+         <menuitem id="ticl_receiving.ticl_refurbishment_charges" name="Refurbishment Charges"
+            parent="service_charges"
+            action="ticl_receiving.action_ticl_refurbishment_charges" sequence="3"/> 
+         <menuitem id="ticl_receiving.ticl_service_charges" name="Receiving Service Charges" 
+            parent="service_charges" 
+            action="ticl_receiving.action_ticl_service_charge" sequence="1"/>
+            
+<!--          <menuitem id="ticl_shipment.ticl_shipment_service_charges" name="Shipment Service Charges" -->
+<!--            parent="service_charges" -->
+<!--            action="ticl_shipment.action_ticl_shipment_service_charge" sequence="2"/>-->
+
+<!--          <menuitem id="ticl_sale.ticl_monthly_service_charges" name="Monthly Service Charges" -->
+<!--            parent="service_charges" -->
+<!--            action="ticl_sale.action_ticl_monthly_service_charge" sequence="4"/>-->
+            
+          <!-- Dashboard --> 
+          <menuitem id="ticl_receiving.tel_dashboard_parent" name="Dashboard" sequence="1"/>
+          <menuitem id="ticl_receiving.tel_dashboard_parent" name="Dashboard" groups="base.group_user" sequence="1"/> 
+          
+		<!-- Reporting -->
+		
+		    <menuitem id="report_ticl_menu" name="Reporting"
+          parent="ticl_shipment.ticl_ship_order_sub" sequence="6" groups="base.group_system,base.group_erp_manager"/>
+
+        <menuitem name="Pending Shipment Report" 
+            id="pending_shipment_pdf_report"
+          parent="ticl_user_management.report_ticl_menu" sequence="5"
+            action="ticl_shipment.action_pending_shipment_report"/>
+
+<!--        <menuitem name="Sold Items Report" id="ticl_inventory_xls_report.inventory_sold_items_report_child_menu"-->
+<!--            parent="report_ticl_menu" sequence="1"-->
+<!--            action="ticl_inventory_xls_report.action_sold_items_Report"/>-->
+<!--            -->
+<!--         <menuitem name="Warehouse Shipping Report" -->
+<!--            id="ticl_inventory_xls_report.warehouse_shipping_excel_pdf_report"-->
+<!--    	    parent="report_ticl_menu" sequence="2"-->
+<!--            action="ticl_inventory_xls_report.action_warehouse_shipping_report"/>-->
+            
+            
+<!--         <menuitem id="ticl_inventory_xls_report.report_xls_ticl_menu" name="Reporting" -->
+<!--            parent="ticl_receiving.receipts_menu" sequence="5" groups="base.group_system,base.group_erp_manager"/>-->
+            
+          
+          <!-- Receipt -->
+          <menuitem name="Receipt" id="ticl_receiving.receipts_menu" sequence="3"
+            groups="base.group_system,base.group_erp_manager,ticl_receiving.ticl_receipts_group_manager,ticl_receiving.ticl_receipts_group_user"/>
+          
+          <!-- inventory -->
+          <!-- <menuitem id="ticl_receiving.tel_all_inventory_display_parent" name="Inventory"  
+            sequence="4" /> -->
+          <!-- Shipping -->
+<!--          <menuitem id="ticl_shipment.ticl_ship_order_sub" name="Shipping" sequence="5"-->
+<!--            groups="base.group_system,base.group_erp_manager,ticl_shipment.ticl_shipment_group_user,ticl_shipment.ticl_shipment_group_manager"/>-->
+          
+          <menuitem name="Tender" id="shipment_menu" sequence="6"/>
+<!--          <menuitem id="ticl_management.configuration_ticl_menu" name="Configuration" groups="ticl_shipment_hide_menu_group" sequence="7"/>-->
+	      <menuitem name="Configuration" id="ticl_management.configuration_menu" groups="base.group_system,base.group_erp_manager" sequence="7"/>
+          
+	</data>
+</odoo>

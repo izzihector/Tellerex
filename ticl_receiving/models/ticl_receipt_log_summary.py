@@ -289,6 +289,8 @@ class ticl_receipt_log_summary(models.Model):
             'name': _('COD ATM(P)'),
             'type': 'ir.actions.act_window',
             'res_model': 'ticl.receipt.log.summary.line',
+            'views': [[self.env.ref('ticl_receiving.ticl_receipt_log_summary_tree_view_atm_process').id, 'tree'],
+                      [self.env.ref('ticl_receiving.ticl_receipt_log_summary_form_view_placard').id, 'form']],
             'target': 'current',
         }
         atm_count_ids = self.env['ticl.receipt.log.summary.line'].search(
@@ -298,7 +300,7 @@ class ticl_receipt_log_summary(models.Model):
             if ids.tel_type.name == 'ATM' and ids.condition_id.name in ('Refurb Required - L1','Refurb Required - L2','Significant Damage') or ids.condition_id.name == 'To Recommend' or ids.condition_id.name == 'Quarantine':
                 condition_ids.append(ids.id)
         if len(condition_ids) >= 1:
-            action['view_mode'] = 'tree,form'
+            # action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', condition_ids)]
         return action
 
@@ -314,6 +316,7 @@ class ticl_receipt_log_summary(models.Model):
             'name': _('Placards(P)'),
             'type': 'ir.actions.act_window',
             'res_model': 'ticl.receipt.log.summary.line',
+            'view_id': self.env.ref('ticl_receiving.ticl_receipt_log_summary_tree_view_placard').id,
             'target': 'current',
         }
         placards_count_ids = self.env['ticl.receipt.log.summary.line'].search(
@@ -354,6 +357,8 @@ class ticl_receipt_log_summary(models.Model):
             'tel_receipt_summary_id' : data.get('tel_receipt_summary_id'),
             'tel_unique_no' : data.get('tel_unique_no'),
             'received_date' : data.get('received_date'),
+            'processed_date' : data.get('processed_date') or False,
+            'cod_comments' :data.get('cod_comments') or False,
             'serial_number' : data.get('serial_number'),
             'xl_items' : data.get('xl_items'),
             'hr_employee_id' : data.get('hr_employee_id'),
@@ -950,28 +955,50 @@ class ticl_receipt_log_summary_line(models.Model):
                 line.repalletize_charge = 0.00
 
 
-    #TICL Service Charges Function 
-    # @api.depends('tel_type', 'misc_log_time', 'xl_items', 'service_price','associated_fees','repalletize')
-    # def _total_service_price(self):
-    #     for line in self:
-    #         rec_log = self.env['ticl.service.charge'].search([('name', '=', 'ATM'),('monthly_service_charge', '=', False)])
-    #         if line.tel_type.name == "ATM":             
-    #             line.service_price = rec_log.service_price + line.associated_fees + line.misc_charges 
-    #             if line.repalletize == "y":
-    #                 line.service_price = rec_log.service_price + line.associated_fees + line.repalletize_charge
+    #TICL Service Charges Function
+    # @api.depends('tel_type','xl_items')
+    def _ticl_service_price(self):
+        for line in self:
+            if line.tel_type.name == "ATM":
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
     
-    #         rec_signage = self.env['ticl.service.charge'].search([('name', '=', 'Signage'),('xl_items', '=', 'y'),('monthly_service_charge', '=', False)])
-    #         if line.tel_type.name == "Signage":             
-    #             line.service_price = rec_log.service_price + line.associated_fees + line.misc_charges
-    #             if line.repalletize == "y":
-    #                 line.service_price = rec_log.service_price + line.associated_fees + line.repalletize_charge
-
-    #         rec_accessory = self.env['ticl.service.charge'].search([('name', '=', 'Accessory'),('xl_items', '=', 'y'),('monthly_service_charge', '=', False)])
-    #         if line.tel_type.name == "Accessory":              
-    #             line.service_price = rec_log.service_price + line.associated_fees
-    #             if line.repalletize == "y":
-    #                 line.service_price = rec_log.service_price +  line.associated_fees + line.repalletize_charge
-
+            if line.tel_type.name == "Signage" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Accessory" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Signage" and line.xl_items == 'n':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Accessory" and line.xl_items =='n':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Lockbox" and line.xl_items =='n':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "Lockbox" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+    
+            if line.tel_type.name == "XL" and line.xl_items =='y':
+                rec_log = self.env['ticl.service.charge'].search([('name', '=', 'Receiving per Pallet')])
+                if line.ticl_receipt_summary_id.receipt_type != "warehouse_transfer":
+                    line.inbound_charges = rec_log.service_price
+                    
     #This fumction for COD Charges                
     @api.onchange('atm_data_destroyed','cod_charges')
     def _ticl_cod_charges(self):
@@ -980,7 +1007,7 @@ class ticl_receipt_log_summary_line(models.Model):
             if line.atm_data_destroyed == True and line.condition_id.name == 'To Recommend' or line.condition_id.name == 'Significant Damage' or line.condition_id.name == 'Refurb Required':
                 line.cod_charges = rec_cod_charges.service_price
             else:
-               line.cod_charges = 0.00       
+                line.cod_charges = 0.00       
 
     name = fields.Text(string='Description')
     received_date = fields.Date(string='Received Date',track_visibility='onchange')
@@ -1029,7 +1056,7 @@ class ticl_receipt_log_summary_line(models.Model):
         string='Status', default='cleaned')
 
 
-    inbound_charges = fields.Float(string='Inbound Charges')
+    inbound_charges = fields.Float(string='Inbound Charges', compute=_ticl_service_price)
     misc_log_time = fields.Char(string='Misc Log Time')
     misc_charges = fields.Float(string='Misc Charges', compute=_total_misc_charges)
     associated_fees = fields.Float(string='Associated Fees')
@@ -1248,6 +1275,7 @@ class ticl_receipt_log_summary_line(models.Model):
                     'warehouse_id': self.warehouse_id.id,
                     'receive_date': self.received_date,
                     'processed_date': self.processed_date,
+                    'cod_comments': self.cod_comments,
                     'received_date': self.received_date,
                     'serial_number': self.serial_number,
                     'tel_unique_no': self.tel_unique_no,

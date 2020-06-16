@@ -286,7 +286,7 @@ class StockMove(models.Model):
     status = fields.Selection([('inventory', 'Inventory'),('assigned', 'Assigned'),('picked', 'Picked'),('packed', 'Packed'),('shipped', 'Shipped'),
         ('sold', 'Sold'),('cancel', 'Cancelled'),('recycled', 'Recycled')], string='Status', default='inventory',track_visibility='onchange')
     processed_date = fields.Date(string='Date Processed')
-
+    cod_comments = fields.Char(string='COD Comments')
     monthly_service_charge = fields.Float('Monthly Service Charges',store=True)
     monthly_service_charge_total = fields.Char('Monthly Service Charges')
     total_service_charge = fields.Char(string="total_service_charge")

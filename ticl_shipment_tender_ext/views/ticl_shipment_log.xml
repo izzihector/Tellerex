@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+       <record id="ticl_shipment_form_view_ext" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.form.ext</field>
+            <field name="model">ticl.shipment.log.ext</field>
+            <field name="arch" type="xml">
+                <form string="Shipment Form" class="o_sale_order" create="false">
+                <header>
+                    
+                	<button name="picked_shipment_log_ext" class="oe_highlight" 
+                        string="Submit Tender" type="object" 
+                        attrs="{'invisible': [('state', '=', 'approved')]}"
+                        />
+                	
+                </header>
+                <sheet> 
+
+                <div>
+                <group> 
+                <h2>       
+                    <field name="name" class="oe_inline" style="width: 70%" 
+                    string="Shipment Number" readonly="1"/>   
+                </h2>     
+               </group>
+                </div>     
+                    <group>
+                       <group>
+							<field name="state" required="1" style="width: 70%" readonly="1"/>
+							<field name="delivery_date" style="width: 70%" invisible="1" widget="datetime"/>
+                            <field name="delivery_date_new" style="width: 70%" readonly="1"/>  
+							<field name="sending_location_id" style="width:70%" required="1" 
+                                string="Destination Location"/>
+                            <field name="receiving_location_id" string="Origin Location" 
+                            style="width:70%" readonly="1"/>
+                        	<field name="equipment_date" style="width: 70%" widget="date" invisible="1"/>
+                        	<field name="shipment_types" style="width: 70%" />
+                       </group>
+                        <group>   
+            			    <field name="accepted_date" style="width: 100%" widget="date" invisible="1"/>
+            			    <field name="bill_of_lading_number" string="BOL #" style="width: 100%" readonly="1"/>
+                           <field name="echo_tracking_id" readonly="1" string="Shipment ID" invisible="1"/>
+                           <field name="pick_up_date" style="width: 100%" widget="datetime" invisible="1"/>
+                           <field name="pick_up_date_new" style="width: 100%" widget="date" readonly="1"/> 
+            			   
+            			   <field name="activity_date" style="width: 100%" widget="datetime" invisible="1"/>
+                           <field name="activity_date_new" style="width: 100%" readonly="1"/> 
+            			   
+            			   
+                            
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Shipment Log">
+                            <field name="ticl_ship_lines">
+                                <tree string="Shipment Log" editable="bottom">
+                                    <field name="tel_type" 
+                                    options="{'no_create': True, 'no_create_edit':True, 'no_open':True}" required="1"/>
+                                    <field name="ticl_checked" invisible="1"/>
+                                    
+                                    <field name="product_id" string="Model Name" required="1"/>
+                                    <field name="common_name" string="Common Name"/>
+                                    
+                                     <field name="serial_number"
+                                        attrs="{'required': [('ticl_checked','=', True)],'readonly':[('ticl_checked', '!=', True)]}" 
+                                        class="serial_number"/>
+                                        
+                                    <field name="count_number" required="1"/>      
+                                    <field name="manufacturer_id" string="Manufacturer"
+                                        options="{'no_create': True, 
+                                    'no_create_edit':True, 'no_open':True}" class="manufacturer" required="1"/>
+                                    <field name="hide_cod" invisible="1"/>
+                                    
+                                    <field name="shipment_date" widget="datetime" invisible="1"/>
+                                    <field name="tel_note" placeholder="Please Comments Here...."/>
+                                    <field name="funding_doc_type"/>
+                                    <field name="funding_doc_number" />
+                                    <field name="ticl_project_id" />
+                                    <field name="tid" string="TID"/>
+                                    <field name="tel_available" readonly="1"/>
+                                    <field name="shipment_service_charges" invisible="1"/>
+                                    <field name="move_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>	
+                         <page string="Note">
+                            <group>
+                                <field name="tel_note" placeholder="Please Comments Here...."/>
+                            </group>
+                         </page>
+                        <page string="Other Information">
+                            <group>
+                                <group>
+                                <field name="user_id" options="{'no_create': True,'no_create_edit':True, 'no_open':True}"/>    
+                                </group>
+                                <group>     
+                                </group>
+                            </group>
+                        </page>           
+
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        
+
+        <record id="ticl_shipment_tree_view_ext" model="ir.ui.view">
+            <field name="name">ticl.shipment.log.tree</field>
+            <field name="model">ticl.shipment.log.ext</field>
+            <field name="arch" type="xml">
+                <tree string="Ships">
+                    <field name="name"/>
+                    <field name="receiving_location_id" string="Origin Location"/>
+                    <field name="sending_location_id" string="Destination Location"/>
+                    <field name="delivery_date" invisible="1"/>
+                    <field name="delivery_date_new"/>
+                    <field name="create_date" widget="date" string="Create Date"/>
+                    <field name="state"/>
+                    <field name="asn_bol_type" invisible="1"/>                      
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ticl_shipment_ext" model="ir.actions.act_window">
+            <field name="name">Outbound Tender Import</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.shipment.log.ext</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('ticl_shipment_tree_view_ext')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('ticl_shipment_form_view_ext')})]"/>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Outbound Tender Import.
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Outbound Tender" id="shipment_menu" action="action_ticl_shipment_ext"/>
+        
+        
+        <menuitem id="ticl_ship_order_sub_ext" name="Outbound Tender" parent="shipment_menu"  action="action_ticl_shipment_ext" sequence="4"/>
+ 
+<!--        <menuitem id="ticl_ship_menu_ext" name="Shipping Log" -->
+<!--            parent="ticl_ship_order_sub_ext" action="action_ticl_shipment_ext" sequence="1"/>-->
+
+
+
+    </data>
+</odoo>

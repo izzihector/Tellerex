@@ -49,7 +49,7 @@
                         <field name="tel_type" readonly="1"/>             
                        <field name="cod_employee_id" attrs="{'required': [('state', '!=', 'cleaned')]}" options="{'no_create': True, 'no_create_edit':True, 'no_open':True}"/>
                        <field name="cod_charges"/>
-                       <field name="cod_comments"/>
+                       <field name="cod_comments" attrs="{'readonly': [('state', '=', 'done')]}"/>
                     </group>
                     </group>
 
@@ -61,7 +61,7 @@
                         </page>
                     </notebook>                
                 </sheet>
- 		<!-- <div class="oe_chatter" style="display:none !important;">
+        <!-- <div class="oe_chatter" style="display:none !important;">
                 <field name="message_follower_ids" widget="mail_followers" />
                 <field name="message_ids" widget="mail_thread" />
             </div> -->
@@ -81,6 +81,23 @@
                     <field name="product_id" string="Model"/>
                     <field name="serial_number"/>          
                     <field name="condition_id"/>             
+                    <field name="received_date" widget="date"/>
+<!--                    <field name="state"/>-->
+                </tree>
+            </field>
+        </record>
+        <record id="ticl_receipt_log_summary_tree_view_atm_process" model="ir.ui.view">
+            <field name="name">ticl.receipt.log.summary.line.tree</field>
+            <field name="model">ticl.receipt.log.summary.line</field>
+            <field name="arch" type="xml">
+                <tree create="false" import="false">
+                    <field name="ticl_receipt_summary_id" string="Receipt ID"/>
+                    <field name="tel_unique_no" readonly="1"/>
+                    <field name="tel_type"/>
+                    <field name="manufacturer_id"/>
+                    <field name="product_id" string="Model"/>
+                    <field name="serial_number"/>
+                    <field name="condition_id"/>
                     <field name="received_date" widget="date"/>
                     <field name="state"/>
                 </tree>
@@ -179,7 +196,7 @@
 <!--            <field name="view_ids" ref="ticl_receipt_log_summary_form_view_quarantine"></field>-->
 <!--            <field name="arch" type="xml">-->
 <!--                <tree create="false" delete="false" import="false">-->
-<!--		            <field name="ticl_receipt_summary_id" string="Receipt ID"/>-->
+<!--                    <field name="ticl_receipt_summary_id" string="Receipt ID"/>-->
 <!--                    <field name="tel_unique_no" readonly="1"/>-->
 <!--                    <field name="tel_type"/>-->
 <!--                    <field name="manufacturer_id"/>-->
@@ -187,7 +204,7 @@
 <!--                    <field name="serial_number"/>          -->
 <!--                    <field name="condition_id"/>             -->
 <!--                    <field name="received_date" widget="date"/>-->
-<!--		            <field name="state" invisible="1"/>-->
+<!--                    <field name="state" invisible="1"/>-->
 <!--                </tree>-->
 <!--            </field>-->
 <!--        </record>-->

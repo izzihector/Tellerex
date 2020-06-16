@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ticl_warehouse_email_form" model="ir.ui.view">
+        <field name="name">warehouse.email.form</field>
+        <field name="model">warehouse.email</field>
+        <field name="arch" type="xml">
+            <form string="Notifications Email Configuration">
+                <group style="width:50%;">
+                    <field name="name"/>
+                </group>
+                <group style="width:50%;" string="Types of Notifications">
+                    <group style="width:50%;">
+                        <field name="weekly"/>
+                        <field name="daily"/>
+                    </group>
+                    <group style="width:50%;">
+                        <field name="lockbox"/>
+                        <field name="warehouse_notify" string="Warehouse Notification"/>
+                    </group>
+
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="warehouse_email_tree" model="ir.ui.view">
+        <field name="name">warehouse.email.tree</field>
+        <field name="model">warehouse.email</field>
+        <field name="arch" type="xml">
+            <tree string="Email Address">
+                <field name="name"/>
+                <field name="weekly"/>
+                <field name="daily"/>
+                <field name="lockbox"/>
+                <field name="warehouse_notify"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_ticl_warehouse_email" model="ir.actions.act_window">
+        <field name="name">Notifications Email Configuration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">warehouse.email</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a New Report Type.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="ticl_warehouse_email" name="Notifications Email Configuration"
+            parent="ticl_user_management.common_masters" action="action_ticl_warehouse_email" sequence="30"/>
+
+</odoo>

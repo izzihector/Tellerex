@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Inherits Receipt From View  -->
+        <record model="ir.ui.view" id="view_receipt_draft_ticl_form">
+        <field name="name">view.receipt.draft.ticl.form</field>
+        <field name="model">ticl.receipt</field>
+        <field name="inherit_id" ref="ticl_receiving.ticl_receipts_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='confirm_receipt']" position="after">
+                <button name="%(action_ticl_order_cancel)d" attrs="{'invisible': [('state', 'in',('cancel'))]}"
+                string="Cancel Receipt" type="action" style="background-color: #ff4d4d;" 
+                class="oe_highlight"/>
+            </xpath>
+
+            <xpath expr="//page[2]/group/field[@name='tel_note']" position="after">
+                <field name="ticl_cancel_reason" string="Reason Of Cancellation" readonly="1"/>
+            </xpath>
+
+        </field>
+        </record>
+
+
+        <!-- Inherits Receipt Pending From View  -->
+        <record model="ir.ui.view" id="view_receipt_pending_ticl_form">
+        <field name="name">view.receipt.pending.ticl.form</field>
+        <field name="model">ticl.receipt</field>
+        <field name="inherit_id" ref="ticl_receiving.ticl_receipts_pending_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='confirm_receipt']" position="after">
+                <button name="%(action_ticl_order_cancel)d" 
+                attrs="{'invisible': [('state', 'in',('cancel'))]}"
+                string="Cancel Receipt" type="action" style="background-color: #ff4d4d;" 
+                class="oe_highlight"
+                />
+            </xpath>
+
+             <xpath expr="//page[3]/group/field[@name='tel_note']" position="after">
+                <field name="ticl_cancel_reason" string="Reason Of Cancellation" readonly="1"/>
+            </xpath>
+
+        </field>
+        </record>
+
+    </data>
+</odoo>

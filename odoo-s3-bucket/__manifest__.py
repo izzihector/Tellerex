@@ -30,8 +30,8 @@
     ],
     'qweb' : [
             'static/src/xml/many2many_extend.xml',
-            # 'static/src/xml/s3_image.xml',
-            # 'static/src/xml/s3_image_epp.xml',
-            # 'static/src/xml/s3_image_hdd.xml',
+            'static/src/xml/s3_image.xml',
+            'static/src/xml/s3_image_epp.xml',
+            'static/src/xml/s3_image_hdd.xml',
     ],
 }

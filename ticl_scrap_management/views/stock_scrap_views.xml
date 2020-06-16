@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_scrap_view_form2_inherit_ticl" model="ir.ui.view">
+        <field name="name">stock.scrap.view.form2.inherit.ticl</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="replace">
+                <form string="Scrap">
+                    <group>
+                        <group>
+                            <field name="state" invisible="1"/>
+                            <field name="picking_id" invisible="1"/>
+                            <field name="tracking" invisible="1"/>
+                            <field name="package_id" groups="stock.group_tracking_lot"/>
+                        </group>
+                        <group>
+                            
+                            <field name="owner_id" groups="stock.group_tracking_owner"/>
+                            <field name="location_id" domain="[('is_location', '=', True)]" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="scrap_location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                            <page string="Scrap Items">
+                                <field name="scrap_lines" class="pointer_event" attrs="{'readonly': [('state','=','done')]}">
+                                    <tree string="scrap" editable="bottom">
+                                        <field name="tel_type" readonly="0"/>
+                                        <field name="manufacturer_id" readonly="0"/>
+                                        <field name="product_id"/>
+                                        <field name="product_uom_id" groups="uom.group_uom" invisible="1"/>
+                                        <field name="lot_id" groups="stock.group_production_lot" attrs="{'required': [('ticl_checked','=', False)], 'readonly': [('ticl_checked','=', True)]}"/>
+                                        <field name="scrap_qty" attrs="{'readonly': [('ticl_checked','=', False)]}"/>
+                                        <field name="condition_id" invisible="1"/>
+                                        <field name="ticl_checked" invisible="1"/>
+                                        <field name="scrap_date"/>
+                                        <field name="scrap_tel_note"/>
+                                    </tree>
+                                </field>
+                            </page>
+                         </notebook>
+                    <footer>
+                        <button name="action_validate" string="Done" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+                
+            </xpath>
+            
+        </field>
+    </record>
+    <record id="stock_scrap_view_form_inherit_ticl" model="ir.ui.view">
+        <field name="name">stock.scrap.view.form.inherit.ticl</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="replace">
+                <form string="Scrap">
+                    <header>
+                        <button name="action_validate" states="draft" string="Validate" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
+                            <field name="picking_id" invisible="1"/>
+                            <button class="oe_stat_button" name="action_get_stock_move_lines"
+                                    string="Product Move" type="object"
+                                    attrs="{'invisible':[('move_count','=',0)]}" icon="fa-arrows-v"/>
+                            <field name="move_count" invisible="1"/>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" nolabel="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="tracking" invisible="1"/>
+                                <field name="package_id" groups="stock.group_tracking_lot"/>
+                                <field name="owner_id" groups="stock.group_tracking_owner"/>
+                                <field name="location_id" domain="[('is_location', '=', True)]" groups="stock.group_stock_multi_locations"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="scrap_location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="origin"/>
+                                <!-- <field name="date_expected" invisible="1"/> -->
+                                <field name="date_expected_new" required="1"/>
+                                <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Scrap Items">
+                                <field name="scrap_lines" class="pointer_event" attrs="{'readonly': [('state','=','done')]}">
+                                    <tree string="scrap" editable="bottom">
+                                        <field name="tel_type" readonly="0"/>
+                                        <field name="manufacturer_id" readonly="0"/>
+                                        <field name="product_id"/>
+                                        <field name="product_uom_id" groups="uom.group_uom" invisible="0"/>
+                                        <field name="lot_id" groups="stock.group_production_lot" attrs="{'required': [('ticl_checked','=', False)], 'readonly': [('ticl_checked','=', True)]}"/>
+                                        <field name="scrap_qty" attrs="{'readonly': [('ticl_checked','=', False)]}"/>
+                                        <field name="condition_id" invisible="1"/>
+                                        <field name="ticl_checked" invisible="1"/>
+                                        <field name="scrap_date" invisible="1"/>
+                                        <field name="date_expected_new" required="1"/>
+                                        <field name="scrap_tel_note"/>
+                                    </tree>
+                                </field>
+                            </page>
+                         </notebook>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </xpath>
+        </field>
+    </record>
+    <record id="ticl_stock_scrap_tree_view" model="ir.ui.view">
+         <field name="name">stock.scrap.tree</field>
+         <field name="model">stock.scrap</field>
+         <field name="inherit_id" ref="stock.stock_scrap_tree_view"/>
+         <field name="arch" type="xml">
+             
+                 <field name="product_id" position="replace">
+                    <field name="product_id" invisible="1" />
+                 </field>
+                 <field name="scrap_qty" position="replace">
+                    <field name="scrap_qty" invisible="1" />
+                 </field>
+                 <field name="date_done" position="replace">
+                    <field name="date_expected_new"/>
+                 </field>
+                  <field name="product_uom_id" position="replace">
+                    <field name="product_uom_id" invisible="1"/>
+                    
+                 </field>
+                 
+         </field>
+     </record>
+     
+     <menuitem id="ticl_menu_stock_scrap" name="Scrap" 
+        parent="ticl_receiving.menu_stock_root_ticl"
+        action="stock.action_stock_scrap" sequence="2"/>
+</odoo>

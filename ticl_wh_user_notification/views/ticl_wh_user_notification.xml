@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <record id="ir_cron_wh_sp_notification" model="ir.cron">
+        <field name="name">Warehouse pending shipment notification</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_stock_warehouse"/>
+        <field name="code">model.warehouse_pending_shipment_notification()</field>
+        <field name="state">code</field>
+    </record> -->
+	
+	<record id="email_template_warehouse_notify" model="mail.template">
+            <field name="name">warehouse: Send by email</field>
+            <field name="model_id" ref="model_stock_warehouse" />
+            <field name="subject">Warehouse notification</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        This is a Warehouse Pending Shipment Notification for SM/00001.<br />
+        Please find the Attachment for Shipment Details.
+        <div style="margin: 16px 0px 16px 0px;">
+            
+        </div>
+        Thanks,<br />
+        Tellerex Inc.
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+        </record>
+</odoo>

@@ -217,14 +217,13 @@ class account_invoice_supplier(models.Model):
 
 
 
-class AccountPayment(models.Model):
-	_inherit = 'account.payment'
 
-	def action_validate_invoice_payment(self):
-		res = super(AccountPayment, self).action_validate_invoice_payment()
-		self.mapped('payment_transaction_id').filtered(
-			lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
-		if self.payment_type == 'outbound':
+class AccountMove(models.Model):
+	_inherit = 'account.move'
+
+	def action_invoice_register_payment(self):
+		res = super(AccountMove, self).action_invoice_register_payment()
+		if self.type == 'out_invoice':
 			if 'SO' == self.communication[:2]:
 				inv_id = self.env['account.move'].search([('reference', '=', self.communication)],limit=1)
 				origin = inv_id.origin
@@ -235,4 +234,30 @@ class AccountPayment(models.Model):
 				origin = inv_id.origin
 				if 'PO' == origin[:2]:
 					self.env['purchase.order'].search([('name','=',inv_id.origin)]).write({'invoice_status':'paid'})
+		sale_ref = self.env['sale.order'].search([('name','=', self.ref)])
+		if sale_ref:
+			print("=====action_invoice_register_payment11111111=")
+			sale_ref.write({'chase_inv_status': 'fully_paid'})
+
 		return res
+
+
+# class AccountPayment(models.Model):
+# 	_inherit = 'account.payment'
+
+# 	def action_validate_invoice_payment(self):
+# 		res = super(AccountPayment, self).action_validate_invoice_payment()
+# 		self.mapped('payment_transaction_id').filtered(
+# 			lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
+# 		if self.payment_type == 'outbound':
+# 			if 'SO' == self.communication[:2]:
+# 				inv_id = self.env['account.move'].search([('reference', '=', self.communication)],limit=1)
+# 				origin = inv_id.origin
+# 				if 'PO' == origin[:2]:
+# 					self.env['purchase.order'].search([('name', '=', inv_id.origin)]).write({'invoice_status': 'paid'})
+# 			else:
+# 				inv_id = self.env['account.move'].search([('number','=',self.communication)],limit=1)
+# 				origin = inv_id.origin
+# 				if 'PO' == origin[:2]:
+# 					self.env['purchase.order'].search([('name','=',inv_id.origin)]).write({'invoice_status':'paid'})
+# 		return res

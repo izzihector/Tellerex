@@ -77,26 +77,26 @@ class StockQuant(models.Model):
 class SaleOrder(models.Model):
 	_inherit = 'sale.order'
 
-	# @api.model
-	# def create(self, vals):
-	# 	if 'order_line' in vals.keys():
-	# 		for i in range(0, len(vals['order_line'])):
-	# 			vals['order_line'][i][2]['disassembly_unit'] = vals['sale_unit']
-	# 			# vals['order_line'][i][2]['unit_type'] = vals['unit_type']
-	# 	return super(SaleOrder, self).create(vals)
+	@api.model
+	def create(self, vals_list):
+		if 'order_line' in vals_list.keys():
+			for i in range(0, len(vals_list['order_line'])):
+				vals_list['order_line'][i][2]['disassembly_unit'] = vals_list['sale_unit']
+				# vals['order_line'][i][2]['unit_type'] = vals['unit_type']
+		return super(SaleOrder, self).create(vals_list)
 
-	# @api.model
-	def write(self, vals):
-		if 'order_line' in vals.keys():
+	#@api.model
+	def write(self, vals_list):
+		if 'order_line' in vals_list.keys():
 			for i in range(len(self.order_line), len(vals['order_line'])):
-				if vals['order_line'][i][2] != False:
-					vals['order_line'][i][2]['disassembly_unit'] = self.sale_unit
+				if vals_list['order_line'][i][2] != False:
+					vals_list['order_line'][i][2]['disassembly_unit'] = self.sale_unit
 					# vals['order_line'][i][2]['unit_type'] = self.unit_type
-		if 'check_number' in vals.keys():
+		if 'check_number' in vals_list.keys():
 			if self.po_ids:
 				po_id = self.env['purchase.order'].search([('name','=',self.po_ids.name)])
-				po_id.write({'check_number':vals['check_number']})
-		return super(SaleOrder, self).write(vals)
+				po_id.write({'check_number':vals_list['check_number']})
+		return super(SaleOrder, self).write(vals_list)
 
 	@api.onchange('sale_unit','unit_type','sale_type')
 	def on_change_sale_unit(self):
@@ -191,6 +191,8 @@ class SaleOrder(models.Model):
 		moves = self.env['stock.move'].search([('picking_id','in',self.picking_ids.ids)])
 		#Contract comission calculation
 		self.get_comission_product(self.date_order)
+		for pick in self.picking_ids:
+			pick.write({'user_id':self.user_id.id})		
 		#Move record from sale order line to picking from line
 # 		user_mvs = []
 		for line in  self.order_line:
@@ -354,8 +356,9 @@ class SaleOrderLine(models.Model):
 				total_prod = len(move)
 				print("==total_prod===",total_prod)
 				if int(total_prod) < int(line.product_uom_qty):
-					line.product_uom_qty = 0.00
-					raise ValidationError(_("Not enough inventory!"))
+					raise UserError(_("Not enough inventory!"))
+					# line.product_uom_qty = 0.00
+					# raise UserError(_("Not enough inventory!"))
 
 	@api.model
 	def _product_filter(self):
@@ -398,12 +401,12 @@ class StockProductionLot(models.Model):
 	stock_move_id = fields.Many2one('stock.move', string='Stock Move ID')
 	
 	
-	@api.model_create_multi
-	def create(self, vals):
-		if vals.get('name', False):
-			move = self.env['stock.move'].search([('serial_number','=',vals.get('name'))], order='id desc', limit=1)
-			vals.update({'condition_id':move.condition_id.id,'receiving_location_id':move.location_dest_id.id,'stock_move_id':move.id})
-		return super(StockProductionLot, self).create(vals)
+	#@api.model_create_multi
+	def create(self, vals_list):
+		if vals_list.get('name', False):
+			move = self.env['stock.move.line'].search([('serial_number','=',vals_list.get('name'))], order='id desc', limit=1)
+			vals_list.update({'condition_id':move.condition_id.id,'receiving_location_id':move.ticl_warehouse_id.id})
+		return super(StockProductionLot, self).create(vals_list)
 
 
 class Picking(models.Model):

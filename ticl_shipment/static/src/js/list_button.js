@@ -156,12 +156,14 @@ ListController.include({
     
     renderButtons: function () {
         this._super.apply(this, arguments); // Sets this.$buttons
+        if (this.$buttons){
         this.$buttons.on('click', '.o_button_import_ship', function () {
             
             var data = [];
             new shippExport(this, data).open();
         });
         this.$buttons.on('click', '.o_button_scrap', this._onScrapRecord.bind(this));
+    }
     },
     _onScrapRecord: function (event) {
         var self = this;

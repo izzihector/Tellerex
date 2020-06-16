@@ -1,0 +1,107 @@
+<odoo>
+    <template id="warehouse_shipping_report_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <style>
+                    table, th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                    }
+                    th, td {
+                    padding: 5px;
+                    text-align: left;
+                    }
+                </style>
+                <table style="width:100%;">
+                    <tr>
+                        <th colspan="16" style="text-align:center;background: #17cbbe;">
+                            <h3>Warehouse Shipping Report</h3>
+                            <h4>(<t t-esc="doc.get_from_date_values(doc['from_date'])"/> ) To
+                                (<t t-esc="doc.get_to_date_values(doc['to_date'])"/>)
+                                </h4>
+                        </th>
+                    </tr>
+                    <tr style="background: yellow;">
+                        <th>Odoo Shipment Id</th>
+                        <th>Echo Shipment Id</th> 
+                        <th>Product</th>
+                        <th>Manufacturer</th>
+                        <th>Serial#</th>
+                        <th>Type</th>
+                        <th>Condition</th>
+                        <th>XL</th>
+                        <th>Shipment Date</th>
+                        <th>Appointment Date</th>
+                        <th>Employee</th>
+                        <th>Origin Location</th>
+                        <th>Destination Location</th> 
+                        <th>Fnding Doc Type</th>
+                        <th>Funding Doc Number</th>         
+                        <th>Project Id</th>     
+                    </tr>
+
+
+                    <t t-foreach="doc.get_warehouse_report_values()" t-as="inventory">
+                        <t t-foreach="inventory" t-as="inventory">
+                            <tr>
+                                <td>
+                                    <t t-esc="inventory.ticl_ship_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.ticl_ship_id.echo_tracking_id"/>
+                                </td>  
+                                <td>
+                                    <t t-esc="inventory.product_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.manufacturer_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.serial_number"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.tel_type.name"/>
+                                </td>
+
+                                <td>
+                                    <t t-esc="inventory.condition_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="{False: False, 'y': 'Yes', 'n': 'No'}[inventory.xl_items]"/>
+                                </td>
+                                <td>
+                                    <span t-field="inventory.ticl_ship_id.shipment_date" 
+                                t-field-options='{"format": "d MMMM y"}'
+                                t-options='{"widget": "date"}'/>
+                                </td>
+                                <td>
+                                    <span t-field="inventory.ticl_ship_id.appointment_date" 
+                                t-field-options='{"format": "d MMMM y"}'
+                                t-options='{"widget": "date"}'/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.ticl_ship_id.hr_employee_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.ticl_ship_id.sending_location_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.ticl_ship_id.receiving_location_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.funding_doc_type"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.funding_doc_number"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.ticl_project_id"/>
+                                </td>                  
+                            </tr>
+                        </t>
+                    </t>
+                </table>
+            </t>
+        </t>
+    </template>
+</odoo>

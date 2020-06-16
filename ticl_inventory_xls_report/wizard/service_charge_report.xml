@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_service_charge_report_form" model="ir.ui.view">
+            <field name="name">ticl.service.charge.report.form</field>
+            <field name="model">ticl.service.charge.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Service Charge Report">
+                        <field name="service_charge_report_printed" invisible="1"/>
+                        <group  attrs="{'invisible':[('service_charge_report_printed','=',True)]}">
+                        <group>
+                        <field name="from_date" required="1" style="width:200px;"  t-options="{'format': 'dd / MM / yyyy HH / mm'}" widget="date"/>             
+                        </group>
+                        <group>
+                        <field name="to_date" required="1" style="width:200px;" widget="date"/> 
+                        </group>
+                        <group> 
+                        <field name="tel_type"
+                        style="width:200px;" widget="many2one_tags"
+                        options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        </group>
+                        <group> 
+                        <field name="print_type" required="1"
+                        style="width:200px;"/> 
+                       
+                        </group>
+                        </group>
+                        <group attrs="{'invisible':[('service_charge_report_printed','=',False)]}">
+                        <field name="file_name" invisible="1"/>
+                        <field name="service_charge_file" readonly="1"  filename="file_name"/>
+                        </group>
+                    <footer>
+                    <button string='Print'  name="action_print_service_charge_report"
+                        type="object" class="btn-primary" attrs="{'invisible':[('service_charge_report_printed','=',True),('print_type','=','pdf')]}"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_service_charge_report_pdf" model="ir.actions.report">
+        <field name="name">Service Charge Report</field>
+        <field name="model">ticl.service.charge.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ticl_inventory_xls_report.service_charge_report_pdf</field>
+        </record>
+
+        <record id="action_service_charge_report" model="ir.actions.act_window">
+            <field name="name">Service Charge Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.service.charge.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Service Charge Report" 
+            id="service_charge_excel_pdf_report"
+    	    parent="ticl_inventory_xls_report.report_xls_ticl_menu" sequence="6"
+            action="action_service_charge_report"/>
+</odoo>

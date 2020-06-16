@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+
+,,,,,,,
+ticl_report_type_model_access_right_user,ticl_report_type_model_access_right user,model_ticl_report_type,ticl_chase_weekly_report_group_user,1,1,1,0
+ticl_report_type_model_access_right_manager,ticl_report_type_model_access_right manager,model_ticl_report_type,ticl_chase_weekly_report_group_manager,1,1,1,1

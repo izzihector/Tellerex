@@ -1,0 +1,82 @@
+<odoo>
+    <template id="stock_used_atm_report_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <style>
+                    table, th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                    }
+                    th, td {
+                    padding: 5px;
+                    text-align: left;
+                    }
+                </style>
+                <table style="width:100%;">
+                    <tr>
+
+                        <th colspan="13" style="text-align:center;background: #17cbbe;">
+                            <h3>Processed ATM Stock Report</h3>
+                            <h4>(<t t-esc="doc.get_from_date_values(doc['from_date'])"/> ) To
+                                (<t t-esc="doc.get_to_date_values(doc['to_date'])"/>)
+                                </h4>
+                        </th>
+                    </tr>
+                    <tr style="background: yellow;">
+                        <th>Manufacturer</th>
+                        <th>Model</th>
+                        <th>Serial#</th>
+                        <th>Count</th>
+                        <th>Status</th>
+                        <th>Location</th>         
+                        <th>Condition</th>
+                        <th>Type</th>   
+                        <th>Received Date</th>
+                        <th>Date Processed</th>
+                        <th>Comments</th>
+        
+                    </tr>
+                    <t t-foreach="doc.get_used_atm_report_values()" t-as="inventory">
+                        <t t-foreach="inventory" t-as="inventory">
+                            <tr>
+                                <td>
+                                    <t t-esc="inventory.manufacturer_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.product_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.serial_number"/>
+                                </td>
+                                <td>
+                                    <t t-esc="int(inventory.product_uom_qty)"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.status"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.ticl_warehouse_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.condition_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.categ_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="doc.get_receive_date_values(inventory['received_date'])"/>
+                                </td>
+                                <td>
+                                    <t t-esc="doc.get_processed_date_values(inventory['processed_date'])"/>
+                                </td>
+                                <td style="word-break: break-word;width: min-content;">
+                                    <span t-esc="inventory.tel_note"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </table>
+            </t>
+        </t>
+    </template>
+</odoo>

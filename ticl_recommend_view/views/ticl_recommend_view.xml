@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="ticl_recommend_receipts_form_view1" model="ir.ui.view">
+            <field name="name">ticl.recommend.model.form</field>
+            <field name="model">ticl.recommend.model</field>
+            <field name="arch" type="xml">
+                <form string="To Recommend Form New" create="false" edit="false">
+                    <group>
+                        <group>
+                            <field name="sending_location_id" readonly="1"/>
+                            <field name="manufacturer_id" readonly="1"/>
+                            <field name="serial_number" readonly="1"/>
+                            <field name="condition_id" readonly="1"/>
+                            <field name="status" readonly="1"/>
+
+                        </group>
+                        <group>
+                            <field name="product_id" readonly="1"/>
+                            <field name="delivery_date" readonly="1"/>
+                            <field name="tel_note" readonly="1"/>
+                            <field name="ticl_age" readonly="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="ticl_recommend_receipts_tree_view1" model="ir.ui.view">
+            <field name="name">ticl.recommend.model.tree</field>
+            <field name="model">ticl.recommend.model</field>
+            <field name="arch" type="xml">
+                <tree string="Recommend Receipts New" class="width_setter">
+                    <field name="sending_location_id"/>
+                    <field name="manufacturer_id"/>
+                    <field name="product_id"/>
+                    <field name="serial_number"/>
+                    <field name="condition_id"/>
+                    <field name="delivery_date"/>
+                    <field name="status"/>
+                    <field name="ticl_age"/>
+                    <field name="tel_note"/>
+                    <field name="m_id" invisible="1"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="to_recommend_search_view" model="ir.ui.view">
+            <field name="name">ticl.recommend.model.search</field>
+            <field name="model">ticl.recommend.model</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="product_id"/>
+                    <field name="serial_number"/>
+                    <field name="tel_note"/>
+                </search>
+            </field>
+        </record>
+
+
+
+        <record id="action_ticl_receipt_recommend_receipts_newss" model="ir.actions.act_window">
+            <field name="name">To Recommend Details</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.recommend.model</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="to_recommend_search_view"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('ticl_recommend_receipts_tree_view1')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('ticl_recommend_receipts_form_view1')})]"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Update View button to collect the To Recommended Records.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem
+                id="ticl_menu_recommend_receipt_newss"
+                name="To Recommend Details"
+                parent="ticl_receiving.menu_stock_root_ticl"
+                action="action_ticl_receipt_recommend_receipts_newss"
+                sequence="3"/>
+    </data>
+</odoo>

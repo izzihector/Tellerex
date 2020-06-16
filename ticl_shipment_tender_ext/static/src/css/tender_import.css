@@ -1,0 +1,59 @@
+.tender_img{
+  width: 20px;
+    height: 20px;
+    float: right;
+    cursor: pointer;
+}
+.drop_img{
+  width: 20px;
+    height: 20px;
+    float: right;
+    cursor: pointer;
+}
+.tender_tooltip .tn_tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: #b6c4d2;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top:30px;
+  right:0;
+}
+.drop_tooltip .tn_tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: #b6c4d2;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top:30px;
+  right:0;
+}
+.tender_tooltip:hover .tn_tooltiptext {
+  visibility: visible;
+}
+.drop_tooltip:hover .tn_tooltiptext {
+  visibility: visible;
+}
+.app-sidebar-panel {
+    flex: 0 0 150px !important;
+
+ }
+.o_main_navbar{
+  background: rgb(45,67,64) !important;
+  border-bottom: 1px solid rgb(45,67,64) !important;
+  }
+
+ .app-sidebar-panel{
+  background: rgb(45,67,64) !important;
+ }
+.nav-link:hover, .nav-link:focus {
+  background:  #85929e !important;
+}

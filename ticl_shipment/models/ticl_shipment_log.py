@@ -216,17 +216,30 @@ class ticl_shipment_log(models.Model):
     #     if self.shipment_type == 'warehouse_transfer':
     #         res['domain'] = {'receiving_location_id': [('is_warehouse', '=', True)]}
     #     return res
+
+    #import shipment
+    def import_shipment(self):
+        view = self.env.ref('ticl_import.wizard_import_work_order')
+        return {
+            'name': 'Warning',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'import.work.order',
+            'view': [('view', 'form')],
+            'target': 'new',
+        }
         
-    @api.model
+    #@api.model
     def unlink(self):
-        move_id = self.env['stock.move'].search([('shipment_id', '=', self.name)])
+        move_id = self.env['stock.move.line'].search([('shipment_id', '=', self.name)])
         if move_id:
             for mv in move_id:
                 mv.write({'status': 'inventory', 'shipment_id':''})
         return super(ticl_shipment_log, self).unlink()
 
     # Validate Fright Charge Fucntion
-    @api.model
+    #@api.model
     def validate_fright_charge(self):
         for record in self:
             if not record.approval_authority and record.shipment_type == 'Guaranteed' or record.shipment_type == 'Expedited' or record.shipment_type == 'Re-Consignment':
@@ -298,7 +311,7 @@ class ticl_shipment_log(models.Model):
             for lines in range(len(vals['ticl_ship_lines'])):
                 type_id = self.env['product.category'].search([('id','=',vals['ticl_ship_lines'][lines][2]['tel_type'])])
                 condition_id = self.env['ticl.condition'].search([('name', '=', 'Quarantine')])
-                if type_id.name != 'ATM':
+                if type_id.name != 'ATM' and self.dropship_state == 'no':
                     if vals['ticl_ship_lines'][lines][2].get('ship_stock_move_line_id',False):
                         x = self.env['stock.move.line'].search(
                             [('id', '=', vals['ticl_ship_lines'][lines][2]['ship_stock_move_line_id'])],limit=1)
@@ -461,8 +474,8 @@ class ticl_shipment_log(models.Model):
                     if type(stand_lines) == dict:
                         return stand_lines
                     self.ticl_ship_lines = stand_lines
-        if self.echo_tracking_id:
-            return True
+        # if self.echo_tracking_id:
+        #     return True
       
         for ids in self.ticl_ship_lines:
             if ids.status_not_inventory == True:
@@ -496,21 +509,21 @@ class ticl_shipment_log(models.Model):
                     'context': context,
                 }
 
-        if int(self.total_pallet) > 20 and self.echo_call == 'yes':
-            view = self.env.ref('sh_message.sh_message_wizard')
-            view_id = view or False
-            context = dict(self._context or {})
-            context['message'] = "'Pallet Quantity' must be a positive integer. '0' is acceptable. Max value is '12'."
-            return {
-                'name': 'Warning',
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'sh.message.wizard',
-                'view': [('view', 'form')],
-                'target': 'new',
-                'context': context,
-            }
+        # if int(self.total_pallet) > 20 and self.echo_call == 'yes':
+        #     view = self.env.ref('sh_message.sh_message_wizard')
+        #     view_id = view or False
+        #     context = dict(self._context or {})
+        #     context['message'] = "'Pallet Quantity' must be a positive integer. '0' is acceptable. Max value is '12'."
+        #     return {
+        #         'name': 'Warning',
+        #         'type': 'ir.actions.act_window',
+        #         'view_type': 'form',
+        #         'view_mode': 'form',
+        #         'res_model': 'sh.message.wizard',
+        #         'view': [('view', 'form')],
+        #         'target': 'new',
+        #         'context': context,
+        #     }
 
         #LTL Shipment Creation API
         if int(self.total_pallet) < 13 and int(self.total_weight) < 20000 and self.echo_call == 'yes':
@@ -702,8 +715,8 @@ class ticl_shipment_log(models.Model):
                                     if ticl.ship_stock_move_line_id:
                                         ticl.ship_stock_move_line_id.write({'status' : self.state,'shipment_id':self.name})
 
-                                # if self.tender_stock_move_id:
-                                #     self.tender_stock_move_id.write({'state' : self.state,'echo_tracking_id' : self.echo_tracking_id})
+                                if self.tender_stock_move_id:
+                                    self.tender_stock_move_id.write({'state' : self.state,'echo_tracking_id' : self.echo_tracking_id})
 
                                 # for ticl in self.ticl_ship_lines:
                                 #     if ticl.serial_number:
@@ -961,7 +974,7 @@ class ticl_shipment_log(models.Model):
                 if self.is_error:
                     raise Warning(_(warning_message))
 
-        elif self.echo_call == 'no':
+        elif ((int(self.total_pallet) >= 1) and (self.echo_call == 'no')):
             self.state = 'picked'
             for ticl in self.ticl_ship_lines:
                 if ticl.ship_stock_move_line_id:
@@ -972,15 +985,6 @@ class ticl_shipment_log(models.Model):
                     if product_search:
                         product_search.write({'status' : 'picked','shipment_id':self.name})
 
-                # if self.shipment_type != 'warehouse_transfer':
-                #     if self.echo_tracking_id is not None:
-                #         prod = self.ticl_ship_lines.filtered(lambda z: z.tel_type.name == 'ATM' and z.product_id.ticl_product_id.name != False)
-                #         if prod:
-                #             stand_lines = self.create_stand(self,prod)
-                #             if type(stand_lines) == dict:
-                #                 return stand_lines
-                #             self.ticl_ship_lines = stand_lines
-                # self.state = 'picked'
 
             if ids.status_not_inventory == True:
                 raise UserError("Please Delete the Red Item first")
@@ -989,7 +993,7 @@ class ticl_shipment_log(models.Model):
             view = self.env.ref('sh_message.sh_message_wizard')
             view_id = view  or False
             context = dict(self._context or {})
-            context['message']="Please check this shipment is above TL capacity 45000LB"
+            context['message']="Please check this shipment is above Pallet Quantity or capacity 45000LB"
             return{
                  'name':'Warning',
                  'type':'ir.actions.act_window',
@@ -1540,6 +1544,9 @@ class ticl_shipment_log(models.Model):
                                             }
                                     log.ticl_payment_lines = [(0, 0, cost_lines)]
                                 # Update Other Fields
+                                EstimatedDeliveryDate = request_data.get('EstimatedDeliveryDate')
+                                delivery_date = datetime.strptime(str(EstimatedDeliveryDate),'%m/%d/%Y').strftime("%Y-%m-%d")
+                                log.write({'estimated_delivery_date': delivery_date})
                                 log.write({
                                     'shipment_status' : request_data.get('ShipmentStatus'),
                                     'shipping_carrier_name' : request_data.get('CarrierName'),
@@ -1548,7 +1555,7 @@ class ticl_shipment_log(models.Model):
                                     'pallet_quantity' : request_data.get('PalletQuantity'),
                                     #'request_pick_date' : request_data.get('RequestedPickUpDate'),
                                     #'request_delivery_date' : request_data.get('RequestedDeliveryDate'),
-                                    'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate'),
+                                    #'estimated_delivery_date' : request_data.get('EstimatedDeliveryDate'),
                                     'total_echo_cost' : request_data.get('TotalCost'),
                                        
                                     })
@@ -1629,6 +1636,7 @@ class ticl_shipment_log(models.Model):
 
     #link serial number
     def create_mv_line(self,moves,picking):
+
         wareKey = self.env['stock.location'].browse(self.sending_location_id.id).warehouse_key
         warehouse = self.env['stock.warehouse'].search([('warehouse_key','=',int(wareKey))])
         print("====warehouse===",warehouse)
@@ -1639,6 +1647,7 @@ class ticl_shipment_log(models.Model):
         moveLst = []
         for line in self.ticl_ship_lines:
             for move in moves:
+                _logger.warning('Create a %s and b %s',move,picking)
                 if move.product_id == line.product_id and move.id not in moveLst:
                     moveLst.append(move.id)
                     lot_id = self.env['stock.production.lot'].search([('name','=',line.lot_id.name)], limit=1)
@@ -1684,20 +1693,24 @@ class ticl_shipment_log(models.Model):
                                           #'location_id':loc.id
     #                                       'quantity_done':data.get('product_uom_qty')
                                         }))
+
+        _logger.warning('Create aaaaaaaaaaaaa %s',move_ids_without_package)    
         vals = {
             'location_dest_id':loc.id,
             'picking_type_id':pickingType.id,
             'location_id':warehouse_loc.id,
             'move_ids_without_package':move_ids_without_package,
             'move_type': 'direct',
+            'state':'confirmed',
             'origin':self.name
         }
-        print("===vals===",vals)
+        
+        _logger.warning('Create a %s',vals)
         picking = self.env['stock.picking'].create(vals)
         self.pick_name = vals['name']
         picking.with_context({'merge':False}).action_confirm()
         moves = self.env['stock.move'].search([('picking_id','=',picking.id)])
-        print(moves)
+        _logger.warning('Create m %s',moves)
         self.create_mv_line(moves, picking)
         picking.button_validate()
         return picking
@@ -2024,6 +2037,7 @@ class ticl_shipment_log_line(models.Model):
 
     name = fields.Text(string='Description')
     shipment_date = fields.Date(string='Shipped Date')
+    receive_date = fields.Date(string='Shipped Date')
     ticl_ship_id = fields.Many2one('ticl.shipment.log', string='Shipment ID', readonly=True)
     product_id = fields.Many2one('product.product', string='Model Name',track_visibility='onchange')
     manufacturer_id = fields.Many2one('manufacturer.order', string="Manufacturer",track_visibility='onchange')
@@ -2246,6 +2260,9 @@ class ticl_shipment_log_line(models.Model):
             else:
                 domain = {'lot_id': [('id', 'in', '')]}
                 return {'domain': domain}
+                
+
+
 
 
     #unlink Fucntion for delete line            
@@ -2334,11 +2351,11 @@ class ticl_shipment_payment(models.Model):
 
     
 
-# class StockQuant(models.Model):
-#     _inherit = 'stock.quant'
+class StockQuant(models.Model):
+    _inherit = 'stock.quant'
 
-#     @api.constrains('quantity')
-#     def check_quantity(self):
-#         if self.lot_id.sale_order_count:
-#             res = super(StockQuant, self).check_quantity()
-#         return True
+    @api.constrains('quantity')
+    def check_quantity(self):
+        if self.lot_id.sale_order_count:
+            res = super(StockQuant, self).check_quantity()
+        return True

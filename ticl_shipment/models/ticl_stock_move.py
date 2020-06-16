@@ -9,6 +9,50 @@ class StockMove(models.Model):
     tel_user_ids = fields.Many2many('res.users', string='Users')
     add_pallet = fields.Char(string='Pallet ID')
 
+    #override Function for move
+    def _action_confirm(self, merge=True, merge_into=False):
+        """ Confirms stock move or put it in waiting if it's linked to another move.
+        :param: merge: According to this boolean, a newly confirmed move will be merged
+        in another move of the same picking sharing its characteristics.
+        """
+        move_create_proc = self.env['stock.move']
+        move_to_confirm = self.env['stock.move']
+        move_waiting = self.env['stock.move']
+
+        to_assign = {}
+        for move in self:
+            # if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
+            if move.move_orig_ids:
+                move_waiting |= move
+            else:
+                if move.procure_method == 'make_to_order':
+                    move_create_proc |= move
+                else:
+                    move_to_confirm |= move
+            if move._should_be_assigned():
+                key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
+                if key not in to_assign:
+                    to_assign[key] = self.env['stock.move']
+                to_assign[key] |= move
+
+        # create procurements for make to order moves
+        for move in move_create_proc:
+            values = move._prepare_procurement_values()
+            origin = (move.group_id and move.group_id.name or (move.origin or move.picking_id.name or "/"))
+            self.env['procurement.group'].run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin,
+                                              values)
+
+        move_to_confirm.write({'state': 'confirmed'})
+        (move_waiting | move_create_proc).write({'state': 'waiting'})
+
+        # assign picking in batch for all confirmed move that share the same details
+        for moves in to_assign.values():
+            moves._assign_picking()
+        self._push_apply()
+        if merge and self._context.get('merge'):
+            return self._merge_moves(merge_into=merge_into)
+        return self
+
     @api.model
     def get_scrapview_action(self, ids):
         view_id = self.env.ref('ticl_shipment.scrap_inventory_entries_form').id

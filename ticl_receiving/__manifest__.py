@@ -15,7 +15,7 @@
     "website": "http://www.delaplex.in",
     "author": "Delaplex",
     "contributors": ["Delaplex Team"],
-    "depends": ['web', 'base', 'mail', 'stock', 'product', 'ticl_management'],
+    "depends": ['web', 'base', 'mail', 'stock', 'product', 'ticl_management','ticl_shipment'],
     "data": [
         'data/cod_paper.xml',
         'security/ticl_asn_security.xml',

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+       <record id="ticl_report_type_form_view" model="ir.ui.view">
+            <field name="name">ticl.report.type.form</field>
+            <field name="model">ticl.report.type</field>
+            <field name="arch" type="xml">
+                <form string="Report Type" class="o_sale_order">
+                <sheet>   
+                     <group>  
+                        <field name="name" required="1" style="width: 50%"/>
+                    </group>
+                </sheet>
+               
+                </form>
+            </field>
+        </record>
+        
+        <record id="ticl_report_type_tree_view" model="ir.ui.view">
+            <field name="name">ticl.report.type.tree</field>
+            <field name="model">ticl.report.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ticl_report_type" model="ir.actions.act_window">
+            <field name="name">Report Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ticl.report.type</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Report Type.
+                </p>
+            </field>
+        </record>
+
+<!-- Configuration Menu  -->
+        <menuitem id="report_type_management_ticl_order" name="Chase Weekly Report"
+            parent="ticl_user_management.common_masters" action="action_ticl_report_type"  groups="ticl_chase_weekly_report_group_manager"/>
+
+
+    </data>
+</odoo>
+

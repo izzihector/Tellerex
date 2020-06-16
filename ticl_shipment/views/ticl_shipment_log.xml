@@ -29,6 +29,9 @@
                     class="oe_highlight" type="object"
                     attrs="{'invisible': [('echo_call', '=', 'no')]}"/>
 
+                    <button name="import_shipment" class="oe_highlight" 
+                        string="Import" type="object"
+                        attrs="{'invisible': [('state', '!=', 'draft')]}" invisible="1"/>
 
                     <button name="revert_shipment" class="oe_highlight"
                                 string="Revert Shipment to Draft" type="object"
@@ -60,7 +63,8 @@
                     <field name="activity_date_new" style="width: 70%" required="1"/>
                     <field name="sending_location_id" required="0" style="width:70%" 
                         options="{'no_create': True,'no_create_edit':True}"
-                        attrs="{'invisible': [('dropship_state', '=','yes')],'readonly': ['|',('state','!=', 'draft'),('is_from_inventory', '=', True)]}"/>
+                        attrs="{'invisible': [('dropship_state', '=','yes')],'readonly': ['|',('state','!=', 'draft'),('is_from_inventory', '=', True)]}"
+                        domain="[('is_location','=',True)]"/>
                     <field name="sending_rigger_id" style="width:70%" attrs="{'invisible': [('dropship_state', '=','no')]}"/>   
                     <field name="is_from_inventory" invisible="1"/>
                     <field name="receiving_location_id" required="1" style="width:70%"
@@ -145,7 +149,7 @@
                     <field name="service_price" invisible="1"/>                       
                     <field name="tel_note" placeholder="Comment Here.."/>
                     <field name="ticl_checked" invisible="1"/>
-                    <field name="ship_stock_move_line_id"/>
+                    <field name="ship_stock_move_line_id" invisible="1"/>
                     <field name="ship_stock_move_id" invisible="1"/>
                     <field name="hide_cod" invisible="1"/>
                     <field name="hide_xl_items" invisible="1"/>
@@ -252,6 +256,7 @@
                     <field name="name" string="Shipment ID"/>
                     <field name="dropship_state"/>
                     <field name="origin_location"/>
+                    <field name="receiving_location_id"/>
                     <field name="hr_employee_id"/>
                     <field name="appointment_date_new" string="Shipment Date"/>
                     <field name="state"/>                      
@@ -267,6 +272,7 @@
                     <field name="name" string="Shipment ID"/>
                     <field name="dropship_state"/>
                     <field name="origin_location"/>
+                    <field name="receiving_location_id"/>
                     <field name="hr_employee_id"/>
                     <field name="appointment_date_new" string="Shipment Date"/>
                     <field name="state"/>                      
@@ -424,7 +430,8 @@
                     <field name="activity_date_new" style="width: 70%" readonly="1"/>
                     <field name="sending_location_id" required="1" style="width:70%" 
                         options="{'no_create': True,'no_create_edit':True}"
-                         attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                         attrs="{'readonly': [('state','!=', 'draft')]}"
+                         domain="[('is_location','=',True)]"/>
                     <field name="receiving_location_id" required="1" style="width:70%"
                         options="{'no_create': True,'no_create_edit':True}"
                          attrs="{'readonly': [('state','!=', 'draft')]}"/>
@@ -506,7 +513,7 @@
                         <field name="service_price" invisible="1"/>
                         <field name="tel_note" placeholder="Please Comment Here.." readonly="1"/>
                         <field name="ticl_checked" invisible="1"/>
-                        <field name="ship_stock_move_line_id"/>
+                        <field name="ship_stock_move_line_id" invisible="1"/>
                         <field name="ship_stock_move_id" invisible="1"/>
                         <field name="hide_cod" invisible="1"/>
                         <field name="hide_xl_items" invisible="1"/>
@@ -605,6 +612,7 @@
                     <field name="name" string="Shipment ID"/>
                     <field name="dropship_state"/>
                     <field name="origin_location"/>
+                    <field name="receiving_location_id"/>
                     <field name="hr_employee_id"/>
                     <field name="appointment_date_new"/>
                     <field name="state"/>                      

@@ -1,0 +1,84 @@
+<odoo>
+    <template id="service_charge_report_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <style>
+                    table, th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                    }
+                    th, td {
+                    padding: 5px;
+                    text-align: left;
+                    }
+                </style>
+                <table style="width:100%;">
+                    <tr>
+                        <th colspan="11" style="text-align:center;background: #17cbbe;">
+                            <h3>Service Charge Report</h3>
+                            <h4>(<t t-esc="doc.get_from_date_values(doc['from_date'])"/>  To
+                                <t t-esc="doc.get_to_date_values(doc['to_date'])"/>)
+                            </h4>
+                        </th>
+                    </tr>
+                    <tr style="background: yellow;">
+                        <th>Receipt Number</th>
+                        <th>Received Date</th>
+                        <th>Unique Id</th>
+                        <th>Model</th>
+                        <th>Manufacturer</th>
+                        <th>Serial Number</th>
+                        <th>XL</th>
+                        <th>Type</th>
+                        <th>Receiving charges</th>
+                        <th>Monthly Service Charges</th>
+                        <th>Refurbishment Charges</th>       
+                    </tr>
+
+                    <t t-foreach="doc.get_charge_report_values()" t-as="inventory">
+                        <t t-foreach="inventory" t-as="inventory">
+                            <tr>
+                                <td>
+                                    <t t-esc="inventory.origin "/>
+                                </td>
+                                <td>
+                                    <span t-field="inventory.received_date" 
+                                t-field-options='{"format": "d MMMM y"}'
+                                t-options='{"widget": "date"}'/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.tel_unique_no"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.product_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.manufacturer_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.serial_number"/>
+                                </td>
+                                <td>
+                                    <t t-esc="{False: False, 'y': 'Yes', 'n': 'No'}[inventory.xl_items]"/>
+                                </td>
+                                <td>
+                                    <t t-esc="inventory.categ_id.name"/>
+                                </td>
+                                <td>
+                                    <t>$<t t-esc="inventory.service_price"/></t>
+                                </td>
+                                <td>
+                                     <t t-esc="doc.get_monthly_service_charge_total_values(inventory)"/>
+                                </td>
+                                <td>
+                                    <t>$<t t-esc="inventory.refurbishment_charges"/></t>
+                                </td>
+                                                 
+                            </tr>
+                        </t>
+                    </t>
+                </table>
+            </t>
+        </t>
+    </template>
+</odoo>
