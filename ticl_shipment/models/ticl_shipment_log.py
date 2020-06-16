@@ -232,11 +232,12 @@ class ticl_shipment_log(models.Model):
         
     #@api.model
     def unlink(self):
-        move_id = self.env['stock.move.line'].search([('shipment_id', '=', self.name)])
-        if move_id:
+        for ids in self:
+            move_id = self.env['stock.move.line'].search([('shipment_id', '=', ids.name)])
             for mv in move_id:
-                mv.write({'status': 'inventory', 'shipment_id':''})
-        return super(ticl_shipment_log, self).unlink()
+                if mv:
+                    mv.write({'status': 'inventory', 'shipment_id':''})
+            return super(ticl_shipment_log, self).unlink()
 
     # Validate Fright Charge Fucntion
     #@api.model
@@ -2262,16 +2263,14 @@ class ticl_shipment_log_line(models.Model):
                 return {'domain': domain}
                 
 
-
-
-
     #unlink Fucntion for delete line            
     @api.model
     def unlink(self):
         for ids in self:
            if ids.status_not_inventory == False:
-                self.env['stock.move.line'].search([('id', '=', ids.ship_stock_move_line_id.id)]).write(
-                    {'status': 'inventory','shipment_id':''})
+                move_search = self.env['stock.move.line'].search([('id', '=', ids.ship_stock_move_line_id.id)])
+                for move in move_search:
+                    move.write({'status': 'inventory','shipment_id':''})
         return super(ticl_shipment_log_line, self).unlink()
 
 

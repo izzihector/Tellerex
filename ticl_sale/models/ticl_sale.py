@@ -401,11 +401,12 @@ class StockProductionLot(models.Model):
 	stock_move_id = fields.Many2one('stock.move', string='Stock Move ID')
 	
 	
-	#@api.model_create_multi
+	@api.model
 	def create(self, vals_list):
 		if vals_list.get('name', False):
-			move = self.env['stock.move.line'].search([('serial_number','=',vals_list.get('name'))], order='id desc', limit=1)
-			vals_list.update({'condition_id':move.condition_id.id,'receiving_location_id':move.ticl_warehouse_id.id})
+			move = self.env['stock.move.line'].search([('serial_number','=',vals_list.get('name', False))], order='id desc', limit=1)
+			if move:
+				vals_list.update({'condition_id':move.condition_id.id,'receiving_location_id':move.ticl_warehouse_id.id})
 		return super(StockProductionLot, self).create(vals_list)
 
 
