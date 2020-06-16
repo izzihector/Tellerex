@@ -217,22 +217,22 @@ class account_invoice_supplier(models.Model):
 
 
 
-class AccountPayment(models.Model):
-	_inherit = 'account.payment'
+# class AccountPayment(models.Model):
+# 	_inherit = 'account.payment'
 
-	def action_validate_invoice_payment(self):
-		res = super(AccountPayment, self).action_validate_invoice_payment()
-		self.mapped('payment_transaction_id').filtered(
-			lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
-		if self.payment_type == 'outbound':
-			if 'SO' == self.communication[:2]:
-				inv_id = self.env['account.move'].search([('reference', '=', self.communication)],limit=1)
-				origin = inv_id.origin
-				if 'PO' == origin[:2]:
-					self.env['purchase.order'].search([('name', '=', inv_id.origin)]).write({'invoice_status': 'paid'})
-			else:
-				inv_id = self.env['account.move'].search([('number','=',self.communication)],limit=1)
-				origin = inv_id.origin
-				if 'PO' == origin[:2]:
-					self.env['purchase.order'].search([('name','=',inv_id.origin)]).write({'invoice_status':'paid'})
-		return res
+# 	def action_validate_invoice_payment(self):
+# 		res = super(AccountPayment, self).action_validate_invoice_payment()
+# 		self.mapped('payment_transaction_id').filtered(
+# 			lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
+# 		if self.payment_type == 'outbound':
+# 			if 'SO' == self.communication[:2]:
+# 				inv_id = self.env['account.move'].search([('reference', '=', self.communication)],limit=1)
+# 				origin = inv_id.origin
+# 				if 'PO' == origin[:2]:
+# 					self.env['purchase.order'].search([('name', '=', inv_id.origin)]).write({'invoice_status': 'paid'})
+# 			else:
+# 				inv_id = self.env['account.move'].search([('number','=',self.communication)],limit=1)
+# 				origin = inv_id.origin
+# 				if 'PO' == origin[:2]:
+# 					self.env['purchase.order'].search([('name','=',inv_id.origin)]).write({'invoice_status':'paid'})
+# 		return res
