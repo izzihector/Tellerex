@@ -62,6 +62,15 @@ class ticl_shipment_log(models.Model):
                     ids.ship_stock_move_line_id = x.ids[0]
                     self.env['stock.move'].search([('id','=',x.ids[0])]).write({'status': 'assigned','shipment_id': self.name})
 
+    #Auto Papulate Warehouse
+    @api.depends('sending_location_id')
+    def _get_warehouse(self):
+        for record in self:
+            warehouse = self.env['stock.warehouse'].search([('name','=',record.sending_location_id.name)])
+            if warehouse:
+                record.warehouse_id = warehouse.id 
+
+
     #Total Pallet Count
     @api.model
     @api.depends('ticl_ship_lines.count_number')
@@ -159,7 +168,7 @@ class ticl_shipment_log(models.Model):
     sending_location_id = fields.Many2one('stock.location', string='Origin Location',default='',track_visibility='onchange')
     sending_rigger_id = fields.Many2one('res.partner', string="Origin Location", default='')
     receiving_location_id = fields.Many2one('res.partner', string='Destination Location',default='',track_visibility='onchange')
-    warehouse_id = fields.Many2one('stock.warehouse', string='warehouse', default=lambda self: self.env.user.warehouse_id.id)
+    warehouse_id = fields.Many2one('stock.warehouse', string='warehouse', compute='_get_warehouse', store=True)
     user_id = fields.Many2one('res.users', string='Created By', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Supplier',track_visibility='onchange')
     asn_bol_type = fields.Selection([('asn', 'ASN'),('bol','BOL')], string='Type', default='bol')
