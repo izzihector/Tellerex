@@ -290,6 +290,8 @@ class ticl_shipment_log(models.Model):
     def create(self, vals):
         sequence = self.env['ir.sequence'].next_by_code('ticl.shipment.log') or '/'
         vals['name'] = sequence
+        dropship = vals.get('dropship_state', '')
+
         if 'ticl_ship_lines' in vals:
             for i in range(len(self.pallet_id.ids), len(vals['ticl_ship_lines'])):
                 if vals['ticl_ship_lines'][i][2] != False or '':
@@ -308,11 +310,12 @@ class ticl_shipment_log(models.Model):
                 for j in range(len(vals['ticl_ship_lines'])):
                     vals['ticl_ship_lines'][j][2]['pallet_id_name_visible'] = self.env['ticl.shipment'].search([('id', '=', int(vals['ticl_ship_lines'][j][2]['pallet_id_name']))]).name
         
+        
         if 'ticl_ship_lines' in vals.keys():
             for lines in range(len(vals['ticl_ship_lines'])):
                 type_id = self.env['product.category'].search([('id','=',vals['ticl_ship_lines'][lines][2]['tel_type'])])
                 condition_id = self.env['ticl.condition'].search([('name', '=', 'Quarantine')])
-                if type_id.name != 'ATM' and self.dropship_state == 'no':
+                if dropship == 'no' and type_id.name != 'ATM':
                     if vals['ticl_ship_lines'][lines][2].get('ship_stock_move_line_id',False):
                         x = self.env['stock.move.line'].search(
                             [('id', '=', vals['ticl_ship_lines'][lines][2]['ship_stock_move_line_id'])],limit=1)
@@ -335,7 +338,7 @@ class ticl_shipment_log(models.Model):
                     if 'ship_stock_move_line_id' in vals['ticl_ship_lines'][lines][2]:
                             self.env['stock.move.line'].search([('id','=',vals['ticl_ship_lines'][lines][2]['ship_stock_move_line_id'])]).write({'status':'assigned','shipment_id': vals['name']})       
 
-                if type_id.name != 'XL' and self.dropship_state == 'no':
+                if type_id.name != 'XL' and dropship == 'no':
                     if type_id.name == 'ATM' and vals['ticl_ship_lines'][lines][2]['lot_id'] == False:
                         product = self.env['product.product'].search([('id','=',vals['ticl_ship_lines'][lines][2]['product_id'])])
                         raise UserError("Please enter Serial Number for the Model ({0})".format(product.name))
