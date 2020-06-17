@@ -62,6 +62,15 @@ class ticl_shipment_log(models.Model):
                     ids.ship_stock_move_line_id = x.ids[0]
                     self.env['stock.move'].search([('id','=',x.ids[0])]).write({'status': 'assigned','shipment_id': self.name})
 
+    #Auto Papulate Warehouse
+    @api.depends('sending_location_id')
+    def _get_warehouse(self):
+        for record in self:
+            warehouse = self.env['stock.warehouse'].search([('name','=',record.sending_location_id.name)])
+            if warehouse:
+                record.warehouse_id = warehouse.id 
+
+
     #Total Pallet Count
     @api.model
     @api.depends('ticl_ship_lines.count_number')
@@ -159,7 +168,7 @@ class ticl_shipment_log(models.Model):
     sending_location_id = fields.Many2one('stock.location', string='Origin Location',default='',track_visibility='onchange')
     sending_rigger_id = fields.Many2one('res.partner', string="Origin Location", default='')
     receiving_location_id = fields.Many2one('res.partner', string='Destination Location',default='',track_visibility='onchange')
-    warehouse_id = fields.Many2one('stock.warehouse', string='warehouse', default=lambda self: self.env.user.warehouse_id.id)
+    warehouse_id = fields.Many2one('stock.warehouse', string='warehouse', compute='_get_warehouse', store=True)
     user_id = fields.Many2one('res.users', string='Created By', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Supplier',track_visibility='onchange')
     asn_bol_type = fields.Selection([('asn', 'ASN'),('bol','BOL')], string='Type', default='bol')
@@ -232,11 +241,12 @@ class ticl_shipment_log(models.Model):
         
     #@api.model
     def unlink(self):
-        move_id = self.env['stock.move.line'].search([('shipment_id', '=', self.name)])
-        if move_id:
+        for ids in self:
+            move_id = self.env['stock.move.line'].search([('shipment_id', '=', ids.name)])
             for mv in move_id:
-                mv.write({'status': 'inventory', 'shipment_id':''})
-        return super(ticl_shipment_log, self).unlink()
+                if mv:
+                    mv.write({'status': 'inventory', 'shipment_id':''})
+            return super(ticl_shipment_log, self).unlink()
 
     # Validate Fright Charge Fucntion
     #@api.model
@@ -289,6 +299,8 @@ class ticl_shipment_log(models.Model):
     def create(self, vals):
         sequence = self.env['ir.sequence'].next_by_code('ticl.shipment.log') or '/'
         vals['name'] = sequence
+        dropship = vals.get('dropship_state', '')
+
         if 'ticl_ship_lines' in vals:
             for i in range(len(self.pallet_id.ids), len(vals['ticl_ship_lines'])):
                 if vals['ticl_ship_lines'][i][2] != False or '':
@@ -307,11 +319,12 @@ class ticl_shipment_log(models.Model):
                 for j in range(len(vals['ticl_ship_lines'])):
                     vals['ticl_ship_lines'][j][2]['pallet_id_name_visible'] = self.env['ticl.shipment'].search([('id', '=', int(vals['ticl_ship_lines'][j][2]['pallet_id_name']))]).name
         
+        
         if 'ticl_ship_lines' in vals.keys():
             for lines in range(len(vals['ticl_ship_lines'])):
                 type_id = self.env['product.category'].search([('id','=',vals['ticl_ship_lines'][lines][2]['tel_type'])])
                 condition_id = self.env['ticl.condition'].search([('name', '=', 'Quarantine')])
-                if type_id.name != 'ATM' and self.dropship_state == 'no':
+                if dropship == 'no' and type_id.name != 'ATM':
                     if vals['ticl_ship_lines'][lines][2].get('ship_stock_move_line_id',False):
                         x = self.env['stock.move.line'].search(
                             [('id', '=', vals['ticl_ship_lines'][lines][2]['ship_stock_move_line_id'])],limit=1)
@@ -334,7 +347,7 @@ class ticl_shipment_log(models.Model):
                     if 'ship_stock_move_line_id' in vals['ticl_ship_lines'][lines][2]:
                             self.env['stock.move.line'].search([('id','=',vals['ticl_ship_lines'][lines][2]['ship_stock_move_line_id'])]).write({'status':'assigned','shipment_id': vals['name']})       
 
-                if type_id.name != 'XL' and self.dropship_state == 'no':
+                if type_id.name != 'XL' and dropship == 'no':
                     if type_id.name == 'ATM' and vals['ticl_ship_lines'][lines][2]['lot_id'] == False:
                         product = self.env['product.product'].search([('id','=',vals['ticl_ship_lines'][lines][2]['product_id'])])
                         raise UserError("Please enter Serial Number for the Model ({0})".format(product.name))
@@ -2262,16 +2275,14 @@ class ticl_shipment_log_line(models.Model):
                 return {'domain': domain}
                 
 
-
-
-
     #unlink Fucntion for delete line            
     @api.model
     def unlink(self):
         for ids in self:
            if ids.status_not_inventory == False:
-                self.env['stock.move.line'].search([('id', '=', ids.ship_stock_move_line_id.id)]).write(
-                    {'status': 'inventory','shipment_id':''})
+                move_search = self.env['stock.move.line'].search([('id', '=', ids.ship_stock_move_line_id.id)])
+                for move in move_search:
+                    move.write({'status': 'inventory','shipment_id':''})
         return super(ticl_shipment_log_line, self).unlink()
 
 
