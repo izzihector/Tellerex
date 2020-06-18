@@ -77,8 +77,8 @@
                                     <span t-field="o.receiving_location_id.name"/><br/>
                                     <span t-field="o.receiving_location_id.street"/>,
                                     <span t-field="o.receiving_location_id.street2"/><br/>
-                                    <span t-field="o.receiving_location_id.city"/>,
-                                    <span t-field="o.receiving_location_id.state.code"/>,
+                                    <span t-field="o.receiving_location_id.city_id.name"/>,
+                                    <span t-field="o.receiving_location_id.state_id.code"/>,
                                     <span t-field="o.receiving_location_id.zip"/>,
                                     <span t-field="o.receiving_location_id.country_id.name"/><br/>
                                     <span t-field="o.receiving_location_id.phone"/><br/>

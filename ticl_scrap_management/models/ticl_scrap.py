@@ -51,6 +51,14 @@ class ticl_scrap_stock(models.Model):
         for scrap_line in lines:
             if scrap_line[0].lot_id:
                 scrap_line[0].lot_id.is_scraped = True
+            stock_mv = self.env['stock.move.line'].search([('tel_cod', 'in', ('N', False)),
+                                                      ('serial_number', '=', scrap_line[0].lot_id.name)], limit=1)
+            if stock_mv:
+                if not scrap_line[0].scrap_tel_note:
+                    raise UserError(_(
+                        "Comments/Note is mandatory for the items in which COD's is 'NO'. Please check the Model %s! " % (
+                            scrap_line[0].product_id.name)))
+                    
             mv = self.env['stock.move.line'].search(scrap_line[1],
                                                        limit=int(scrap_line[0].scrap_qty))
             mv.sudo().write({'status':'recycled','recycled_date':scrap_line[0].date_expected_new,'scrap_tel_note': scrap_line[0].scrap_tel_note})
