@@ -1136,6 +1136,7 @@ class ticl_receipt_log_summary_line(models.Model):
         else:
             if self.atm_photographed == True:
                 self.state = 'destroyed'
+                self.processed_date = datetime.now()
     
     #Onchange for Data Destroyed
     @api.onchange('atm_data_destroyed')
