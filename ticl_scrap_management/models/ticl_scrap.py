@@ -199,7 +199,8 @@ class ticl_scrap_stock_line(models.Model):
                 if not line.condition_id:
                     line.condition_id = scrap.condition_id.id
             scrap.write({'move_id': move.id, 'state': 'done'})
-            scrap.scrap_id.write({'state': 'done'})
+            scrap_name = self.env['ir.sequence'].next_by_code('scrap.scrap') or _('New')
+            scrap.scrap_id.write({'state': 'done','name':scrap_name})
         return True
     
     # Filter Product Basis of Product TYpe
