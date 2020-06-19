@@ -18,7 +18,7 @@ class import_update_data(models.TransientModel):
     import_option = fields.Selection(
         [('xls', 'XLS File')], string='Select', default='xls')
     import_type = fields.Selection(
-        [('update_check_sale', 'update_check_sale'),('update_status_stock', 'update_status_stock'),('update_status_recycle', 'update_status_recycle')], string='Select')
+        [('update_check_sale', 'update_check_sale'),('update_check_shipment', 'update_check_shipment'),('update_status_stock', 'update_status_stock'),('update_status_recycle', 'update_status_recycle')], string='Select')
 
 
 
@@ -73,33 +73,54 @@ class import_update_data(models.TransientModel):
                     elif self.import_type == 'update_status_stock':
                         recipt_obj = self.env['stock.move.line']
                         col1 = sheet.cell(row, 0).value
+                        print("----col1",col1)
+                        col1 = str(col1).split('.')
+                        print("----col1",col1)
                         #receipt_name = col1.strip()
                         receipt = recipt_obj.search([('tel_unique_no','=',col1)])
+                        print("----receipt",receipt)
                         if receipt:
                             vals = {}
                             print("----receipt",receipt)
                             status = sheet.cell(row,1).value
                             print("----total_weight",status)
                             vals.update({'status':status})
-                            receipt.sudo().write(vals)
+                            receipt.sudo().write(vals) 
 
                     elif self.import_type == 'update_status_recycle':
                         recipt_obj = self.env['stock.move.line']
-                        col1 = sheet.cell(row,0).value
-                        
+                        col1 = sheet.cell(row, 0).value
+                        print("----col1",col1)
+                        col1 = str(col1).split('.')
+                        print("----col1",col1)
                         #receipt_name = col1.strip()
-                        receipt = recipt_obj.search([('tel_unique_no','=',col1),('status','=','recycled')])
+                        receipt = recipt_obj.search([('tel_unique_no','=',col1)])
+                        print("----receipt",receipt)
                         if receipt:
                             vals = {}
-                            col1 = sheet.cell(row, 1).value
-                            if col1:
-                                c_date = self.convert_date(col1,workbook.datemode)
-                                print("----c_date",c_date)
-                                vals.update({'recycled_date':c_date})
+                            print("----receipt",receipt)
+                            status = sheet.cell(row,1).value
+                            print("----total_weight",status)
+                            vals.update({'status':status})
+                            receipt.sudo().write(vals) 
 
-                            scrap_tel_note = sheet.cell(row,2).value
-                            vals.update({'scrap_tel_note':scrap_tel_note})
-                            receipt.sudo().write(vals)
+
+                    elif self.import_type == 'update_check_shipment':
+                        recipt_obj = self.env['stock.move.line']
+                        col1 = sheet.cell(row, 0).value
+                        print("----col1",col1)
+                        col1 = str(col1).split('.')
+                        print("----col1",col1)
+                        #receipt_name = col1.strip()
+                        receipt = recipt_obj.search([('tel_unique_no','=',col1)])
+                        print("----receipt",receipt)
+                        if receipt:
+                            vals = {}
+                            print("----receipt",receipt)
+                            status = sheet.cell(row,1).value
+                            print("----total_weight",status)
+                            vals.update({'status':status})
+                            receipt.sudo().write(vals)                          
 
                 
             except Exception as e:
