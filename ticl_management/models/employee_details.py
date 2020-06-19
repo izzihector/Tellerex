@@ -19,15 +19,15 @@ class Employee(models.Model):
 	state_id = fields.Many2one("res.country.state", string='State')
 	country_id = fields.Many2one('res.country', string='Country')
 
-
+	#Add code with name in dropdown of employee
 # 	@api.multi
-	# def name_get(self):
-	# 	result = []
-	# 	for emp in self:
-	# 		employee_id = emp.employee_code
-	# 		if employee_id:
-	# 			emp_name_id = emp.name + '(' + str(employee_id) + ')'
-	# 		else:
-	# 			emp_name_id = emp.name
-	# 		result.append((emp.id, emp_name_id))	
-	# 	return result
+	def name_get(self):
+		result = []
+		for emp in self:
+			employee_id = emp.employee_code
+			if employee_id:
+				emp_name_id = emp.name + '(' + str(employee_id) + ')'
+			else:
+				emp_name_id = emp.name
+			result.append((emp.id, emp_name_id))	
+		return result

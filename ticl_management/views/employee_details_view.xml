@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>  
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='address_id']" position="before">
+                <xpath expr="//field[@name='mobile_phone']" position="before">
                     <field name="employee_code" required="1" />
                 </xpath>
 
@@ -36,14 +36,14 @@
                     <attribute name="invisible">0</attribute>
                 </xpath>
 
-                <xpath expr="//field[@name='google_drive_link']" position="attributes">
+               <!--  <xpath expr="//field[@name='google_drive_link']" position="attributes">
                     <attribute name="invisible">1</attribute>
-                </xpath>
+                </xpath> -->
 
-                <xpath expr="//field[@name='additional_note']" position="attributes">
+                <!-- <xpath expr="//field[@name='additional_note']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                
+                 -->
                 <xpath expr="//field[@name='km_home_work']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>

@@ -32,6 +32,7 @@
         'views/template.xml',
         'views/ticl_epp_manufacturer_view.xml',
         'views/ticl_hdd_manufacturer_view.xml',
+        'views/employee_details_view.xml',
 
         'wizards/update_inventory_model.xml',
         'wizards/update_inventory_entries.xml',
