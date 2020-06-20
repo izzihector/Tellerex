@@ -65,43 +65,37 @@ class ticl_receipt(models.Model):
     # This function is for Revert Receipt back to draft state
     def revert_receipt(self):
         for record in self:
+            receipt_status = []
+            status = []
             for line in record.ticl_receipt_lines:
                 receipt_record = self.env['ticl.receipt.line'].sudo().search(
                     [('serial_number', '=', line.serial_number)])
-                move_id = self.env['stock.move'].sudo().search([('serial_number', '=', line.serial_number)],
+                move_id = self.env['stock.move.line'].sudo().search([('serial_number', '=', line.serial_number)],
                                                                limit=1)
-                receipt_status = []
-                status = []
-                for rec in receipt_record:
-                    if rec.serial_number:
-                        if receipt_record:
-                            for ids2 in receipt_record:
-                                receipt_status.append(ids2.ticl_receipt_id.state)
-
-                        if 'draft' in receipt_status:
-                            raise UserError('Serial Number already exists in Draft !')
-                        elif 'pending' in receipt_status:
-                            raise UserError('Serial Number already exists in Pending !')
-                        elif 'inprogress' in receipt_status:
-                            raise UserError('Serial Number already exists in In-progress !')
-
-                        if move_id :
+                if line.serial_number:
+                    for rec in receipt_record:
+                        receipt_status.append(rec.ticl_receipt_id.state)
+                        if move_id:
                             for ids in move_id:
                                 status.append(ids.status)
+            if 'draft' in receipt_status:
+                raise UserError('Serial Number already exists in Draft !')
+            elif 'pending' in receipt_status:
+                raise UserError('Serial Number already exists in Pending !')
+            elif 'inprogress' in receipt_status:
+                raise UserError('Serial Number already exists in In-progress !')
 
-                        if 'inventory' in status:
-                            raise UserError('Serial Number already exists in Inventory !')
-                        elif 'assigned' in status:
-                            raise UserError('Serial Number already exists in Assigned !')
-                        elif 'picked' in status:
-                            raise UserError('Serial Number already exists in Picked !')
-                        elif 'packed' in status:
-                            raise UserError('Serial Number already exists in Packed !')
-                        else:
-                            record.state = 'draft'
-                            break
-                    else:
-                        record.state = 'draft'
+            if 'inventory' in status:
+                raise UserError('Serial Number already exists in Inventory !')
+            elif 'assigned' in status:
+                raise UserError('Serial Number already exists in Assigned !')
+            elif 'picked' in status:
+                raise UserError('Serial Number already exists in Picked !')
+            elif 'packed' in status:
+                raise UserError('Serial Number already exists in Packed !')
+
+            else:
+                record.state = 'draft'
         
     #Total ATM
     @api.depends('ticl_receipt_lines.count_number')
@@ -1162,7 +1156,7 @@ class ticl_receipt(models.Model):
                         'misc_log_time':tel_line.misc_log_time,
                         'misc_charges':tel_line.misc_charges,
                         'service_price':tel_line.service_price,
-                        #'tel_unique_no':tel_line.tel_unique_no,
+                        'tel_unique_no':tel_line.tel_unique_no,
                         'check_move_inventory': True,
                         'repalletize': tel_line.repalletize,
                         'repalletize_charge':tel_line.repalletize_charge,

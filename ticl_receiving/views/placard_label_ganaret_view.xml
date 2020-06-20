@@ -33,9 +33,8 @@
                         <field name="hide_mv_inv_button" invisible="1"/>
                     </group>
                      <group>
-                        <field name="processed_date"
-                            attrs="{'invisible': [('state', '!=', 'done')]}"
-                            readonly="1" widget="date"/>
+                        <field name="processed_date" readonly="1"
+                        attrs="{'invisible': [('state', '!=', 'done'),('state', '!=', 'wrapped')]}"/>
                         <field name="received_date" readonly="1" widget="date"/>
                         <field name="ticl_receipt_summary_id" readonly="1" 
                             string="Receipt Number"/> 

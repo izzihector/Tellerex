@@ -65,11 +65,12 @@
                         options="{'no_create': True,'no_create_edit':True}"
                         attrs="{'invisible': [('dropship_state', '=','yes')],'readonly': ['|',('state','!=', 'draft'),('is_from_inventory', '=', True)]}"
                         domain="[('is_location','=',True)]"/>
-                    <field name="sending_rigger_id" style="width:70%" attrs="{'invisible': [('dropship_state', '=','no')]}"/>   
+                    <field name="sending_rigger_id" style="width:70%" attrs="{'invisible': [('dropship_state', '=','no')]}" domain="[('is_rigger','=',True)]"/>   
                     <field name="is_from_inventory" invisible="1"/>
                     <field name="receiving_location_id" required="1" style="width:70%"
                         options="{'no_create': True,'no_create_edit':True}"
-                         attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                         attrs="{'readonly': [('state','!=', 'draft')]}"
+                         domain="[('is_rigger','=',True)]"/>
                     <field name="hr_employee_id" style="width:70%"
                         attrs="{'required': [('state','in', 'packed')]}" options="{'no_create': True, 'no_create_edit':True}"/>
                     <field name="pallet_id" widget="many2many_tags" style="width: 70%"

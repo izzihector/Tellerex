@@ -68,8 +68,8 @@
 
         <menuitem id="tel_dashboard_parent" name="Dashboard" sequence="1"/>
     
-        <menuitem id="tel_dashboard_menu" name="DASHBOARD" 
-        parent="tel_dashboard_parent" action="receiving_dashboard_action" sequence="1"/>
+        <!-- <menuitem id="tel_dashboard_menu" name="DASHBOARD" 
+        parent="tel_dashboard_parent" action="receiving_dashboard_action" sequence="1"/> -->
 
 
     </data>
