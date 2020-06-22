@@ -27,19 +27,19 @@ class ticl_receipt(models.Model):
     _order = 'delivery_date desc, id desc'
 
     #Unique Receiving Number
-    # @api.model
-    # def create(self, vals):
-    #     sequence = self.env['ir.sequence'].next_by_code('ticl.receipt') or '/'
-    #     vals['name'] = sequence
-    #     if 'ticl_receipt_lines' in vals.keys():
-    #         for recs in range(len(vals['ticl_receipt_lines'])):
-    #             vals['ticl_receipt_lines'][recs][2]['tel_type'] = vals['ticl_receipt_lines'][recs][2]['type_dup']
-    #             vals['ticl_receipt_lines'][recs][2]['manufacturer_id'] = vals['ticl_receipt_lines'][recs][2]['manufacturer_id_dup']
-    #             tel_type =  self.env['product.category'].search([('id','=',vals['ticl_receipt_lines'][recs][2]['tel_type'])])
-    #             if tel_type.name == 'ATM' and vals['ticl_receipt_lines'][recs][2]['serial_number'] == False:
-    #                 product = self.env['product.product'].search([('id','=',vals['ticl_receipt_lines'][recs][2]['product_id'])])
-    #                 raise UserError("Please enter Serial Number for the Model ({0})".format(product.name))
-    #     return super(ticl_receipt, self).create(vals)
+    @api.model
+    def create(self, vals):
+        sequence = self.env['ir.sequence'].next_by_code('ticl.receipt') or '/'
+        vals['name'] = sequence
+        if 'ticl_receipt_lines' in vals.keys():
+            for recs in range(len(vals['ticl_receipt_lines'])):
+                vals['ticl_receipt_lines'][recs][2]['tel_type'] = vals['ticl_receipt_lines'][recs][2]['type_dup']
+                vals['ticl_receipt_lines'][recs][2]['manufacturer_id'] = vals['ticl_receipt_lines'][recs][2]['manufacturer_id_dup']
+                tel_type =  self.env['product.category'].search([('id','=',vals['ticl_receipt_lines'][recs][2]['tel_type'])])
+                if tel_type.name == 'ATM' and vals['ticl_receipt_lines'][recs][2]['serial_number'] == False:
+                    product = self.env['product.product'].search([('id','=',vals['ticl_receipt_lines'][recs][2]['product_id'])])
+                    raise UserError("Please enter Serial Number for the Model ({0})".format(product.name))
+        return super(ticl_receipt, self).create(vals)
 
 #     @api.multi
     def write(self, vals):

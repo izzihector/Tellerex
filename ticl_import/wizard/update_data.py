@@ -18,7 +18,7 @@ class import_update_data(models.TransientModel):
     import_option = fields.Selection(
         [('xls', 'XLS File')], string='Select', default='xls')
     import_type = fields.Selection(
-        [('update_check_sale', 'update_check_sale'),('update_check_shipment', 'update_check_shipment'),('update_status_stock', 'update_status_stock'),('update_status_recycle', 'update_status_recycle')], string='Select')
+        [('update_check_sale', 'update_check_sale'),('update_COD', 'update_COD'),('update_check_shipment', 'update_check_shipment'),('update_status_stock', 'update_status_stock'),('update_status_recycle', 'update_status_recycle')], string='Select')
 
 
 
@@ -110,8 +110,6 @@ class import_update_data(models.TransientModel):
                         col1 = sheet.cell(row, 0).value
                         print("----col1",col1)
                         col1 = str(col1).split('.')
-                        print("----col1",col1)
-                        #receipt_name = col1.strip()
                         receipt = recipt_obj.search([('tel_unique_no','=',col1)])
                         print("----receipt",receipt)
                         if receipt:
@@ -120,7 +118,32 @@ class import_update_data(models.TransientModel):
                             status = sheet.cell(row,1).value
                             print("----total_weight",status)
                             vals.update({'status':status})
-                            receipt.sudo().write(vals)                          
+                            receipt.sudo().write(vals)
+
+                    elif self.import_type == 'update_COD':
+                        recipt_obj = self.env['ticl.receipt.log.summary.line']
+                        col1 = sheet.cell(row, 0).value
+                        col1 = str(col1).split('.')
+                        col2 = sheet.cell(row, 1).value
+                        col3 = sheet.cell(row, 2).value
+                        col4 = sheet.cell(row, 3).value
+                        col5 = sheet.cell(row, 4).value
+                        col6 = sheet.cell(row, 5).value
+                        col7 = sheet.cell(row, 6).value
+                        receipt = recipt_obj.search([('tel_unique_no','=',col1)])
+                        print("----receipt",receipt)
+                        epp = self.env['ticl.epp.manufacturer'].search([('name','=',col2)])
+                        hdd = self.env['ticl.hdd.manufacturer'].search([('name','=',col4)])
+                        emp = self.env['hr.employee'].search([('name','=',col6)])
+                        if receipt:
+                            vals = {}
+                            vals.update({'epp_manufacturer':epp})
+                            vals.update({'epp_serial_num':col3})
+                            vals.update({'hdd_manufacturer':hdd})
+                            vals.update({'hdd_serial_num':col5})
+                            vals.update({'cod_employee_id':emp})
+                            vals.update({'cod_comments':col7})
+                            receipt.sudo().write(vals)                                                         
 
                 
             except Exception as e:
