@@ -93,12 +93,21 @@ class import_update_data(models.TransientModel):
                         print("----col1",col1)
                         col1 = str(col1).split('.')
                         print("----col1",col1)
-                        #receipt_name = col1.strip()
                         receipt = recipt_obj.search([('tel_unique_no','=',col1)])
                         print("----receipt",receipt)
                         if receipt:
                             vals = {}
-                            print("----receipt",receipt)
+
+                            recycled_date = sheet.cell(row,2).value
+                            if not recycled_date:
+                                raise Exception("Approval date field is blank in row %s , Please review the file."% (row + 1))
+                            if recycled_date:
+                                if type(recycled_date) is str:  
+                                    appr_date = datetime.strptime(recycled_date, "%m/%d/%Y")
+                                else:
+                                    appr_date = datetime(*xlrd.xldate_as_tuple(recycled_date, workbook.datemode))
+                                vals.update({'recycled_date':appr_date.strftime("%Y-%m-%d")})                            
+
                             status = sheet.cell(row,1).value
                             print("----total_weight",status)
                             vals.update({'status':status})
