@@ -18,7 +18,7 @@ class import_update_data(models.TransientModel):
     import_option = fields.Selection(
         [('xls', 'XLS File')], string='Select', default='xls')
     import_type = fields.Selection(
-        [('update_check_sale', 'update_check_sale'),('update_COD', 'update_COD'),('update_check_shipment', 'update_check_shipment'),('update_status_stock', 'update_status_stock'),('update_status_recycle', 'update_status_recycle')], string='Select')
+        [('update_check_sale', 'update_check_sale'),('import_sale', 'import_sale'),('update_COD', 'update_COD'),('update_check_shipment', 'update_check_shipment'),('update_status_stock', 'update_status_stock'),('update_status_recycle', 'update_status_recycle')], string='Select')
 
 
 
@@ -143,7 +143,51 @@ class import_update_data(models.TransientModel):
                             vals.update({'hdd_serial_num':col5})
                             vals.update({'cod_employee_id':emp})
                             vals.update({'cod_comments':col7})
-                            receipt.sudo().write(vals)                                                         
+                            receipt.sudo().write(vals) 
+
+
+                    elif self.import_type == 'import_sale':
+                        stock_line_obj = self.env['stock.move.line']
+                        col1 = sheet.cell(row, 0).value
+                        print("====col1==",col1)
+                        col1 = str(col1).split('.')
+                        col2 = sheet.cell(row, 1).value
+                        print("====col2==",col2)
+                        col3 = sheet.cell(row, 2).value
+                        col4 = sheet.cell(row, 3).value
+                        col5 = sheet.cell(row, 4).value
+                        col7 = sheet.cell(row, 6).value
+                        col7 = float(col7)
+                        col8 = sheet.cell(row, 7).value
+                        col8 = float(col8)     
+                        col9 = sheet.cell(row, 8).value
+                        col9 = float(col9)
+                        col10 = sheet.cell(row, 9).value
+                        sale_import = stock_line_obj.search([('serial_number','=',col1),('status','=','sold')])
+                        print("----sale_import",sale_import)
+                        if sale_import:
+                            vals = {}
+
+                            sale_date_pick = sheet.cell(row,5).value
+                            if not sale_date_pick:
+                                raise Exception("Approval date field is blank in row %s , Please review the file."% (row + 1))
+                            if sale_date_pick:
+                                if type(sale_date_pick) is str:  
+                                    appr_date = datetime.strptime(sale_date_pick, "%m/%d/%Y")
+                                else:
+                                    appr_date = datetime(*xlrd.xldate_as_tuple(sale_date_pick, workbook.datemode))
+                                vals.update({'sale_date_pick':appr_date.strftime("%Y-%m-%d")})                        
+                            
+                            vals.update({'sale_import_data':col3 or ''})
+                            vals.update({'sale_old_id':col4 or ''})
+                            vals.update({'sale_type':col5 or ''})
+                            vals.update({'sale_gross':str(col7)})
+                            vals.update({'sale_net':str(col8)})
+                            vals.update({'sale_commission':str(col9)})
+                            col10 = sheet.cell(row, 9).value
+                            if col10:
+                                vals.update({'sale_check_number':int(col10)})
+                            sale_import.sudo().write(vals)                                                                                     
 
                 
             except Exception as e:
