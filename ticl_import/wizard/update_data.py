@@ -184,7 +184,9 @@ class import_update_data(models.TransientModel):
                             vals.update({'sale_gross':str(col7)})
                             vals.update({'sale_net':str(col8)})
                             vals.update({'sale_commission':str(col9)})
-                            vals.update({'sale_check_number':int(col10)})
+                            col10 = sheet.cell(row, 9).value
+                            if col10:
+                                vals.update({'sale_check_number':int(col10)})
                             sale_import.sudo().write(vals)                                                                                     
 
                 
