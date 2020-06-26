@@ -130,7 +130,7 @@ class import_update_data(models.TransientModel):
                             receipt.sudo().write(vals)
 
                     elif self.import_type == 'update_COD':
-                        recipt_obj = self.env['ticl.receipt.log.summary.line']
+                        recipt_obj = self.env['stock.move.line']
                         col1 = sheet.cell(row, 0).value
                         col1 = int(col1)
                         print("----col1",col1)
@@ -150,16 +150,16 @@ class import_update_data(models.TransientModel):
                         emp = self.env['hr.employee'].search([('name','=',col6)])
                         if receipt:
                             vals = {}
-                            vals.update({'epp_manufacturer':epp})
-                            vals.update({'epp_serial_num':col3})
-                            vals.update({'hdd_manufacturer':hdd})
-                            vals.update({'hdd_serial_num':col5})
-                            vals.update({'cod_employee_id':emp})
+                            # vals.update({'epp_manufacturer':epp})
+                            # vals.update({'epp_serial_num':col3})
+                            # vals.update({'hdd_manufacturer':hdd})
+                            # vals.update({'hdd_serial_num':col5})
+                            # vals.update({'cod_employee_id':emp})
                             vals.update({'tel_cod':col7})
-                            vals.update({'atm_cleaned':col8})
-                            vals.update({'atm_photographed':col9})
-                            vals.update({'atm_data_destroyed':col10})
-                            vals.update({'state':'wrapped'})
+                            # vals.update({'atm_cleaned':col8})
+                            # vals.update({'atm_photographed':col9})
+                            # vals.update({'atm_data_destroyed':col10})
+                            # vals.update({'state':'wrapped'})
                             receipt.sudo().write(vals) 
 
 
