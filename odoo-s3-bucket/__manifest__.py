@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','web','ticl_management','ticl_receiving'],
+    'depends': ['base','web','ticl_management','ticl_receiving','boto3'],
 
     # only the admin user should be having access -so default is ok
     'data': [
