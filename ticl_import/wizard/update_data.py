@@ -155,7 +155,7 @@ class import_update_data(models.TransientModel):
                             # vals.update({'hdd_manufacturer':hdd})
                             # vals.update({'hdd_serial_num':col5})
                             # vals.update({'cod_employee_id':emp})
-                            vals.update({'tel_cod':col1})
+                            vals.update({'tel_cod':col7})
                             # vals.update({'atm_cleaned':col8})
                             # vals.update({'atm_photographed':col9})
                             # vals.update({'atm_data_destroyed':col10})
