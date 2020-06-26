@@ -1432,14 +1432,14 @@ class ticl_receipt_log_summary_line(models.Model):
 
 
     def dir_atm_process_images(self, unsplashurls=None, **kwargs):
-        print('\n path',os.getcwd(),type(os.getcwd()),os.getcwd()+'/src/user/COD')
-        dir = os.listdir(os.getcwd()+'/src/user/COD')
+        print('\n path',os.getcwd(),type(os.getcwd()),os.getcwd()+'/src/user/ticl_receiving/models/COD')
+        dir = os.listdir(os.getcwd()+'/src/user/ticl_receiving/models/COD')
         for folder_name in dir:
-            folder = os.listdir(os.getcwd()+'/src/user/COD'+"/{0}".format(folder_name))
+            folder = os.listdir(os.getcwd()+'/src/user/ticl_receiving/models/COD'+"/{0}".format(folder_name))
             for sub_folder_name in folder:
-                sub_folder = folder = os.listdir(os.getcwd()+'/COD'+"/{0}/{1}".format(folder_name,sub_folder_name))
+                sub_folder = folder = os.listdir(os.getcwd()+'/src/user/ticl_receiving/models/COD'+"/{0}/{1}".format(folder_name,sub_folder_name))
                 for file_name in sub_folder:
-                    with open(os.getcwd()+'/src/user/COD'+"/{0}/{1}/{2}".format(folder_name,sub_folder_name,file_name), "rb") as imageFile:
+                    with open(os.getcwd()+'/src/user/ticl_receiving/models/COD'+"/{0}/{1}/{2}".format(folder_name,sub_folder_name,file_name), "rb") as imageFile:
                         str = base64.b64encode(imageFile.read())
                         # print('\n\n photo', str[:10])
                         photo_0 = str
