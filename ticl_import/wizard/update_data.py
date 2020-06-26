@@ -93,12 +93,21 @@ class import_update_data(models.TransientModel):
                         print("----col1",col1)
                         col1 = str(col1).split('.')
                         print("----col1",col1)
-                        #receipt_name = col1.strip()
                         receipt = recipt_obj.search([('tel_unique_no','=',col1)])
                         print("----receipt",receipt)
                         if receipt:
                             vals = {}
-                            print("----receipt",receipt)
+
+                            recycled_date = sheet.cell(row,2).value
+                            if not recycled_date:
+                                raise Exception("Approval date field is blank in row %s , Please review the file."% (row + 1))
+                            if recycled_date:
+                                if type(recycled_date) is str:  
+                                    appr_date = datetime.strptime(recycled_date, "%m/%d/%Y")
+                                else:
+                                    appr_date = datetime(*xlrd.xldate_as_tuple(recycled_date, workbook.datemode))
+                                vals.update({'recycled_date':appr_date.strftime("%Y-%m-%d")})                            
+
                             status = sheet.cell(row,1).value
                             print("----total_weight",status)
                             vals.update({'status':status})
@@ -123,13 +132,17 @@ class import_update_data(models.TransientModel):
                     elif self.import_type == 'update_COD':
                         recipt_obj = self.env['ticl.receipt.log.summary.line']
                         col1 = sheet.cell(row, 0).value
-                        col1 = str(col1).split('.')
+                        col1 = int(col1)
+                        print("----col1",col1)
                         col2 = sheet.cell(row, 1).value
                         col3 = sheet.cell(row, 2).value
                         col4 = sheet.cell(row, 3).value
                         col5 = sheet.cell(row, 4).value
                         col6 = sheet.cell(row, 5).value
                         col7 = sheet.cell(row, 6).value
+                        col8 = sheet.cell(row, 7).value
+                        col9 = sheet.cell(row, 8).value
+                        col10 = sheet.cell(row, 9).value
                         receipt = recipt_obj.search([('tel_unique_no','=',col1)])
                         print("----receipt",receipt)
                         epp = self.env['ticl.epp.manufacturer'].search([('name','=',col2)])
@@ -142,7 +155,11 @@ class import_update_data(models.TransientModel):
                             vals.update({'hdd_manufacturer':hdd})
                             vals.update({'hdd_serial_num':col5})
                             vals.update({'cod_employee_id':emp})
-                            vals.update({'cod_comments':col7})
+                            vals.update({'tel_cod':col7})
+                            vals.update({'atm_cleaned':col8})
+                            vals.update({'atm_photographed':col9})
+                            vals.update({'atm_data_destroyed':col10})
+                            vals.update({'state':'wrapped'})
                             receipt.sudo().write(vals) 
 
 

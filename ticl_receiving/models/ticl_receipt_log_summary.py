@@ -1430,6 +1430,53 @@ class ticl_receipt_log_summary_line(models.Model):
     #         os.remove("Tellerex_Dev/ticl_receiving/static/src/images/{0}".format(name))
 
 
+
+    def dir_atm_process_images(self, unsplashurls=None, **kwargs):
+        print('\n path',os.getcwd(),type(os.getcwd()),os.getcwd()+'/src/user/ticl_receiving/models/COD')
+        dir = os.listdir(os.getcwd()+'/src/user/ticl_receiving/models/COD')
+        for folder_name in dir:
+            folder = os.listdir(os.getcwd()+'/src/user/ticl_receiving/models/COD'+"/{0}".format(folder_name))
+            for sub_folder_name in folder:
+                sub_folder = folder = os.listdir(os.getcwd()+'/src/user/ticl_receiving/models/COD'+"/{0}/{1}".format(folder_name,sub_folder_name))
+                for file_name in sub_folder:
+                    with open(os.getcwd()+'/src/user/ticl_receiving/models/COD'+"/{0}/{1}/{2}".format(folder_name,sub_folder_name,file_name), "rb") as imageFile:
+                        str = base64.b64encode(imageFile.read())
+                        # print('\n\n photo', str[:10])
+                        photo_0 = str
+
+                        # print('\n\n photo', photo_0)
+
+                        # resized_images = o_tools.image_get_resized_images(photo_0, return_big=True,
+                        #                                                 avoid_resize_medium=True)
+                        # image_small = resized_images['image']
+
+                        receipt_log_id = self.env['ticl.receipt.log.summary.line'].search(
+                            [('serial_number', '=', folder_name)],limit=1)
+                        receipt_log_id.sudo().write({'atm_cleaned':True})
+                        if receipt_log_id.id == False:
+                            continue
+                        if receipt_log_id.atm_cleaned == False:
+                            receipt_log_id.sudo().write({'atm_cleaned': True, 'state': 'photographed'})
+                        attachment_id = self.env['ir.attachment'].sudo().create(
+                            {'mimetype': 'image/jpg', 'name': file_name,
+                             'res_model': 'ticl.receipt.log.summary.line',
+                             'res_id': 0, 'datas': photo_0, 'checksum': photo_0})
+                        if sub_folder_name == "ATM":
+                            table = 'class_ir_attachmentsatm_rel'
+                            field_id = 'attachment_ids'
+                        if sub_folder_name == "HDD":
+                            table = 'class_ir_attachmentsepp_rel'
+                            field_id = 'attachment_ids_epp'
+                        if sub_folder_name == "EPP":
+                            table = 'class_ir_attachmentshdd_rel'
+                            field_id = 'attachment_ids_hdd'
+                        self._cr.execute("""
+                                                INSERT INTO {0} (class_id,
+                                                {1}) VALUES({2},{3});
+                                            """.format(table, field_id, receipt_log_id.id, attachment_id.id))
+
+
+
 #Ticl Receipts Payments 
 class ticl_receipt_payment_log(models.Model):
     _name = 'ticl.receipt.payment.log'

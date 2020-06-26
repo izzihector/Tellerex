@@ -120,6 +120,14 @@
         </record>
 
 
+        <record id="model_stock_action_refurbishment" model="ir.actions.server">
+            <field name="name">Import COD Images</field>
+            <field name="model_id" ref="model_ticl_receipt_log_summary_line"/>
+            <field name="binding_model_id" ref="model_ticl_receipt_log_summary_line"/>
+            <field name="state">code</field>
+            <field name="code">action = records.dir_atm_process_images() </field>
+        </record>
+
 
 
 
