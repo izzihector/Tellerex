@@ -120,6 +120,20 @@
             </field>
         </record>
 
+        <!-- Search View Inherit from Stock move line -->
+        <record id="stock_move_line_view_search" model="ir.ui.view">
+        <field name="name">stock.move.line.search</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="/search/field[@name='picking_id']" position="before">
+                    <field name="serial_number" string="Serial Number" /> 
+                    <field name="product_id" string="Model"/>
+                    <field name="tel_unique_no" string="Unique No"/>
+                    <field name="shipment_id" string="Shipment ID"/>
+                </xpath>
+            </field>
+        </record>
 
         <record id="action_tel_receving_inv_line" model="ir.actions.act_window">
             <field name="name">Inventory Line</field>
