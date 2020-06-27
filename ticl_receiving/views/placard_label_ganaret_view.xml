@@ -8,13 +8,18 @@
             <field name="arch" type="xml">
                 <form create="false" delete="false">
                    <header>
+                        <field name="stock_atm_process" invisible="1"/>
                         <button name="atm_process_done" class="oe_highlight"
                         string="Move to Inventory" type="object"
-                        attrs="{'invisible': ['|',('state', 'not in', ('wrapped')) ,('hide_mv_inv_button', '=', True)]}"/>
+                        attrs="{'invisible': ['|','|',('state', 'not in', ('wrapped')) ,('hide_mv_inv_button', '=', True),('stock_atm_process', '==', True)]}"/>
                         
                         <button name="download_cod" class="oe_highlight"
                         string="Generate COD" type="object"
-                        attrs="{'invisible': ['&amp;', ('state', 'not in', ('done')), ('hide_mv_inv_button', '!=', True)]}"/>
+                        attrs="{'invisible': ['&amp;','&amp;', ('state', 'not in', ('done')), ('hide_mv_inv_button', '!=', True),('stock_atm_process', '!=', False)]}"/>
+                        
+                        <button name="stock_atm_process_done" class="oe_highlight"
+                        string="Finish" type="object"
+                        attrs="{'invisible': ['|','|',('state', 'not in', ('wrapped')) ,('stock_atm_process', '==', False),('hide_mv_inv_button', '=', True)]}"/>
 
                         <field name="state" widget="statusbar"/>
                     </header>

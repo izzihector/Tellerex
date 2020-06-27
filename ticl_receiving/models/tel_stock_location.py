@@ -261,6 +261,16 @@ class StockMove(models.Model):
  #                if line.repalletize == "y":
  #                    line.service_price = rec_log.service_price +  line.associated_fees + line.repalletize_charge
 
+    #Old ATM Processing from Inventory
+    def confirm_atm_process(self):
+        receipt_log_line_id = self.env['ticl.receipt.log.summary.line'].search(
+                       [('tel_unique_no', '=', self.tel_unique_no)], limit=1)
+        receipt_log_line_id.write({'stock_atm_process':True})
+        action =self.env.ref('ticl_receiving.ticl_action_receipt_log_summary_placards').read()[0]
+        action['views'] = [(self.env.ref('ticl_receiving.ticl_receipt_log_summary_form_view_placard').id, 'form')]
+        action['res_id'] = receipt_log_line_id.id
+        return action
+
     move_to_inv = fields.Selection([('y', 'Y'), ('n', 'N')], string="Moved to Inventory")
     tel_receive_id = fields.Many2one("tel.receiving", string="TEL Received ID")
     tel_receipt_id = fields.Many2one("ticl.receipt", string="TEL Receipt ID")
@@ -315,6 +325,22 @@ class StockMove(models.Model):
     #                                      string="Misc Log Time")
     scrap_tel_note = fields.Char(string='Scrap Comments')
     sending_location_id = fields.Many2one('res.partner', string='Origin Location')
+    categ_name = fields.Char('Category Name',compute="categ_name_comp",store=True)
+    condition_check = fields.Boolean('Check condition for Processing',store=True,compute="condition_check_comp")
+
+    # @api.one
+    @api.depends('categ_id')
+    def categ_name_comp(self):
+        for ids in self:
+            if ids.categ_id.name == 'ATM':
+                self.categ_name = 'ATM'
+
+    # @api.one
+    @api.depends('condition_id')
+    def condition_check_comp(self):
+        for ids in self:
+            if ids.condition_id.name not in ('New','Factory Sealed','Refurb Complete'):
+                self.condition_check = True
 
     @api.onchange('misc_log_time', 'misc_charges')
     def _total_misc_charges(self):

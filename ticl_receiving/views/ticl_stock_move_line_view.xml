@@ -8,9 +8,21 @@
                 <xpath expr="//form" position="attributes">
                     <attribute name="edit">1</attribute>
                     </xpath>
-                <xpath expr="//form/header" position="attributes">
+                <!-- <xpath expr="//form/header" position="attributes">
                     <attribute name="invisible">1</attribute>
-                </xpath>
+                </xpath> -->
+                <xpath expr="//form/header" position="replace">
+                <header>
+                        <field name="status" invisible="1"/>
+                        <field name="condition_check" invisible="1"/>
+                        <field name="categ_name" invisible="1"/>
+                    <button name="confirm_atm_process" class="oe_highlight" 
+                        string="ATM Processing" 
+                        type="object" attrs="{'invisible':['|','|',('categ_name','!=','ATM'),('condition_check','!=',True),('status','!=','inventory')]}"
+                        />
+                        </header>
+                    </xpath>
+                
                 <xpath expr="//group" position="replace">
                    <div class="oe_button_box" name="button_box">
                         <button name="update_entries_model" icon="fa-edit" 

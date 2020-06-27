@@ -11,6 +11,16 @@ class TiclStockMoveLine(models.Model):
     _inherit = "stock.move.line"
     _order = 'tel_unique_no desc, id desc'
 
+    #Old ATM Processing from Inventory
+    def confirm_atm_process(self):
+        receipt_log_line_id = self.env['ticl.receipt.log.summary.line'].search(
+                       [('tel_unique_no', '=', self.tel_unique_no)], limit=1)
+        receipt_log_line_id.write({'stock_atm_process':True})
+        action =self.env.ref('ticl_receiving.ticl_action_receipt_log_summary_placards').read()[0]
+        action['views'] = [(self.env.ref('ticl_receiving.ticl_receipt_log_summary_form_view_placard').id, 'form')]
+        action['res_id'] = receipt_log_line_id.id
+        return action    
+
     order_from_receipt = fields.Boolean(string='Order from Receipt')
     product_id = fields.Many2one("product.product",string="Product ID")
     categ_id = fields.Many2one("product.category",string="type")
@@ -78,6 +88,22 @@ class TiclStockMoveLine(models.Model):
     sale_commission = fields.Char('Sale Commission')
     sale_check_number = fields.Char('Sale Check Number')
     sending_location_id = fields.Many2one('res.partner', string='Origin Location')
+    categ_name = fields.Char('Category Name',compute="categ_name_comp",store=True)
+    condition_check = fields.Boolean('Check condition for Processing',store=True,compute="condition_check_comp")
+
+    # @api.one
+    @api.depends('categ_id')
+    def categ_name_comp(self):
+        for ids in self:
+            if ids.categ_id.name == 'ATM':
+                self.categ_name = 'ATM'
+
+    # @api.one
+    @api.depends('condition_id')
+    def condition_check_comp(self):
+        for ids in self:
+            if ids.condition_id.name not in ('New','Factory Sealed','Refurb Complete'):
+                self.condition_check = True    
 
 
     #@api.multi
