@@ -1089,6 +1089,17 @@ class ticl_receipt_log_summary_line(models.Model):
         ('sold', 'Sold'),('cancel', 'Cancelled'),('recycled', 'Recycled')], string='Receipt Status', default='inventory')
 
     custom_hide_condition = fields.Boolean(string="Hide Condition", compute='get_hide_condition_user')
+    stock_atm_process = fields.Boolean('ATM Process from Inventory')
+
+
+    # @api.multi
+    def stock_atm_process_done(self):
+        self.tel_cod='Y'
+        self.hide_mv_inv_button =True
+        mv_id = self.env['stock.move'].search([('tel_unique_no','=',self.tel_unique_no),('order_from_receipt','=',True),('condition_id','!=',False)])
+        if mv_id not in (False,[],''):
+            mv_id.write({'tel_cod':'Y'})
+
 
 # This Function for CLeaned massege PopUP
     @api.onchange('atm_cleaned')
