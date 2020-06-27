@@ -1477,10 +1477,10 @@ class ticl_receipt_log_summary_line(models.Model):
                             field_id = 'attachment_ids'
                         if sub_folder_name == "HDD":
                             table = 'class_ir_attachmentsepp_rel'
-                            field_id = 'attachment_ids_epp'
+                            field_id = 'attachment_ids_hdd'
                         if sub_folder_name == "EPP":
                             table = 'class_ir_attachmentshdd_rel'
-                            field_id = 'attachment_ids_hdd'
+                            field_id = 'attachment_ids_epp'
                         self._cr.execute("""
                                                 INSERT INTO {0} (class_id,
                                                 {1}) VALUES({2},{3});
