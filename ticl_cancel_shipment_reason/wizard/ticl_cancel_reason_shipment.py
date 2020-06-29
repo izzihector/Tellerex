@@ -24,6 +24,15 @@ class TiclShipmentCancel(models.TransientModel):
         self.ensure_one()
         act_close = {'type': 'ir.actions.act_window_close'}
         shipment_ids = self._context.get('active_ids')
+        shipment = self.env['ticl.shipment.log'].browse(shipment_ids)
+        shipment_line = self.env['ticl.shipment.log.line'].search([('ticl_ship_id', 'in', shipment.ids),
+                                                                   ('stand_attached', '=', True)])
+        # shipment.sudo().is_notified = False
+        if shipment_ids:
+            print("shipment lin \n", shipment_line)
+            for line in shipment_line:
+
+                line.unlink()
         if shipment_ids is None:
             return act_close
         assert len(shipment_ids) == 1, "Only 1 sale ID expected"
