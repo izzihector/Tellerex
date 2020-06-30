@@ -130,7 +130,7 @@ class import_update_data(models.TransientModel):
                             receipt.sudo().write(vals)
 
                     elif self.import_type == 'update_COD':
-                        recipt_obj = self.env['stock.move.line']
+                        recipt_obj = self.env['ticl.receipt.log.summary.line']
                         col1 = sheet.cell(row, 0).value
                         col1 = int(col1)
                         print("----col1",col1)
