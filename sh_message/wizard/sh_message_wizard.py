@@ -36,13 +36,28 @@ class stand_not_available(models.TransientModel):
             return self.env.context.get("message")
         return False
 
-    name = fields.Html(string="Stand Not Available", readonly=True, default=get_default)
+    def get_default_button(self):
+        if self.env.context.get("hide_button", False):
+            return self.env.context.get("hide_button")
+        return False
+
+    name = fields.Html(string="Stand Availability", readonly=True, default=get_default)
+    hide_button = fields.Boolean(string="Hide button",default=get_default_button)
 
     def byepass_stand(self):
         self.env.context = dict(self.env.context)
         self.env.context.update({'byepass': True})
+        self.env.context.update({'no_byepass': True})
         ship_id = self._context.get('active_id')
         ship = self.env['ticl.shipment.log'].browse(ship_id)
         return ship.ticl_echo_shipment()
+
+    def available_byepass_stand(self):
+        self.env.context = dict(self.env.context)
+        self.env.context.update({'no_byepass': True})
+        ship_id = self._context.get('active_id')
+        ship = self.env['ticl.shipment.log'].browse(ship_id)
+        return ship.ticl_echo_shipment()
+
 
 

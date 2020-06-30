@@ -44,11 +44,15 @@
 				<field name="name"/>
 
 				<footer>
-					<b>Note </b>:- By Clicking on Yes, this Shipment will be processed without stand.
+					<b>Note </b>:- By clicking on <b>Continue without Stand</b>, this Shipment will be processed without any stand(s).
 					<br/>
-					<button name = "byepass_stand" type="object" string="Yes" class="btn-primary" />
+					<field name="hide_button" invisible="1"/>
+					<button name="available_byepass_stand" type="object" string="Continue with Available Stand"
+							class="btn-primary" attrs="{'invisible':[('hide_button','=',True)]}"/>
+					<button name="byepass_stand" type="object" string="Continue without Stand"
+							class="btn-primary" style="background-color: #ff4d4d;"/>
 					OR
-					<button string="No" class="oe_link" special="cancel" />
+					<button string="Cancel" type="object" class="oe_link" special="cancel" />
 				</footer>
 
 

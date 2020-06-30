@@ -124,32 +124,29 @@ class TiclStockMoveLine(models.Model):
         return result
 
 
-    # def write(self, values):
-    #     print("\n Inside write")
-    #     for i in self:
-    #         print("inside move line ")
-    #         tel_receipt_summary_line = self.env['ticl.receipt.log.summary.line'].search(
-    #             [('tel_unique_no', '=', i.tel_unique_no)])
+    def write(self, values):
+        for i in self:
+            print("inside move line ")
+            tel_receipt_summary_line = self.env['ticl.receipt.log.summary.line'].search(
+                [('tel_unique_no', '=', i.tel_unique_no)])
 
-
-    #         if 'condition_id' in values.keys():
-    #             if values['condition_id'] == 5:
-    #                 x = self.env['ticl.refurbishment.charge'].search([('name', '=', 'Refurb Complete')])
-    #                 values['refurbishment_charges'] = x.service_price
-    #             elif values['condition_id'] != 5:
-    #                 values['refurbishment_charges'] = 0
-    #             if 'condition' not in dict(self._context):
-    #                 self.inv_update_condition(values)
-    #         if 'tel_note' in values.keys():
-    #             tel_receipt_summary_line.write({'tel_note': values['tel_note']})
-    #         if 'cod_comments' in values.keys():
-    #             tel_receipt_summary_line.write({'cod_comments': values['cod_comments']})
-    #         if 'scrap_tel_note' in values.keys():
-    #             print("inside1")
-    #             if self.scrap_line_id:
-    #                 self.scrap_line_id.write({'scrap_tel_note': values['scrap_tel_note']})
-
-    #     return super(TiclStockMoveLine, self).write(values)
+            if 'condition_id' in values.keys():
+                if values['condition_id'] == 5:
+                    x = self.env['ticl.refurbishment.charge'].search([('name', '=', 'Refurb Complete')])
+                    values['refurbishment_charges'] = x.service_price
+                elif values['condition_id'] != 5:
+                    values['refurbishment_charges'] = 0
+                if 'condition' not in dict(self._context):
+                    self.inv_update_condition(values)
+            if 'tel_note' in values.keys():
+                tel_receipt_summary_line.write({'tel_note': values['tel_note']})
+            if 'cod_comments' in values.keys():
+                tel_receipt_summary_line.write({'cod_comments': values['cod_comments']})
+            # if 'scrap_tel_note' in values.keys():
+            #     print("inside1")
+            #     if self.scrap_line_id:
+            #         self.scrap_line_id.write({'scrap_tel_note': values['scrap_tel_note']})
+        return super(TiclStockMoveLine, self).write(values)
 
     def inv_update_condition(self, vals):
         print("\n \n inside inv update condiytion of stock move line ")
