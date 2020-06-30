@@ -1196,8 +1196,8 @@ class ticl_receipt_log_summary_line(models.Model):
                 values['atm_photographed'] = True
                 values['atm_data_destroyed'] = True
 
-        if 'processed_date' in values.keys():
-            values['processed_date'] = datetime.now()
+        # if 'processed_date' in values.keys():
+        #     values['processed_date'] = datetime.now()
         if 'atm_wrapped' in values.keys() and self.in_inventory == True:
             values['state'] = 'done' 
         return super(ticl_receipt_log_summary_line, self).write(values)
