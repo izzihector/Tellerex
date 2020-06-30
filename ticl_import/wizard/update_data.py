@@ -154,7 +154,7 @@ class import_update_data(models.TransientModel):
                             # vals.update({'epp_serial_num':col3})
                             # vals.update({'hdd_manufacturer':hdd})
 
-                            processed_date = sheet.cell(row,2).value
+                            processed_date = sheet.cell(row,1).value
                             # if not processed_date:
                             #     raise Exception("Approval date field is blank in row %s , Please review the file."% (row + 1))
                             if processed_date:
