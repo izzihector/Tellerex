@@ -29,8 +29,8 @@ class ticl_receipt(models.Model):
     #Unique Receiving Number
     @api.model
     def create(self, vals):
-        sequence = self.env['ir.sequence'].next_by_code('ticl.receipt') or '/'
-        vals['name'] = sequence
+        # sequence = self.env['ir.sequence'].next_by_code('ticl.receipt') or '/'
+        # vals['name'] = sequence
         if 'ticl_receipt_lines' in vals.keys():
             for recs in range(len(vals['ticl_receipt_lines'])):
                 vals['ticl_receipt_lines'][recs][2]['tel_type'] = vals['ticl_receipt_lines'][recs][2]['type_dup']

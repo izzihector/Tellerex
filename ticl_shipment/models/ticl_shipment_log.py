@@ -297,8 +297,8 @@ class ticl_shipment_log(models.Model):
     #Create method in shipment draft status
     @api.model
     def create(self, vals):
-        sequence = self.env['ir.sequence'].next_by_code('ticl.shipment.log') or '/'
-        vals['name'] = sequence
+        # sequence = self.env['ir.sequence'].next_by_code('ticl.shipment.log') or '/'
+        # vals['name'] = sequence
         dropship = vals.get('dropship_state', '')
 
         if 'ticl_ship_lines' in vals:
