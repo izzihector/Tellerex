@@ -90,6 +90,12 @@ class TiclStockMoveLine(models.Model):
     sending_location_id = fields.Many2one('res.partner', string='Origin Location')
     categ_name = fields.Char('Category Name',compute="categ_name_comp",store=True)
     condition_check = fields.Boolean('Check condition for Processing',store=True,compute="condition_check_comp")
+    origin_sort = fields.Char('Category Name',compute="origin_sort_comp",store=True)
+
+    @api.depends('origin')
+    def origin_sort_comp(self):
+        for ids in self:
+            ids.origin_sort = ids.origin
 
     # @api.one
     @api.depends('categ_id')
