@@ -187,7 +187,7 @@ class ticl_receipt_log_summary(models.Model):
                                       ('LTL', 'LTL')], string='ShipmentMode')
 
     echo_call = fields.Selection([('yes', 'YES'),
-                                      ('no', 'NO')], string='Call Echo(Optional)')
+                                      ('no', 'NO')], string='Call Transport(OPT)')
     response_message = fields.Char(string='Responce Message') 
     error_code = fields.Char(string='Error Code')   
     error_message = fields.Char(string='Error Message')   

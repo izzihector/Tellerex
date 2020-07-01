@@ -772,7 +772,7 @@ class ticl_chase_weekly_report(models.TransientModel):
                     self._cr.execute("""select * from ticl_receipt_log_summary_line  where state in ('wrapped', 'done') and condition_id in {0} and tel_cod = 'Y' order by CAST(processed_date AS DATE) DESC,CAST(received_date AS DATE) ASC;""".format(tuple(cond_ids)))
                     summary_line_id = self._cr.dictfetchall()
                     for line_ids in summary_line_id:
-                        status = self.env['stock.move'].search([('tel_unique_no', '=', line_ids["tel_unique_no"])],limit=1)
+                        status = self.env['stock.move.line'].search([('tel_unique_no', '=', line_ids["tel_unique_no"])],limit=1)
                         if status:
                             ids = self.env['ticl.receipt.log.summary.line'].search([('id', '=', line_ids['id'])])
                             if self.warehouse_ids.ids != []:

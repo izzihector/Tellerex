@@ -67,7 +67,7 @@
                         </group>
                         <group> 
                             <field name="echo_call" required="1" 
-                                placeholder="Please select Echo Call(Optional)"/>
+                                placeholder="Please select Call Transport(Optional)"/>
                             <field name="total_pallet" required="1"/>
                             <field name="shipping_carrier_id" style="width:100%"
                                 invisible="1"/>
@@ -343,7 +343,7 @@
                         </group>
                         <group> 
                             <field name="echo_call" required="1" 
-                                placeholder="Please select Echo Call(Optional)"/>
+                                placeholder="Please select Call Transport(Optional)"/>
                             <field name="total_pallet" required="1"/>
                             <field name="shipping_carrier_name" invisible="1"/>
                             <field name="shipping_carrier_id" style="width:100%"
