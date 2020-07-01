@@ -262,7 +262,7 @@ class ticl_receipt(models.Model):
                                       ('LTL', 'LTL')], string='Shipment Mode')
 
     echo_call = fields.Selection([('yes', 'YES'),
-                                      ('no', 'NO')], string='Call Transport(Optional)', default='no')
+                                      ('no', 'NO')], string='Call Transport(OPT)', default='no')
     response_message = fields.Char(string='Responce Message') 
     error_code = fields.Char(string='Error Code')   
     error_message = fields.Char(string='Error Message')   

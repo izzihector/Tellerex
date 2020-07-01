@@ -204,7 +204,7 @@ class ticl_shipment_log(models.Model):
     total_signage = fields.Char(string='Total Signage', compute='count_total_signage')
     total_accessory = fields.Char(string='Total Accessory', compute='count_total_accessory')
     pallet_id_name_visible = fields.Char(string='Pallet ID',track_visibility='onchange')
-    echo_call = fields.Selection([('yes', 'YES'),('no', 'NO')], string='Call Transport(Optional)')
+    echo_call = fields.Selection([('yes', 'YES'),('no', 'NO')], string='Call Transport(OPT)')
     activity_date =  fields.Date(string='Activity Start Date')
     chase_fright_cost = fields.Float(string='Chase Fright Charge')
     miles = fields.Integer(string='Miles')
