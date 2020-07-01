@@ -156,7 +156,7 @@ class import_update_data(models.TransientModel):
                         # print("----receipt",receipt)
                         # epp = self.env['ticl.epp.manufacturer'].search([('name','=',col2)])
                         # hdd = self.env['ticl.hdd.manufacturer'].search([('name','=',col4)])
-                        emp = self.env['hr.employee'].search([('name','=',col3)])
+                        emp = self.env['hr.employee'].search([('name','=',col3),('tel_cod','=','Y')])
                         if receipt:
                             vals = {}
                             # vals.update({'epp_manufacturer':epp})
