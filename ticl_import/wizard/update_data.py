@@ -66,10 +66,10 @@ class import_update_data(models.TransientModel):
                         receipt = recipt_obj.search([('tel_unique_no','=',col1)])
                         if receipt:
                             vals = {}
-                            tel_note = sheet.cell(row,1).value
-                            vals.update({'tel_note':tel_note})
+                            # tel_note = sheet.cell(row,1).value
+                            # vals.update({'tel_note':tel_note})
   
-                            cod_comments = sheet.cell(row,2).value
+                            cod_comments = sheet.cell(row,1).value
                             vals.update({'cod_comments':cod_comments})
                             receipt.sudo().write(vals)
 
@@ -85,13 +85,13 @@ class import_update_data(models.TransientModel):
                         if receipt:
                             vals = {}
                             print("----receipt",receipt)
-                            tel_note = sheet.cell(row,1).value
-                            vals.update({'tel_note':tel_note})
+                            # tel_note = sheet.cell(row,1).value
+                            # vals.update({'tel_note':tel_note})
 
-                            scrap_note = sheet.cell(row,2).value
-                            vals.update({'scrap_tel_note':scrap_note})
+                            # scrap_note = sheet.cell(row,2).value
+                            # vals.update({'scrap_tel_note':scrap_note})
   
-                            cod_comments = sheet.cell(row,3).value
+                            cod_comments = sheet.cell(row,1).value
                             vals.update({'cod_comments':cod_comments})
 
                             receipt.sudo().write(vals) 
