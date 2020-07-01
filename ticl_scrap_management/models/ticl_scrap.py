@@ -19,6 +19,11 @@ class ticl_scrap_stock(models.Model):
         'name':self.name,'email':self.env.user.company_id.email,'phone':self.env.user.company_id.phone,
                  'website':self.env.user.company_id.website}]
 
+    def get_current_url(self):
+        url = self.env['ir.config_parameter'].get_param('web.base.url')
+        return [{'url': url + '/ticl_scrap_management/static/img/0001.jpg'}]
+
+    tot_count = []
     def get_scrap_line_data(self, scrap_id):
         count_lines = len(self.scrap_lines.ids)
         lines = []
@@ -35,6 +40,58 @@ class ticl_scrap_stock(models.Model):
                                   'serial_number': ids.lot_id.name,
                                   'tel_id_no': mvs.tel_unique_no})
                     index = index + 1
+        return lines
+
+    def get_scrap_line_data_2(self,scrap_id):
+        count_lines = len(self.scrap_lines.ids)
+        lines = []
+        count=[]
+        index=0
+        scrap_lines = self.env['stock.scrap.line'].search([('id','in',self.scrap_lines.ids)],order='id desc')
+        for sc_l in scrap_lines:
+            count.append(sc_l.scrap_qty)
+        if sum(count) <=18:
+            return [{'no':'False'}]
+        for ids in scrap_lines:
+            move = self.env['stock.move.line'].search([('scrap_line_id','=',ids.id)],order='id desc')
+            for mvs in move:
+                if index <= 18:
+                    index=index+1
+                if index > 18 and index <= 44:
+                    lines.append({'no':index,'manufacturer':ids.manufacturer_id.name,
+                            'description':ids.tel_type.name,
+                            'work_order_no': self.name,
+                            'part_no':ids.product_id.name,
+                            'serial_number':ids.lot_id.name,
+                            'tel_id_no':mvs.tel_unique_no})
+                    index=index+1
+
+        return lines
+
+
+    def get_scrap_line_data_3(self,scrap_id):
+        count_lines = len(self.scrap_lines.ids)
+        lines = []
+        count=[]
+        index=0
+        scrap_lines = self.env['stock.scrap.line'].search([('id','in',self.scrap_lines.ids)],order='id desc')
+        for sc_l in scrap_lines:
+            count.append(sc_l.scrap_qty)
+        if sum(count) <=18:
+            return [{'no':'False'}]
+        for ids in scrap_lines:
+            move = self.env['stock.move.line'].search([('scrap_line_id','=',ids.id)],order='id desc')
+            for mvs in move:
+                if index <= 44:
+                    index=index+1
+                if index >= 45 and index <= 69:
+                    lines.append({'no':index,'manufacturer':ids.manufacturer_id.name,
+                            'description':ids.tel_type.name,
+                            'work_order_no': self.name,
+                            'part_no':ids.product_id.name,
+                            'serial_number':ids.lot_id.name,
+                            'tel_id_no':mvs.tel_unique_no})
+                    index=index+1
         return lines
     def _get_default_location_id(self):
         location = self.env['stock.location'].search([('is_location', '=', True),('name','=','Chase Atlanta')], limit=1)
