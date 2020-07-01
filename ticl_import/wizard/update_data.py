@@ -141,7 +141,7 @@ class import_update_data(models.TransientModel):
                     elif self.import_type == 'update_COD':
                         recipt_obj = self.env['ticl.receipt.log.summary.line']
                         col1 = sheet.cell(row, 0).value
-                        col1 = int(col1)
+                        col1 = col1
                         print("----col1",col1)
                         #col2 = sheet.cell(row, 1).value
                         col3 = sheet.cell(row, 2).value
