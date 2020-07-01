@@ -67,7 +67,7 @@ class import_update_data(models.TransientModel):
                         if receipt:
                             vals = {}
                             tel_note = sheet.cell(row,1).value
-                            vals.update({'tel_note':status})
+                            vals.update({'tel_note':tel_note})
   
                             tel_cod = sheet.cell(row,2).value
                             vals.update({'tel_cod':tel_cod})
@@ -86,7 +86,7 @@ class import_update_data(models.TransientModel):
                             vals = {}
                             print("----receipt",receipt)
                             tel_note = sheet.cell(row,1).value
-                            vals.update({'tel_note':status})
+                            vals.update({'tel_note':tel_note})
 
                             scrap_note = sheet.cell(row,2).value
                             vals.update({'scrap_tel_note':scrap_note})
