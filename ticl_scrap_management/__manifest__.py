@@ -15,7 +15,8 @@
     "website": "http://www.delaplex.in",
     "author": "Delaplex",
     "contributors": ["Delaplex Team"],
-    "depends": ['web', 'base', 'mail', 'product', 'sale_management','sale','sale_stock','stock','purchase','account','ticl_management','ticl_receiving','ticl_shipment','ticl_sale'],
+    "depends": ['web', 'base', 'mail', 'product', 'sale_management','sale','sale_stock','stock','purchase','account',
+                'ticl_management','ticl_receiving','ticl_shipment','ticl_sale'],
     "data": [ 
         'data/recycle_report_format.xml',
         'security/ir.model.access.csv',
