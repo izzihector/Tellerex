@@ -69,8 +69,8 @@ class import_update_data(models.TransientModel):
                             tel_note = sheet.cell(row,1).value
                             vals.update({'tel_note':tel_note})
   
-                            tel_cod = sheet.cell(row,2).value
-                            vals.update({'tel_cod':tel_cod})
+                            cod_comments = sheet.cell(row,2).value
+                            vals.update({'cod_comments':cod_comments})
                             receipt.sudo().write(vals)
 
                     elif self.import_type == 'update_status_stock':
@@ -91,8 +91,8 @@ class import_update_data(models.TransientModel):
                             scrap_note = sheet.cell(row,2).value
                             vals.update({'scrap_tel_note':scrap_note})
   
-                            tel_cod = sheet.cell(row,3).value
-                            vals.update({'tel_cod':tel_cod})
+                            cod_comments = sheet.cell(row,3).value
+                            vals.update({'cod_comments':cod_comments})
 
                             receipt.sudo().write(vals) 
 
