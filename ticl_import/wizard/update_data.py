@@ -134,7 +134,7 @@ class import_update_data(models.TransientModel):
                         col1 = sheet.cell(row, 0).value
                         col1 = int(col1)
                         print("----col1",col1)
-                        col2 = sheet.cell(row, 1).value
+                        #col2 = sheet.cell(row, 1).value
                         col3 = sheet.cell(row, 2).value
                         col4 = sheet.cell(row, 3).value
                         col5 = sheet.cell(row, 4).value
@@ -145,17 +145,28 @@ class import_update_data(models.TransientModel):
                         col10 = sheet.cell(row, 9).value
                         receipt = recipt_obj.search([('tel_unique_no','=',col1)])
                         print("----receipt",receipt)
-                        epp = self.env['ticl.epp.manufacturer'].search([('name','=',col2)])
+                        #epp = self.env['ticl.epp.manufacturer'].search([('name','=',col2)])
                         hdd = self.env['ticl.hdd.manufacturer'].search([('name','=',col4)])
-                        emp = self.env['hr.employee'].search([('name','=',col6)])
+                        emp = self.env['hr.employee'].search([('name','=',col3)])
                         if receipt:
                             vals = {}
+
+                            processed_date = sheet.cell(row,1).value
+                            if not processed_date:
+                                raise Exception("Approval date field is blank in row %s , Please review the file."% (row + 1))
+                            if processed_date:
+                                if type(processed_date) is str:  
+                                    appr_date = datetime.strptime(processed_date, "%m/%d/%Y")
+                                else:
+                                    appr_date = datetime(*xlrd.xldate_as_tuple(sale_date_pick, workbook.datemode))
+                                vals.update({'processed_date':appr_date.strftime("%Y-%m-%d")})                        
+                            
                             # vals.update({'epp_manufacturer':epp})
                             # vals.update({'epp_serial_num':col3})
                             # vals.update({'hdd_manufacturer':hdd})
                             # vals.update({'hdd_serial_num':col5})
-                            # vals.update({'cod_employee_id':emp})
-                            vals.update({'tel_cod':col7})
+                            vals.update({'cod_employee_id':emp})
+                            #vals.update({'tel_cod':col7})
                             # vals.update({'atm_cleaned':col8})
                             # vals.update({'atm_photographed':col9})
                             # vals.update({'atm_data_destroyed':col10})
