@@ -13,7 +13,29 @@ class ticl_scrap_stock(models.Model):
     def count_moves(self):
         moves = self.mapped('scrap_lines.move_id')
         self.move_count = len(moves) if moves else 0
-        
+
+    def get_scrap_data(self,scrap_id):
+        return [{"lines":len(self.scrap_lines.ids),"created_date":self.date_expected_new.strftime("%m-%d-%Y"),
+        'name':self.name,'email':self.env.user.company_id.email,'phone':self.env.user.company_id.phone,
+                 'website':self.env.user.company_id.website}]
+
+    def get_scrap_line_data(self, scrap_id):
+        count_lines = len(self.scrap_lines.ids)
+        lines = []
+        index = 1
+        scrap_lines = self.env['stock.scrap.line'].search([('id', 'in', self.scrap_lines.ids)], order='id desc')
+        for ids in scrap_lines:
+            move = self.env['stock.move.line'].search([('scrap_line_id', '=', ids.id)], order='id desc')
+            for mvs in move:
+                if index < 19:
+                    lines.append({'no': index, 'manufacturer': ids.manufacturer_id.name,
+                                  'description': ids.tel_type.name,
+                                  'work_order_no': self.name,
+                                  'part_no': ids.product_id.name,
+                                  'serial_number': ids.lot_id.name,
+                                  'tel_id_no': mvs.tel_unique_no})
+                    index = index + 1
+        return lines
     def _get_default_location_id(self):
         location = self.env['stock.location'].search([('is_location', '=', True),('name','=','Chase Atlanta')], limit=1)
         if location:
@@ -29,12 +51,42 @@ class ticl_scrap_stock(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('cancel', 'Cancelled')], string='Status',
                              default="draft", track_visibility='onchange')
 
+    def update_rec_inv(self):
+        sc = []
+        scraps = self.env['stock.scrap'].search([])
+        mv = self.env['stock.move.line'].search([('status', '=', 'recycled'), ('scrap_line_id', '!=', False)])
+        for line_ids in mv:
+            sc.append(line_ids.scrap_line_id.id)
+        for scrap_id in scraps:
+            for ids in scrap_id.scrap_lines:
+                if ids.id not in sc:
+                    move = self.env['stock.move.line'].search(
+                        [('product_id', '=', ids.product_id.id), ('condition_id', '!=', False),
+                         ('order_from_receipt', '!=', False), ('tel_unique_no', '!=', False),
+                         ('status', '=', 'recycled'), ('scrap_line_id', '=', False)], limit=1)
+                    if move.categ_id.name == 'ATM':
+                        if ids.lot_id.name == move.serial_number:
+                            move.write({'scrap_line_id': ids.id})
+                    else:
+                        move.write({'scrap_line_id': ids.id})
+
+
+    def download_recycle_report(self):
+        report = {
+            'type': 'ir.actions.report',
+            'report_name': 'ticl_scrap_management.generate_recycle_report',
+            'report_type': 'qweb-pdf',
+            'report_file': 'ticl_scrap_management.generate_recycle_report',
+            'name': 'stock.scrap',
+        }
+        return report
+
     def revert_scrap(self):
         self.state = 'draft'
         for ids in self.scrap_lines:
             condition_id = self.env['ticl.condition'].search([('name', '=', 'To Recommend')])
             if ids.lot_id.name:
-                ids.move_id.write({'status': 'assigned'})
+                ids.move_line_id.write({'status': 'assigned'})
             else:
                 x = self.env['stock.move.line'].search(
                     [('product_id', '=', ids.product_id.id),
@@ -315,9 +367,9 @@ class ticl_scrap_stock_line(models.Model):
     def onchange_product_type(self):
         if self.tel_type.name == 'ATM':
             lot_id = self.env['stock.move.line'].search([('serial_number', '=', self.lot_id.name)], limit=1)
-            self.move_id = lot_id.id
+            self.move_line_id = lot_id.id
         else:
-            self.move_id = ""
+            self.move_line_id = ""
         if self.tel_type.name == 'ATM':
                 self.ticl_checked = False
                 self.count_number = 1

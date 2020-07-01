@@ -930,7 +930,7 @@ class ticl_chase_weekly_report(models.TransientModel):
                         else:
                             c5 = ''
                         worksheet.write(row, 5, c5 or '')
-                        worksheet.write(row, 6, ids.ticl_warehouse_id.name or '')
+                        worksheet.write(row, 6, ids.location_dest_id.name or '')
                         worksheet.write(row, 7, ids.condition_id.name or '')
                         if ids.categ_id.name == "ATM":
                             worksheet.write(row, 8, "Unit" or '')
@@ -1051,7 +1051,6 @@ class ticl_chase_weekly_report(models.TransientModel):
                 data.sort(key=lambda x: x[14])
                 data.sort(key=lambda x: x[6])
                 data.sort(key=lambda x: x[7])
-                # data.sort(key = lambda x: datetime.strptime(x[11], "%m-%d-%y"), reverse=True)
                 data.sort(key=lambda x: x[11], reverse=True)
 
                 sheet = wbk.add_sheet(sheet.name)
@@ -1134,7 +1133,6 @@ class ticl_chase_weekly_report(models.TransientModel):
                 data.sort(key=lambda x: x[2])
                 data.sort(key=lambda x: x[1].lower())
                 data.sort(key=lambda x: x[0])
-                # data.sort(key=lambda x: datetime.strptime(x[11], "%m-%d-%y"), reverse=True)
                 data.sort(key=lambda x: x[11], reverse=True)
                 sheet = wbk.add_sheet(sheet.name)
                 sheet.col(0).width = 3000
