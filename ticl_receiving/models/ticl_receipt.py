@@ -482,8 +482,8 @@ class ticl_receipt(models.Model):
                     "ProNumber" : "",
                     "PodSignature" : "",
                     "GlCode" : "",
-                    "AckNotification" : "ssingh@delaplex.in",
-                    "AsnNotification" : "ssingh@delaplex.in",
+                    "AckNotification" : "jpmc-tellerex@googlegroups.com;",
+                    "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
                     "References" : ticl_references
                 }) 
 
@@ -690,8 +690,8 @@ class ticl_receipt(models.Model):
                   "ProNumber" : "",
                   "PodSignature" : "",
                   "GlCode" : " ",
-                  "AckNotification" : "ssingh@delaplex.in;",
-                  "AsnNotification" : "ssingh@delaplex.in;",
+                  "AckNotification" : "jpmc-tellerex@googlegroups.com;",
+                  "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
                   "References" : ticl_references
                 })
 
