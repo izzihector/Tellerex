@@ -9,7 +9,7 @@ import calendar
 
 class TiclStockMoveLine(models.Model):
     _inherit = "stock.move.line"
-    _order = 'tel_unique_no desc, id desc'
+    _order = 'origin desc'
 
     #Old ATM Processing from Inventory
     def confirm_atm_process(self):
@@ -90,6 +90,12 @@ class TiclStockMoveLine(models.Model):
     sending_location_id = fields.Many2one('res.partner', string='Origin Location')
     categ_name = fields.Char('Category Name',compute="categ_name_comp",store=True)
     condition_check = fields.Boolean('Check condition for Processing',store=True,compute="condition_check_comp")
+    origin_sort = fields.Char('Category Name',compute="origin_sort_comp",store=True)
+
+    @api.depends('origin')
+    def origin_sort_comp(self):
+        for ids in self:
+            ids.origin_sort = ids.origin
 
     # @api.one
     @api.depends('categ_id')
@@ -124,32 +130,29 @@ class TiclStockMoveLine(models.Model):
         return result
 
 
-    # def write(self, values):
-    #     print("\n Inside write")
-    #     for i in self:
-    #         print("inside move line ")
-    #         tel_receipt_summary_line = self.env['ticl.receipt.log.summary.line'].search(
-    #             [('tel_unique_no', '=', i.tel_unique_no)])
+    def write(self, values):
+        for i in self:
+            print("inside move line ")
+            tel_receipt_summary_line = self.env['ticl.receipt.log.summary.line'].search(
+                [('tel_unique_no', '=', i.tel_unique_no)])
 
-
-    #         if 'condition_id' in values.keys():
-    #             if values['condition_id'] == 5:
-    #                 x = self.env['ticl.refurbishment.charge'].search([('name', '=', 'Refurb Complete')])
-    #                 values['refurbishment_charges'] = x.service_price
-    #             elif values['condition_id'] != 5:
-    #                 values['refurbishment_charges'] = 0
-    #             if 'condition' not in dict(self._context):
-    #                 self.inv_update_condition(values)
-    #         if 'tel_note' in values.keys():
-    #             tel_receipt_summary_line.write({'tel_note': values['tel_note']})
-    #         if 'cod_comments' in values.keys():
-    #             tel_receipt_summary_line.write({'cod_comments': values['cod_comments']})
-    #         if 'scrap_tel_note' in values.keys():
-    #             print("inside1")
-    #             if self.scrap_line_id:
-    #                 self.scrap_line_id.write({'scrap_tel_note': values['scrap_tel_note']})
-
-    #     return super(TiclStockMoveLine, self).write(values)
+            if 'condition_id' in values.keys():
+                if values['condition_id'] == 5:
+                    x = self.env['ticl.refurbishment.charge'].search([('name', '=', 'Refurb Complete')])
+                    values['refurbishment_charges'] = x.service_price
+                elif values['condition_id'] != 5:
+                    values['refurbishment_charges'] = 0
+                if 'condition' not in dict(self._context):
+                    self.inv_update_condition(values)
+            if 'tel_note' in values.keys():
+                tel_receipt_summary_line.write({'tel_note': values['tel_note']})
+            if 'cod_comments' in values.keys():
+                tel_receipt_summary_line.write({'cod_comments': values['cod_comments']})
+            # if 'scrap_tel_note' in values.keys():
+            #     print("inside1")
+            #     if self.scrap_line_id:
+            #         self.scrap_line_id.write({'scrap_tel_note': values['scrap_tel_note']})
+        return super(TiclStockMoveLine, self).write(values)
 
     def inv_update_condition(self, vals):
         print("\n \n inside inv update condiytion of stock move line ")

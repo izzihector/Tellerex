@@ -13,7 +13,86 @@ class ticl_scrap_stock(models.Model):
     def count_moves(self):
         moves = self.mapped('scrap_lines.move_id')
         self.move_count = len(moves) if moves else 0
-        
+
+    def get_scrap_data(self,scrap_id):
+        return [{"lines":len(self.scrap_lines.ids),"created_date":self.date_expected_new.strftime("%m-%d-%Y"),
+        'name':self.name,'email':self.env.user.company_id.email,'phone':self.env.user.company_id.phone,
+                 'website':self.env.user.company_id.website}]
+
+    def get_current_url(self):
+        url = self.env['ir.config_parameter'].get_param('web.base.url')
+        return [{'url': url + '/ticl_scrap_management/static/img/0001.jpg'}]
+
+    tot_count = []
+    def get_scrap_line_data(self, scrap_id):
+        count_lines = len(self.scrap_lines.ids)
+        lines = []
+        index = 1
+        scrap_lines = self.env['stock.scrap.line'].search([('id', 'in', self.scrap_lines.ids)], order='id desc')
+        for ids in scrap_lines:
+            move = self.env['stock.move.line'].search([('scrap_line_id', '=', ids.id)], order='id desc')
+            for mvs in move:
+                if index < 19:
+                    lines.append({'no': index, 'manufacturer': ids.manufacturer_id.name,
+                                  'description': ids.tel_type.name,
+                                  'work_order_no': self.name,
+                                  'part_no': ids.product_id.name,
+                                  'serial_number': ids.lot_id.name,
+                                  'tel_id_no': mvs.tel_unique_no})
+                    index = index + 1
+        return lines
+
+    def get_scrap_line_data_2(self,scrap_id):
+        count_lines = len(self.scrap_lines.ids)
+        lines = []
+        count=[]
+        index=0
+        scrap_lines = self.env['stock.scrap.line'].search([('id','in',self.scrap_lines.ids)],order='id desc')
+        for sc_l in scrap_lines:
+            count.append(sc_l.scrap_qty)
+        if sum(count) <=18:
+            return [{'no':'False'}]
+        for ids in scrap_lines:
+            move = self.env['stock.move.line'].search([('scrap_line_id','=',ids.id)],order='id desc')
+            for mvs in move:
+                if index <= 18:
+                    index=index+1
+                if index > 18 and index <= 44:
+                    lines.append({'no':index,'manufacturer':ids.manufacturer_id.name,
+                            'description':ids.tel_type.name,
+                            'work_order_no': self.name,
+                            'part_no':ids.product_id.name,
+                            'serial_number':ids.lot_id.name,
+                            'tel_id_no':mvs.tel_unique_no})
+                    index=index+1
+
+        return lines
+
+
+    def get_scrap_line_data_3(self,scrap_id):
+        count_lines = len(self.scrap_lines.ids)
+        lines = []
+        count=[]
+        index=0
+        scrap_lines = self.env['stock.scrap.line'].search([('id','in',self.scrap_lines.ids)],order='id desc')
+        for sc_l in scrap_lines:
+            count.append(sc_l.scrap_qty)
+        if sum(count) <=18:
+            return [{'no':'False'}]
+        for ids in scrap_lines:
+            move = self.env['stock.move.line'].search([('scrap_line_id','=',ids.id)],order='id desc')
+            for mvs in move:
+                if index <= 44:
+                    index=index+1
+                if index >= 45 and index <= 69:
+                    lines.append({'no':index,'manufacturer':ids.manufacturer_id.name,
+                            'description':ids.tel_type.name,
+                            'work_order_no': self.name,
+                            'part_no':ids.product_id.name,
+                            'serial_number':ids.lot_id.name,
+                            'tel_id_no':mvs.tel_unique_no})
+                    index=index+1
+        return lines
     def _get_default_location_id(self):
         location = self.env['stock.location'].search([('is_location', '=', True),('name','=','Chase Atlanta')], limit=1)
         if location:
@@ -26,26 +105,150 @@ class ticl_scrap_stock(models.Model):
     scrap_lines = fields.One2many('stock.scrap.line', 'scrap_id', ondelete='cascade',track_visibility='onchange')
     move_count = fields.Integer(compute="count_moves",track_visibility='onchange')
     date_expected_new = fields.Date('Create Date', store=True,track_visibility='onchange')
-    
+    state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('cancel', 'Cancelled')], string='Status',
+                             default="draft", track_visibility='onchange')
+
+    def update_rec_inv(self):
+        sc = []
+        scraps = self.env['stock.scrap'].search([])
+        mv = self.env['stock.move.line'].search([('status', '=', 'recycled'), ('scrap_line_id', '!=', False)])
+        for line_ids in mv:
+            sc.append(line_ids.scrap_line_id.id)
+        for scrap_id in scraps:
+            for ids in scrap_id.scrap_lines:
+                if ids.id not in sc:
+                    move = self.env['stock.move.line'].search(
+                        [('product_id', '=', ids.product_id.id), ('condition_id', '!=', False),
+                         ('order_from_receipt', '!=', False), ('tel_unique_no', '!=', False),
+                         ('status', '=', 'recycled'), ('scrap_line_id', '=', False)], limit=1)
+                    if move.categ_id.name == 'ATM':
+                        if ids.lot_id.name == move.serial_number:
+                            move.write({'scrap_line_id': ids.id})
+                    else:
+                        move.write({'scrap_line_id': ids.id})
+
+
+    def download_recycle_report(self):
+        report = {
+            'type': 'ir.actions.report',
+            'report_name': 'ticl_scrap_management.generate_recycle_report',
+            'report_type': 'qweb-pdf',
+            'report_file': 'ticl_scrap_management.generate_recycle_report',
+            'name': 'stock.scrap',
+        }
+        return report
+
+    def revert_scrap(self):
+        self.state = 'draft'
+        for ids in self.scrap_lines:
+            condition_id = self.env['ticl.condition'].search([('name', '=', 'To Recommend')])
+            if ids.lot_id.name:
+                ids.move_line_id.write({'status': 'assigned'})
+            else:
+                x = self.env['stock.move.line'].search(
+                    [('product_id', '=', ids.product_id.id),
+                     ('status', '=', 'inventory'),
+                     ('condition_id', '=', condition_id.id)])
+                self.env['stock.move.line'].search([('id','=',x.ids[0])]).write({'status': 'assigned'})
+
     @api.model
-    def create(self, vals_list):
-        if vals_list.get('scrap_lines',False):
-            for line in vals_list.get('scrap_lines'):
+    def create(self, vals):
+        exist_serial_no = []
+        if vals.get('scrap_lines', False):
+            for lines in range(len(vals['scrap_lines'])):
+                print("lem\n \n", range(len(vals['scrap_lines'])))
+                type_id = self.env['product.category'].search([('id', '=', vals['scrap_lines'][lines][2]['tel_type'])])
+
+                condition_id = self.env['ticl.condition'].search([('name', '=', 'To Recommend')])
+                if type_id.name != "ATM":
+                    if vals['scrap_lines'][lines][2].get('move_line_id', False):
+
+                        x = self.env['stock.move.line'].search(
+                            [('id', '=', vals['scrap_lines'][lines][2]['move_line_id'])], limit=1)
+                    else:
+                        x = self.env['stock.move.line'].search(
+                            [('product_id', '=', vals['scrap_lines'][lines][2]['product_id']),
+                             ('ticl_warehouse_id', '=', vals['location_id']),
+                             ('status', '=', 'inventory'),
+                             ('condition_id', '=', condition_id.id)], limit=1)
+                    vals['scrap_lines'][lines][2]['move_line_id'] = x.id
+                    vals['scrap_lines'][lines][2]['state'] = 'draft'
+                    self.env['stock.move.line'].search(
+                        [('id', '=', x.id)]).write({'status': 'assigned'})
+                else:
+                    print("inside ATM")
+                    exist_serial_no.append(vals['scrap_lines'][lines][2]['lot_id'])
+                    if 'move_line_id' in vals['scrap_lines'][lines][2]:
+                        x = self.env['stock.move.line'].search([('id', '=', vals['scrap_lines'][lines][2]['move_line_id'])])
+
+                    else:
+                        x = self.env['stock.move.line'].search(
+                            [('product_id', '=', vals['scrap_lines'][lines][2]['product_id']),
+                             ('ticl_warehouse_id', '=', vals['location_id']),
+                             ('status', '=', 'inventory'),
+                             ('condition_id', '=', condition_id.id)], limit=1)
+                    vals['scrap_lines'][lines][2]['move_line_id'] = x.id
+                    vals['scrap_lines'][lines][2]['state'] = 'draft'
+                    self.env['stock.move.line'].search([('id', '=', x.id)]).write({'status': 'assigned'})
+            for line in vals.get('scrap_lines'):
                 product_id = line[2].get('product_id')
                 product = self.env['product.product'].browse(product_id)
                 uom = product.product_tmpl_id.uom_id
-                line[2].update({'product_uom_id':uom.id})
-                vals_list.update({'product_id':product_id,'product_uom_id':uom.id})
-            return super(ticl_scrap_stock, self).create(vals_list)
+                line[2].update({'product_uom_id': uom.id})
+                vals.update({'product_id': product_id, 'product_uom_id': uom.id})
+            if exist_serial_no:
+                dup_ser = list(set([x for x in exist_serial_no if exist_serial_no.count(x) > 1]))
+                if dup_ser:
+                    raise UserError("Duplicate Serial Numbers not allowed")
+            return super(ticl_scrap_stock, self).create(vals)
+
         else:
             try:
-                return super(ticl_scrap_stock, self).create(vals_list)
-            except:
+                return super(ticl_scrap_stock, self).create(vals)
 
+            except:
                 raise UserError(_("No Scrap Items"))
 
+    def write(self, vals):
+        if vals.get('scrap_lines', False):
+            for lines in range(len(vals['scrap_lines'])):
 
+                if vals['scrap_lines'][lines][2] != False and isinstance(vals['scrap_lines'][lines][1], int) == False:
+                    type_id = self.env['product.category'].search(
+                        [('id', '=', vals['scrap_lines'][lines][2]['tel_type'])])
+                    condition_id = self.env['ticl.condition'].search([('name', '=', 'To Recommend')])
+                    if type_id.name != "ATM":
+                        if vals['scrap_lines'][lines][2].get('move_line_id', False):
+                            x = self.env['stock.move.line'].search(
+                                [('id', '=', vals['scrap_lines'][lines][2]['move_line_id'])], limit=1)
+                        else:
+                            x = self.env['stock.move.line'].search(
+                                [('product_id', '=', vals['scrap_lines'][lines][2]['product_id']),
+                                 ('ticl_warehouse_id', '=', self.location_id.id),
+                                 ('status', '=', 'inventory'),
+                                 ('condition_id', '=', condition_id.id)], limit=1)
 
+                        vals['scrap_lines'][lines][2]['move_line_id'] = x.id
+                        vals['scrap_lines'][lines][2]['state'] = 'draft'
+                        self.env['stock.move.line'].search(
+                            [('id', '=', x.id)]).write({'status': 'assigned'})
+
+                    else:
+                        if 'move_line_id' in vals['scrap_lines'][lines][2]:
+                            x = self.env['stock.move.line'].search([('id', '=', vals['scrap_lines'][lines][2]['move_line_id'])])
+                        else:
+                            x = self.env['stock.move.line'].search(
+                                [('product_id', '=', vals['scrap_lines'][lines][2]['product_id']),
+                                 ('ticl_warehouse_id', '=', self.location_id.id),
+                                 ('status', '=', 'inventory'),
+                                 ('condition_id', '=', condition_id.id)], limit=1)
+
+                        vals['scrap_lines'][lines][2]['move_line_id'] = x.id
+                        vals['scrap_lines'][lines][2]['state'] = 'draft'
+                        self.env['stock.move.line'].search(
+                            [('id', '=', x.id)]).write({'status': 'assigned'})
+
+        return super(ticl_scrap_stock, self).write(vals)
 
     def action_validates(self, lines):
         for scrap_line in lines:
@@ -61,7 +264,10 @@ class ticl_scrap_stock(models.Model):
                     
             mv = self.env['stock.move.line'].search(scrap_line[1],
                                                        limit=int(scrap_line[0].scrap_qty))
-            mv.sudo().write({'status':'recycled','recycled_date':scrap_line[0].date_expected_new,'scrap_tel_note': scrap_line[0].scrap_tel_note})
+            for mv in mv:
+                mv.sudo().write({'status': 'recycled', 'recycled_date': scrap_line[0].date_expected_new,
+                                 'scrap_tel_note': scrap_line[0].scrap_tel_note,
+                                 'scrap_line_id': scrap_line[0].id})
 
 
     
@@ -77,7 +283,8 @@ class ticl_scrap_stock(models.Model):
             domain = [('product_id','=',scrap_line.product_id.id),
                       ('order_from_receipt','=',True),
                       ('condition_id','=',condition.id),
-                      ('status','=','inventory')]
+                      ('status', 'in', ('inventory', 'assigned')),
+                      ('ticl_warehouse_id', '=', scrap_line.location_id.id)]
             print("==111111111111111===",domain)          
 #             available_qty = sum(self.env['stock.quant']._gather(scrap_line.product_id,
 #                                                                 scrap_line.location_id,
@@ -159,6 +366,13 @@ class ticl_scrap_stock_line(models.Model):
     date_expected_new = fields.Date('Scrap Date', store=True)
     picking_id = fields.Many2one('stock.picking', 'Picking', related="scrap_id.picking_id",store=True)
     ticl_checked = fields.Boolean(default=False)
+
+
+    def unlink(self):
+        for ids in self:
+            self.env['stock.move.line'].search([('id', '=', ids.move_line_id.id)]).write(
+                {'status': 'inventory'})
+        return super(ticl_scrap_stock_line, self).unlink()
     
     
     def _prepare_move_values(self):
@@ -210,9 +424,9 @@ class ticl_scrap_stock_line(models.Model):
     def onchange_product_type(self):
         if self.tel_type.name == 'ATM':
             lot_id = self.env['stock.move.line'].search([('serial_number', '=', self.lot_id.name)], limit=1)
-            self.move_id = lot_id.id
+            self.move_line_id = lot_id.id
         else:
-            self.move_id = ""
+            self.move_line_id = ""
         if self.tel_type.name == 'ATM':
                 self.ticl_checked = False
                 self.count_number = 1
@@ -254,3 +468,15 @@ class StockWarnInsufficientQtyScrap(models.TransientModel):
 
     def action_done(self):
         return self.scrap_id.scrap_lines.do_scrap()
+
+
+class TiclStockMoveLine(models.Model):
+    _inherit = "stock.move.line"
+
+    scrap_line_id = fields.Many2one('stock.scrap.line', string="Scrap Line ID")
+    def write(self, values):
+        for i in self:
+            if 'scrap_tel_note' in values.keys():
+                if self.scrap_line_id:
+                    self.scrap_line_id.write({'scrap_tel_note': values['scrap_tel_note']})
+        return super(TiclStockMoveLine, self).write(values)

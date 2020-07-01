@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Inherits Scrap Form View  -->
+        <record model="ir.ui.view" id="view_scrap_ticl_form">
+        <field name="name">view.scrap.ticl.form</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='action_validate']" position="after">
+                <button name="%(action_ticl_scrap_order_cancel)d" attrs="{'invisible': [('state', 'in',('cancel','done'))]}"
+                string="Cancel Scrap" type="action" style="background-color: #ff4d4d;"
+                class="oe_highlight"/>
+            </xpath>
+
+        </field>
+        </record>
+    </data>
+</odoo>

@@ -204,7 +204,7 @@ class ticl_shipment_log(models.Model):
     total_signage = fields.Char(string='Total Signage', compute='count_total_signage')
     total_accessory = fields.Char(string='Total Accessory', compute='count_total_accessory')
     pallet_id_name_visible = fields.Char(string='Pallet ID',track_visibility='onchange')
-    echo_call = fields.Selection([('yes', 'YES'),('no', 'NO')], string='Call Echo(Optional)')
+    echo_call = fields.Selection([('yes', 'YES'),('no', 'NO')], string='Call Transport(OPT)')
     activity_date =  fields.Date(string='Activity Start Date')
     chase_fright_cost = fields.Float(string='Chase Fright Charge')
     miles = fields.Integer(string='Miles')
@@ -657,8 +657,8 @@ class ticl_shipment_log(models.Model):
                     "ProNumber" : "",
                     "PodSignature" : "",
                     "GlCode" : "",
-                    "AckNotification" : "ssingh@delaplex.in;",
-                    "AsnNotification" : "ssingh@delaplex.in;",
+                    "AckNotification" : "jpmc-tellerex@googlegroups.com;",
+                    "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
                     "References" : ticl_references
                 }) 
 
@@ -896,8 +896,8 @@ class ticl_shipment_log(models.Model):
                   "ProNumber" : "",
                   "PodSignature" : "",
                   "GlCode" : " ",
-                  "AckNotification" : "ssingh@delaplex.in;",
-                  "AsnNotification" : "ssingh@delaplex.in;",
+                  "AckNotification" : "jpmc-tellerex@googlegroups.com;",
+                  "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
                   "References" : ticl_references
                 })
 
@@ -1019,11 +1019,12 @@ class ticl_shipment_log(models.Model):
             }
 
     #wizard stand for stand
-    def exception_wizard_stand(self, message):
+    def exception_wizard_stand(self, message, hide_button):
         context = dict(self._context or {})
         context['message'] = message
+        context['hide_button'] = hide_button
         return {
-            'name': 'Stand not Available',
+            'name': 'Stand Availability',
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -1033,24 +1034,30 @@ class ticl_shipment_log(models.Model):
             'context': context,
         }
 
-    #Create Stand for ATM        
     def create_stand(self, obj, lines):
         pr_list = []
         custom_list = []
-        byepass_stand = True
         condition_id = self.env['ticl.condition'].search([('name', '=', 'New')])
-        stand_line =  []
+        stand_line = []
+        moves = []
         rec_log = self.env['ticl.shipment.charge'].search([('name', '=', 'Outbound per ATM / Pallet')])
         outbound_charges = rec_log.shipment_service_charges
         for ticl in lines:
             loc_id = self.sending_location_id.id
             if loc_id is False and self.receiving_location_id.id is False:
                 loc_id = ticl.ticl_ship_id.receiving_location_id.id
-            move_id = self.env['stock.move.line'].search([('product_id', '=', ticl.product_id.ticl_product_id.id),('ticl_warehouse_id','=',loc_id),('status','=','inventory')])
+            move_id = self.env['stock.move.line'].search([('product_id', '=', ticl.product_id.ticl_product_id.id),
+                                                     ('ticl_warehouse_id', '=', loc_id), ('id', 'not in', moves),
+                                                     ('status', '=', 'inventory'),
+                                                     ('order_from_receipt', '=', True),
+                                                     ('condition_id.name', 'not in', ('To Recommend', 'Quarantine'))],
+                                                    limit=1)
+
             if not move_id:
                 pr_list.append(ticl.product_id.name)
             elif move_id:
                 product_id = self.env['product.product'].search([('name', '=', ticl.product_id.ticl_product_id.name)])
+
                 vals = {
                     'tel_type': product_id.categ_id.id,
                     'product_id': product_id.id,
@@ -1058,28 +1065,43 @@ class ticl_shipment_log(models.Model):
                     'manufacturer_id': product_id.manufacturer_id.id,
                     'condition_id': condition_id.id,
                     'xl_items': 'n',
-                    'product_weight': product_id.product_weight,
+                    'product_weight': int(float(product_id.product_weight)),
                     'funding_doc_type': ticl.funding_doc_type,
                     'funding_doc_number': ticl.funding_doc_number,
                     'ticl_project_id': ticl.ticl_project_id,
                     'common_name': ticl.common_name,
                     'outbound_charges': outbound_charges,
                     'tid': ticl.tid,
-                    'ship_stock_move_line_id': move_id.ids[0],
+                    'ship_stock_move_line_id': move_id.id,
+                    'stand_attached': True,
                 }
-                stand_line.append((0, 0, vals))
-                move_id[0].write({'status': 'assigned', 'shipment_id': self.name})
-                custom_list.append(move_id[0].id)
+                moves.append(move_id.id)
+                if 'byepass' not in dict(self._context):
+                    stand_line.append((0, 0, vals))
+                # move_id[0].write({'status': 'assigned', 'shipment_id': self.name})
+                custom_list.append(move_id.id)
+
+        pr_list2 = pr_list
         pr_list = list(set(pr_list))
         if pr_list != []:
             if 'byepass' not in dict(self._context):
-                byepass_stand = False
                 move_ids = self.env['stock.move.line'].browse(custom_list)
-                move_ids.write({'status':'inventory','shipment_id': ''})
-        if 'byepass' in dict(self._context) or byepass_stand == True:
-            return stand_line
-        return self.exception_wizard_stand("<b>Stand for {0} is not available in the inventory!</b><br/> Do you want to Continue?".format(pr_list))
+                move_ids.write({'status': 'inventory', 'shipment_id': ''})
 
+        if 'no_byepass' in dict(self._context):
+            return stand_line
+        if len(pr_list2) == len(lines):
+            return self.exception_wizard_stand("<b>Stand(s) for {0} is not available in the inventory!</b><br/> "
+                                               "Do you want to continue without Stand(s)?".format(pr_list),
+                                               hide_button=True)
+        if pr_list != []:
+            return self.exception_wizard_stand("<b>Stand(s) for {0} is not available in the inventory!</b><br/> "
+                                               "<b>Available Stand= {1}.</b><br/> Do you want to continue?".format(
+                pr_list, len(moves)), hide_button=False)
+
+        else:
+            return self.exception_wizard_stand("<b>Stand(s) available in the inventory!</b><br/> "
+                                               "Do you want to continue?", hide_button=False)
 
 #Echo API POST INTEGRATION With Shipment Creations With Dropship
     #@api.model
@@ -1192,8 +1214,8 @@ class ticl_shipment_log(models.Model):
                     "ProNumber" : "",
                     "PodSignature" : "",
                     "GlCode" : "",
-                    "AckNotification" : "ssingh@delaplex.com;",
-                    "AsnNotification" : "ssingh@delaplex.com;",
+                    "AckNotification" : "jpmc-tellerex@googlegroups.com;",
+                    "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
                     "References" : ticl_references
                 }) 
 
@@ -1395,8 +1417,8 @@ class ticl_shipment_log(models.Model):
                   "ProNumber" : "",
                   "PodSignature" : "",
                   "GlCode" : " ",
-                  "AckNotification" : "ssingh@delaplex.com;",
-                  "AsnNotification" : "ssingh@delaplex.com;",
+                  "AckNotification" : "jpmc-tellerex@googlegroups.com;",
+                  "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
                   "References" :ticl_references
                 })
 
@@ -2074,6 +2096,7 @@ class ticl_shipment_log_line(models.Model):
     shipment_service_charges = fields.Float(string='Charges')
     hide_xl_items = fields.Boolean(string="Hide XL")
     ship_stock_move_id = fields.Many2one('stock.move', string="Stock Name")
+    stand_attached = fields.Boolean(string='Stand Attached')
     ship_stock_move_line_id = fields.Many2one('stock.move.line', string="Stock Move Line")
     product_weight = fields.Char(string="Weight")
     warehouse_id = fields.Many2one('stock.warehouse', string='warehouse', default=lambda self: self.env.user.warehouse_id.id)

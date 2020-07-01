@@ -59,7 +59,13 @@
                 <form string="Scrap">
                     <header>
                         <button name="action_validate" states="draft" string="Validate" type="object" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,done" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done,cancel" />
+                        <button name="revert_scrap" class="oe_highlight"
+                            string="Revert Scrap to Draft" type="object"
+                            attrs="{'invisible': [('state', 'not in','cancel')]}"/>
+                        <button name="download_recycle_report" class="oe_highlight"
+                        string="Generate Recyled Report" type="object"
+                        attrs="{'invisible': [('state', 'not in','done')]}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -78,6 +84,7 @@
                         <group>
                             <group>
                                 <field name="tracking" invisible="1"/>
+                                <field name="state" invisible="1"/>
                                 <field name="package_id" groups="stock.group_tracking_lot"/>
                                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                                 <field name="location_id" domain="[('is_location', '=', True)]" groups="stock.group_stock_multi_locations"/>
@@ -142,7 +149,25 @@
                  
          </field>
      </record>
-     
+    <record id="tel_receving_stock_move_line_form2" model="ir.ui.view">
+        <field name="name">stock.move.line.form.ticl.inherit</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="ticl_receiving.tel_receving_stock_move_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='scrap_tel_note']" position="after">
+            <field name="scrap_line_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <report id="print_recycle_report"  model="stock.scrap"  string="Generate Recyle Report"  name="ticl_scrap_management.generate_recycle_report"
+    file="ticl_scrap_management.generate_recycle_report" report_type="qweb-pdf"
+    />
+
+        <record id="ticl_scrap_management.print_recycle_report" model="ir.actions.report">
+    <field name="paperformat_id" ref="ticl_scrap_management.recycle_report_format" />
+    </record>
+
      <menuitem id="ticl_menu_stock_scrap" name="Scrap" 
         parent="ticl_receiving.menu_stock_root_ticl"
         action="stock.action_stock_scrap" sequence="2"/>

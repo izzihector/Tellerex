@@ -152,6 +152,7 @@
                     <field name="ticl_checked" invisible="1"/>
                     <field name="ship_stock_move_line_id" invisible="1"/>
                     <field name="ship_stock_move_id" invisible="1"/>
+                    <field name="stand_attached" invisible="1"/>
                     <field name="hide_cod" invisible="1"/>
                     <field name="hide_xl_items" invisible="1"/>
                     <field name="xl_items" attrs="{'invisible':[('hide_xl_items','=',True)]}" 
@@ -516,6 +517,7 @@
                         <field name="ticl_checked" invisible="1"/>
                         <field name="ship_stock_move_line_id" invisible="1"/>
                         <field name="ship_stock_move_id" invisible="1"/>
+                        <field name="stand_attached" invisible="1"/>
                         <field name="hide_cod" invisible="1"/>
                         <field name="hide_xl_items" invisible="1"/>
                         <field name="xl_items" 
