@@ -9,7 +9,7 @@ import calendar
 
 class TiclStockMoveLine(models.Model):
     _inherit = "stock.move.line"
-    _order = 'tel_unique_no desc, id desc'
+    _order = 'tel_unique_no desc'
 
     #Old ATM Processing from Inventory
     def confirm_atm_process(self):
