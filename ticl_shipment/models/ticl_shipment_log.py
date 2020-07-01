@@ -657,8 +657,8 @@ class ticl_shipment_log(models.Model):
                     "ProNumber" : "",
                     "PodSignature" : "",
                     "GlCode" : "",
-                    "AckNotification" : "jpmc-tellerex@googlegroups.com;",
-                    "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
+                    "AckNotification" : "ssingh@delaplex.com;",
+                    "AsnNotification" : "ssingh@delaplex.com;",
                     "References" : ticl_references
                 }) 
 
@@ -896,8 +896,8 @@ class ticl_shipment_log(models.Model):
                   "ProNumber" : "",
                   "PodSignature" : "",
                   "GlCode" : " ",
-                  "AckNotification" : "jpmc-tellerex@googlegroups.com;",
-                  "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
+                  "AckNotification" : "ssingh@delaplex.com;",
+                  "AsnNotification" : "ssingh@delaplex.com;",
                   "References" : ticl_references
                 })
 
@@ -1214,8 +1214,8 @@ class ticl_shipment_log(models.Model):
                     "ProNumber" : "",
                     "PodSignature" : "",
                     "GlCode" : "",
-                    "AckNotification" : "jpmc-tellerex@googlegroups.com;",
-                    "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
+                    "AckNotification" : "ssingh@delaplex.com;",
+                    "AsnNotification" : "ssingh@delaplex.com;",
                     "References" : ticl_references
                 }) 
 
@@ -1417,8 +1417,8 @@ class ticl_shipment_log(models.Model):
                   "ProNumber" : "",
                   "PodSignature" : "",
                   "GlCode" : " ",
-                  "AckNotification" : "jpmc-tellerex@googlegroups.com;",
-                  "AsnNotification" : "jpmc-tellerex@googlegroups.com;",
+                  "AckNotification" : "ssingh@delaplex.com;",
+                  "AsnNotification" : "ssingh@delaplex.com;",
                   "References" :ticl_references
                 })
 
