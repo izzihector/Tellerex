@@ -86,7 +86,7 @@ class ticl_chase_weekly_report(models.TransientModel):
                 if product_ids:
                     where_product_ids = " quant.product_id in %s" % str(tuple(product_ids)).replace(',)', ')')
                     where_product_ids2 = " product_id in %s" % str(tuple(product_ids)).replace(',)', ')')
-                warehouse_ids2 = self.env['stock.location'].search([('is_warehouse', '=', True)])
+                warehouse_ids2 = self.env['stock.location'].search([('is_location', '=', True)])
                 ids_location = [loc.id for loc in warehouse_ids2]
                 where_warehouse_ids = " quant.location_id in %s" % str(tuple(ids_location)).replace(',)', ')')
                 # where_warehouse_ids2 = " location_id in %s"%str(tuple(ids_location)).replace(',)', ')')

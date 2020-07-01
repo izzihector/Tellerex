@@ -66,8 +66,11 @@ class import_update_data(models.TransientModel):
                         receipt = recipt_obj.search([('tel_unique_no','=',col1)])
                         if receipt:
                             vals = {}
-                            check_sale = sheet.cell(row,1).value
-                            vals.update({'check_sale':check_sale})
+                            tel_note = sheet.cell(row,1).value
+                            vals.update({'tel_note':status})
+  
+                            tel_cod = sheet.cell(row,2).value
+                            vals.update({'tel_cod':tel_cod})
                             receipt.sudo().write(vals)
 
                     elif self.import_type == 'update_status_stock':
@@ -82,9 +85,15 @@ class import_update_data(models.TransientModel):
                         if receipt:
                             vals = {}
                             print("----receipt",receipt)
-                            status = sheet.cell(row,1).value
-                            print("----total_weight",status)
-                            vals.update({'status':status})
+                            tel_note = sheet.cell(row,1).value
+                            vals.update({'tel_note':status})
+
+                            scrap_note = sheet.cell(row,2).value
+                            vals.update({'scrap_tel_note':scrap_note})
+  
+                            tel_cod = sheet.cell(row,3).value
+                            vals.update({'tel_cod':tel_cod})
+
                             receipt.sudo().write(vals) 
 
                     elif self.import_type == 'update_status_recycle':
