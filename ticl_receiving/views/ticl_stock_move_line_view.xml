@@ -94,7 +94,8 @@
             <field name="name">stock.move.tree.ticl</field>
             <field name="model">stock.move.line</field>
             <field name="arch" type="xml">
-                <tree create="false" delete="false">
+                <tree create="false" delete="false" default_order="origin_sort desc">
+                    <field name="origin_sort" string="Receipt" invisible="1"/>
                      <field name="origin" string="Receipt"/>
                      <field name="received_date" widget="date"/>
                      <field name="manufacturer_id" string="Manufacturer"/>
