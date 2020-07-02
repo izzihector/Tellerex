@@ -151,7 +151,7 @@ class import_work_order(models.TransientModel):
                     if self.import_type == 'receipt_line':
                         receiptLine_obj = self.env['ticl.receipt.line']
                         col5 = sheet.cell(row, 5).value
-                        unique_no = col5.strip()
+                        unique_no = int(col5)
                         receipt_line = receiptLine_obj.search([('tel_unique_no','=',unique_no)])
                         if not receipt_line:
                             receipt_obj = self.env['ticl.receipt']

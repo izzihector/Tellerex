@@ -27,19 +27,19 @@ class ticl_receipt(models.Model):
     _order = 'delivery_date desc, id desc'
 
     #Unique Receiving Number
-    @api.model
-    def create(self, vals):
-        sequence = self.env['ir.sequence'].next_by_code('ticl.receipt') or '/'
-        vals['name'] = sequence
-        if 'ticl_receipt_lines' in vals.keys():
-            for recs in range(len(vals['ticl_receipt_lines'])):
-                vals['ticl_receipt_lines'][recs][2]['tel_type'] = vals['ticl_receipt_lines'][recs][2]['type_dup']
-                vals['ticl_receipt_lines'][recs][2]['manufacturer_id'] = vals['ticl_receipt_lines'][recs][2]['manufacturer_id_dup']
-                tel_type =  self.env['product.category'].search([('id','=',vals['ticl_receipt_lines'][recs][2]['tel_type'])])
-                if tel_type.name == 'ATM' and vals['ticl_receipt_lines'][recs][2]['serial_number'] == False:
-                    product = self.env['product.product'].search([('id','=',vals['ticl_receipt_lines'][recs][2]['product_id'])])
-                    raise UserError("Please enter Serial Number for the Model ({0})".format(product.name))
-        return super(ticl_receipt, self).create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     sequence = self.env['ir.sequence'].next_by_code('ticl.receipt') or '/'
+    #     vals['name'] = sequence
+    #     if 'ticl_receipt_lines' in vals.keys():
+    #         for recs in range(len(vals['ticl_receipt_lines'])):
+    #             vals['ticl_receipt_lines'][recs][2]['tel_type'] = vals['ticl_receipt_lines'][recs][2]['type_dup']
+    #             vals['ticl_receipt_lines'][recs][2]['manufacturer_id'] = vals['ticl_receipt_lines'][recs][2]['manufacturer_id_dup']
+    #             tel_type =  self.env['product.category'].search([('id','=',vals['ticl_receipt_lines'][recs][2]['tel_type'])])
+    #             if tel_type.name == 'ATM' and vals['ticl_receipt_lines'][recs][2]['serial_number'] == False:
+    #                 product = self.env['product.product'].search([('id','=',vals['ticl_receipt_lines'][recs][2]['product_id'])])
+    #                 raise UserError("Please enter Serial Number for the Model ({0})".format(product.name))
+    #     return super(ticl_receipt, self).create(vals)
 
 #     @api.multi
     def write(self, vals):
@@ -463,7 +463,8 @@ class ticl_receipt(models.Model):
                     "Name" : serial_inc,
                     "value" : line.serial_number,
                     })
-
+            echo_mail = self.env['ir.config_parameter'].sudo().get_param('ticl_shipment.echo_mail')
+            print("===echo_mail===",echo_mail)
             data.update({
                     "PalletType" : "CORRUGATED",
                     "PalletQuantity" : self.total_pallet,
@@ -482,8 +483,8 @@ class ticl_receipt(models.Model):
                     "ProNumber" : "",
                     "PodSignature" : "",
                     "GlCode" : "",
-                    "AckNotification" : "ssingh@delaplex.com;",
-                    "AsnNotification" : "ssingh@delaplex.com;",
+                    "AckNotification" : echo_mail or "",
+                    "AsnNotification" : echo_mail or "",
                     "References" : ticl_references
                 }) 
 
@@ -672,7 +673,9 @@ class ticl_receipt(models.Model):
                     "Name" : serial_inc,
                     "value" : line.serial_number,
                     })
-            
+
+            echo_mail = self.env['ir.config_parameter'].sudo().get_param('ticl_shipment.echo_mail')
+            print("===echo_mail===",echo_mail)            
             data.update({
                   "CubicSize" : 10,
                   "UnitOfWeight" : "LB",
@@ -690,8 +693,8 @@ class ticl_receipt(models.Model):
                   "ProNumber" : "",
                   "PodSignature" : "",
                   "GlCode" : " ",
-                  "AckNotification" : "ssingh@delaplex.com;",
-                  "AsnNotification" : "ssingh@delaplex.com;",
+                  "AckNotification" : echo_mail or "",
+                  "AsnNotification" : echo_mail or "",
                   "References" : ticl_references
                 })
 

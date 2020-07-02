@@ -1364,11 +1364,10 @@ class ticl_receipt_log_summary_line(models.Model):
 
 
     #Create Unique ID in line items        
-    # @api.model
-    def create(self, vals):
-        seq = self.env['ir.sequence'].next_by_code('ticl.receipt.log.summary.line') or '/'
-        vals['tel_unique_no'] = seq
-        return super(ticl_receipt_log_summary_line, self).create(vals)
+    # def create(self, vals):
+    #     seq = self.env['ir.sequence'].next_by_code('ticl.receipt.log.summary.line') or '/'
+    #     vals['tel_unique_no'] = seq
+    #     return super(ticl_receipt_log_summary_line, self).create(vals)
 
 
     @api.model
@@ -1476,11 +1475,11 @@ class ticl_receipt_log_summary_line(models.Model):
                             table = 'class_ir_attachmentsatm_rel'
                             field_id = 'attachment_ids'
                         if sub_folder_name == "HDD":
-                            table = 'class_ir_attachmentsepp_rel'
-                            field_id = 'attachment_ids_epp'
-                        if sub_folder_name == "EPP":
                             table = 'class_ir_attachmentshdd_rel'
                             field_id = 'attachment_ids_hdd'
+                        if sub_folder_name == "EPP":
+                            table = 'class_ir_attachmentsepp_rel'  
+                            field_id = 'attachment_ids_epp'
                         self._cr.execute("""
                                                 INSERT INTO {0} (class_id,
                                                 {1}) VALUES({2},{3});
