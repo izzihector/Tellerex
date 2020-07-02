@@ -18,7 +18,8 @@
                                         <label for="autontication_key" 
                                         string="Authontication Key"/>
                                         <field name="autontication_key" required="1"/>
-                                        <label for="echo_mail" string="Transport Call Mail"/>
+                                        <label for="echo_mail" 
+                                        string="Transport EMail Configuration"/>
                                         <field name="echo_mail" required="1"/>
 
                                     </div>
