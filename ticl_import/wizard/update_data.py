@@ -107,7 +107,7 @@ class import_update_data(models.TransientModel):
                         if receipt:
                             vals = {}
 
-                            recycled_date = sheet.cell(row,2).value
+                            recycled_date = sheet.cell(row,1).value
                             if not recycled_date:
                                 raise Exception("Approval date field is blank in row %s , Please review the file."% (row + 1))
                             if recycled_date:
@@ -117,9 +117,11 @@ class import_update_data(models.TransientModel):
                                     appr_date = datetime(*xlrd.xldate_as_tuple(recycled_date, workbook.datemode))
                                 vals.update({'recycled_date':appr_date.strftime("%Y-%m-%d")})                            
 
-                            status = sheet.cell(row,1).value
-                            print("----total_weight",status)
-                            vals.update({'status':status})
+                            # status = sheet.cell(row,1).value
+                            # print("----total_weight",status)
+                            # vals.update({'status':status})
+                            scrap_note = sheet.cell(row,2).value
+                            vals.update({'scrap_tel_note':scrap_note})                            
                             receipt.sudo().write(vals) 
 
 
