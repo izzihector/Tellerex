@@ -930,7 +930,7 @@ class ticl_chase_weekly_report(models.TransientModel):
                         else:
                             c5 = ''
                         worksheet.write(row, 5, c5 or '')
-                        worksheet.write(row, 6, ids.location_dest_id.name or '')
+                        worksheet.write(row, 6, ids.ticl_warehouse_id.name or '')
                         worksheet.write(row, 7, ids.condition_id.name or '')
                         if ids.categ_id.name == "ATM":
                             worksheet.write(row, 8, "Unit" or '')
