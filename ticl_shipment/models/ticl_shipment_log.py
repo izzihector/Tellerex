@@ -638,7 +638,8 @@ class ticl_shipment_log(models.Model):
                     "Name":"Work Order #",  
                     "Value":line_no
                     })
-
+            echo_mail = self.env['ir.config_parameter'].sudo().get_param('ticl_shipment.echo_mail')
+            print("===echo_mail===",echo_mail)
             data.update({
                     "PalletType" : "CORRUGATED",
                     "PalletQuantity" : self.total_pallet,
@@ -657,8 +658,8 @@ class ticl_shipment_log(models.Model):
                     "ProNumber" : "",
                     "PodSignature" : "",
                     "GlCode" : "",
-                    "AckNotification" : "ssingh@delaplex.com;",
-                    "AsnNotification" : "ssingh@delaplex.com;",
+                    "AckNotification" : echo_mail or "",
+                    "AsnNotification" : echo_mail or "",
                     "References" : ticl_references
                 }) 
 
@@ -878,7 +879,8 @@ class ticl_shipment_log(models.Model):
                     "Name":"Work Order #",  
                     "Value":line_no
                     })
-
+            echo_mail = self.env['ir.config_parameter'].sudo().get_param('ticl_shipment.echo_mail')
+            print("===echo_mail===",echo_mail)
             data.update({
                   "CubicSize" : 10,
                   "UnitOfWeight" : "LB",
@@ -896,8 +898,8 @@ class ticl_shipment_log(models.Model):
                   "ProNumber" : "",
                   "PodSignature" : "",
                   "GlCode" : " ",
-                  "AckNotification" : "ssingh@delaplex.com;",
-                  "AsnNotification" : "ssingh@delaplex.com;",
+                  "AckNotification" : echo_mail or "",
+                  "AsnNotification" : echo_mail or "",
                   "References" : ticl_references
                 })
 
@@ -1195,7 +1197,8 @@ class ticl_shipment_log(models.Model):
                     "Name" : serial_inc,
                     "value" : line.lot_id.name,
                     })
-
+            echo_mail = self.env['ir.config_parameter'].sudo().get_param('ticl_shipment.echo_mail')
+            print("===echo_mail===",echo_mail)
             data.update({
                     "PalletType" : "CORRUGATED",
                     "PalletQuantity" : 1,
@@ -1214,8 +1217,8 @@ class ticl_shipment_log(models.Model):
                     "ProNumber" : "",
                     "PodSignature" : "",
                     "GlCode" : "",
-                    "AckNotification" : "ssingh@delaplex.com;",
-                    "AsnNotification" : "ssingh@delaplex.com;",
+                    "AckNotification" : echo_mail or "",
+                    "AsnNotification" : echo_mail or "",
                     "References" : ticl_references
                 }) 
 
@@ -1399,7 +1402,8 @@ class ticl_shipment_log(models.Model):
                     "Name" : serial_inc,
                     "value" : line.lot_id.name,
                     })
-
+            echo_mail = self.env['ir.config_parameter'].sudo().get_param('ticl_shipment.echo_mail')
+            print("===echo_mail===",echo_mail)
             data.update({
                   "CubicSize" : 10,
                   "UnitOfWeight" : "LB",
@@ -1417,8 +1421,8 @@ class ticl_shipment_log(models.Model):
                   "ProNumber" : "",
                   "PodSignature" : "",
                   "GlCode" : " ",
-                  "AckNotification" : "ssingh@delaplex.com;",
-                  "AsnNotification" : "ssingh@delaplex.com;",
+                  "AckNotification" : echo_mail or "",
+                  "AsnNotification" : echo_mail or "",
                   "References" :ticl_references
                 })
 
